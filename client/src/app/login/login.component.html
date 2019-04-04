@@ -1,0 +1,7 @@
+<form #f=ngForm (ngSubmit)="send(f)" method="POST">
+  Email<br>
+  <input type="text" name="email" id="email" ngModel><br>
+  Senha<br>
+  <input type="password" name="password" id="password" ngModel><br>
+  <button type="submit">Logar</button>
+</form>
