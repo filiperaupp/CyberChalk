@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from './login.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'login',
@@ -8,30 +9,43 @@ import { LoginService } from './login.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private _loginService: LoginService) { }
+  constructor(private _authService: AuthService) { }
 
 
   ngOnInit() {
   }
 
   send(form) {
-    let user = new FormData;
-    user.append('email', form.value.email);
-    user.append('password', form.value.password);
-    this.login(user);
+    let email = form.value.email;
+    let password = form.value.password;
+    this._authService.login(email, password).subscribe(
+      res => {
+        console.log('Sucesso: ', res)
+      },
+      error => {
+        console.log('falhou: ', error)
+      }
+    )
   }
 
-  login(user){
-    this._loginService.login(user)
-      .subscribe(
-        (val:any) => {
-          let token = val.token;
-          console.log(token);
-        },
-        response => {
-          console.log(response)
-        }
-      )
+  pegaProdutos(){
+    this._authService.getProdutos().subscribe(
+      res => console.log(res),
+      error => console.log(error)
+    )
   }
+
+  logout(){
+    this._authService.logout().subscribe(
+      res => {
+        console.log('Sucesso: ', res)
+      },
+      error => {
+        console.log('falhou: ', error)
+      }
+    )
+  }
+
+
 
 }
