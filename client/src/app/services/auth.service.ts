@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { User } from '../models/user';
-import { fillProperties } from '@angular/core/src/util/property';
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +22,7 @@ export class AuthService {
     return this.currentUserSubject.value
   }
 
-  login(cgu:string, password:string) {
-    let login = new FormData()
-    login.append('email',cgu)
-    login.append('password',password)
+  public login(login) {
     return this.http.post('http://localhost:8000/api/auth/login', login)
       .pipe(map((user:User)=> {
         if (user && user.token) {
@@ -42,7 +38,8 @@ export class AuthService {
   }
 
   public logout() {
+    
     localStorage.removeItem('currentUser')
-    return this.http.post("http://localhost:8000/api/auth/logout",'')
+    this.currentUserSubject.next(null)
   }
 }

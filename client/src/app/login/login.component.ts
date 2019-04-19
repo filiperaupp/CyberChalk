@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginService } from './login.service';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'login',
@@ -9,23 +9,29 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private _authService: AuthService) { }
+  display = 'block';
 
+  constructor(private _authService: AuthService,
+              private router: Router) { }
 
   ngOnInit() {
   }
 
   send(form) {
-    let email = form.value.email;
-    let password = form.value.password;
-    this._authService.login(email, password).subscribe(
-      res => {
-        console.log('Sucesso: ', res)
-      },
-      error => {
-        console.log('falhou: ', error)
-      }
-    )
+    let login = new FormData()
+    login.append('email',form.value.email)
+    login.append('password',form.value.password)
+    this._authService.login(login)
+      .subscribe(
+        res => {
+          console.log('Sucesso: ', res)
+          this.router.navigate(['/dashboard']);
+          document.getElementById('loginModal').style.display = "none";
+        },
+        error => {
+          console.log('falhou: ', error)
+        }
+      )
   }
 
   pegaProdutos(){
@@ -36,14 +42,11 @@ export class LoginComponent implements OnInit {
   }
 
   logout(){
-    this._authService.logout().subscribe(
-      res => {
-        console.log('Sucesso: ', res)
-      },
-      error => {
-        console.log('falhou: ', error)
-      }
-    )
+    this._authService.logout();
+  }
+
+  fecha(){
+    
   }
 
 

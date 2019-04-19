@@ -1,0 +1,92 @@
+.col-12, .col-md-6, .col-lg-6{
+    padding: 0;
+    margin: 0;
+}
+a:link{
+    text-decoration: none;
+}
+li{
+    color: #000000;
+}
+ul {
+    padding: 0;
+    margin: 5px;
+}
+.box-home{
+    border: 0px;
+    width: 90%;
+    height: auto;
+    margin: auto;
+}
+
+.card-header{
+    background-color: #367FA9;
+    color: #ffffff;
+}
+
+.main-color{
+    color:#367FA9 !important;
+}
+
+.main-div{
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    background-image: url('../../assets/images/home-image.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+.pass-through{
+    background-color: #00000080;
+    min-height: 100vh;
+}
+
+.margin-phone{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 576px) {
+    .title{
+        font-size: 22px;
+    }
+    .description{
+        font-size: 17px;
+    }
+} 
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 576px) {
+    .title{
+        font-size: 27px;
+    }
+    .description{
+        font-size: 23px;
+    }
+} 
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+} 
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .title{
+        font-size: 35px;
+    }
+    .description{
+        font-size: 24px;
+    }
+} 
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .title{
+        font-size: 45px;
+    }
+    .description{
+        font-size: 28px;
+    }
+}

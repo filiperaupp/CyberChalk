@@ -1,0 +1,76 @@
+<div class="w-100 text-center">
+  <h1>Solicitações pendentes</h1>
+</div>
+
+<ng-template #load>
+
+  <loader *ngIf="loading"></loader>
+</ng-template>
+
+<div *ngIf="!loading && !isNull else load" class="table-responsive">
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">CGU</th>
+        <th scope="col">Nome</th>
+        <th scope="col">E-mail</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Ação</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <tr *ngFor="let s of solicitations; index as i;">
+        <th scope="row">{{ s.cgu }}</th>
+        <td>{{ s.name }}</td>
+        <td>{{ s.email }}</td>
+        <td>
+          <select class="form-control min-width-130" name="type" id="type" #inputSelect>
+            <option value="adm">Administrador</option>
+            <option value="student" selected>Aluno</option>
+            <option value="invited">Convidado</option>
+          </select>
+        </td>
+        <td>
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#acceptModal"
+              (click)="getSolicitation(i)">
+              Aceitar
+            </button>
+            <button class="btn btn-sm btn-danger">Rejeitar</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div *ngIf="isNull" class="alert alert-success mx-4 mt-4">
+  <h4 class="alert-heading text-center">
+    Nenhuma solicitação pendente!
+  </h4>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="acceptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Aceitar Usuário</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div *ngIf="selectedSolicitation" class="modal-body">
+        Deseja realmente aceitar <b>{{ selectedSolicitation.name }}</b> como novo usuário do tipo
+        <b>{{ selectedOption }}</b>
+        no <span class="main-color"><b>Cyber</b>Chalk?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" (click)="confirmed()" data-dismiss="modal">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>

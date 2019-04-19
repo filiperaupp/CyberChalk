@@ -1,0 +1,56 @@
+<div class="container-fluid">
+  <div class="row nav">
+    <div class="side-title" id="navTitle" #navTitle>
+      <a routerLink="/dashboard">
+        <b>{{ title1 }}</b>{{ title2 }}
+      </a>
+    </div>
+    <div>
+      <button (click)="toggleMenu()"> Toggle </button>
+    </div>
+  </div>
+  <div class="flex-container">
+    <div class="side-menu" id="sideMenu">
+      <div class="user">
+        <div class="float-left">
+          <img class="user-photo" src="../../assets/images/home-image.jpg" alt="" srcset="">
+        </div>
+        <div class="float-left ml-3">
+          <p class="username">Filipe Oliveira Raupp</p>
+        </div>
+      </div>
+      <div class="main-navigation">
+        Main Navigation
+      </div>
+      <ul class="list-style-none">
+        <li  routerLinkActive="category-active" [routerLinkActiveOptions]="{exact: true}">
+          <a class="category accordion">Solicitações</a>
+          <div class="panel">
+            <ul class="list-style-none">
+              <li class="sub-category">
+                <a routerLink="solicitation/user" routerLinkActive="sub-category-active">
+                  <i class="far fa-circle"></i><span class="ml-2">Usuários</span>
+                </a>
+              </li>
+              <li class="sub-category">
+                <a routerLink="solicitation/category-and-subcategory" routerLinkActive="sub-category-active">
+                  <i class="far fa-circle"></i>
+                  <span class="ml-2">Categorias / Subcategorias</span>
+                </a>
+              </li>
+              <li class="sub-category">
+                <a routerLink="solicitation/courses-and-contents" routerLinkActive="sub-category-active">
+                  <i class="far fa-circle"></i>
+                  <span class="ml-2">Conteúdos / Cursos</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="board" id="board">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
