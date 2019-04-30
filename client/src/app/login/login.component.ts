@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -8,47 +9,54 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  @ViewChild('closeButton') closeButton: ElementRef;
+  
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
+  })
 
-  display = 'block';
+  loading:boolean = false;
+  unauthorized:boolean = false;
 
   constructor(private _authService: AuthService,
-              private router: Router) { }
+              private router: Router,
+              private fb: FormBuilder) { }
 
   ngOnInit() {
   }
 
-  send(form) {
-    let login = new FormData()
-    login.append('email',form.value.email)
-    login.append('password',form.value.password)
+  onSubmit(form) {
+    this.loading = true;
+    this.unauthorized = false;
+    let login = this.loginForm.value
     this._authService.login(login)
       .subscribe(
         res => {
-          console.log('Sucesso: ', res)
+          this.loading = false;
+          this.triggerFalseClick()
           this.router.navigate(['/dashboard']);
-          document.getElementById('loginModal').style.display = "none";
         },
         error => {
-          console.log('falhou: ', error)
+          if (error === "Unauthorized")
+            this.unauthorized = true;
+          this.loading = false;
         }
       )
-  }
-
-  pegaProdutos(){
-    this._authService.getProdutos().subscribe(
-      res => console.log(res),
-      error => console.log(error)
-    )
   }
 
   logout(){
     this._authService.logout();
   }
 
-  fecha(){
-    
+  triggerFalseClick() {
+    let el: HTMLElement = this.closeButton.nativeElement as HTMLElement;
+    el.click();
   }
-
-
+  
+  ngOnDestroy(){
+    this.triggerFalseClick()
+  }
+  
 
 }

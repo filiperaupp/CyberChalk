@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\UserSolicitation;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -13,12 +14,15 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|',
             'cgu' => 'required|string',
-            'type' => 'required|string'
+            'type' => 'required|string',
+            'idSolicitation' => 'required'
         ]);
+        $idSolicitation = $request->idSolicitation;
+        $solicitation = UserSolicitation::find($idSolicitation);
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt('fulano123'),       
+            'password' => $solicitation->password,       
             'cgu' => $request->cgu,
             'type' => $request->type,
         ]);
@@ -45,7 +49,13 @@ class AuthController extends Controller
         
         $user = $request->user();
         $token = $user->createToken('Access token')->accessToken;
+
+        $userData = User::where('email',$request->email)->get();
+
         return response()->json([
+            'name' => $user->name,
+            'cgu' => $user->cgu,
+            'type' => $user->type,
             'email' => $request->email,
             'token' => $token
         ], 200);

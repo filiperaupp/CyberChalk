@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     const currentUser = this._authService.currenUserValue
     if (currentUser) {
       //check de role
-      if (route.data.roles && route.data.roles.indexOf(currentUser.role) === -1) {
+      if (route.data.roles && route.data.roles.indexOf(currentUser.type) === -1) {
         //not authorized
         this.router.navigate(['/'])
         return false
@@ -27,7 +27,24 @@ export class AuthGuard implements CanActivate {
     }
 
     //not logged
-    //this.router.navigate(['/login'])
+    this.router.navigate(['/'])
+    return false
+  }
+
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
+    const currentUser = this._authService.currenUserValue
+    if (currentUser) {
+      //check de role
+      if (route.data.roles && route.data.roles.indexOf(currentUser.type) === -1) {
+        //not authorized
+        this.router.navigate(['/dashboard'])
+        return false
+      }
+      return true;
+    }
+
+    //not logged
+    this.router.navigate(['/'])
     return false
   }
 }

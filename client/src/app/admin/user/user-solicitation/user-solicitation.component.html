@@ -1,15 +1,10 @@
-<div class="w-100 text-center">
-  <h1>Solicitações pendentes</h1>
-</div>
-
 <ng-template #load>
-
   <loader *ngIf="loading"></loader>
 </ng-template>
 
 <div *ngIf="!loading && !isNull else load" class="table-responsive">
   <table class="table">
-    <thead class="thead-dark">
+    <thead class="bg-white">
       <tr>
         <th scope="col">CGU</th>
         <th scope="col">Nome</th>
@@ -36,7 +31,9 @@
               (click)="getSolicitation(i)">
               Aceitar
             </button>
-            <button class="btn btn-sm btn-danger">Rejeitar</button>
+            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectModal"
+              (click)="getSolicitation(i)">
+              Rejeitar</button>
           </div>
         </td>
       </tr>
@@ -51,25 +48,58 @@
   </h4>
 </div>
 
-<!-- Modal -->
+<!-- Modal Accept-->
 <div class="modal fade" id="acceptModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header bg-dark text-light">
-        <h5 class="modal-title" id="exampleModalLabel">Aceitar Usuário</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Aceitar solicitação</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span class="text-light" aria-hidden="true">X</span>
+          <span #closeButtonAcc class="text-light" aria-hidden="true">X</span>
         </button>
       </div>
       <div *ngIf="selectedSolicitation" class="modal-body">
-        Deseja realmente aceitar <b>{{ selectedSolicitation.name }}</b> como novo usuário do tipo
+        Deseja realmente aceitar de <b>{{ selectedSolicitation.name }}</b> como novo usuário do tipo
         <b>{{ selectedOption }}</b>
         no <span class="main-color"><b>Cyber</b>Chalk?</span>
       </div>
-      <div class="modal-footer">
+      <div *ngIf="!loadingAction" class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-success" (click)="confirmed()" data-dismiss="modal">Confirmar</button>
+        <button type="button" class="btn btn-success" (click)="confirmed()">Confirmar</button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Reject-->
+<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Rejeitar solicitação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonRej class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div *ngIf="selectedSolicitation" class="modal-body">
+        Deseja realmente rejeitar a solicitação <b>{{ selectedSolicitation.name }}</b> como novo usuário
+        no <span class="main-color"><b>Cyber</b>Chalk?</span>
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="rejected()">Rejeitar</button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
       </div>
     </div>
   </div>

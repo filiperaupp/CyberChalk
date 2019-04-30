@@ -23,12 +23,14 @@
         Main Navigation
       </div>
       <ul class="list-style-none">
-        <li  routerLinkActive="category-active" [routerLinkActiveOptions]="{exact: true}">
-          <a class="category accordion">Solicitações</a>
+        <li  routerLinkActive="category-active" [routerLinkActiveOptions]="{exact: false}">
+          <a class="category accordion">
+            <i class="fas fa-user-shield mr-1"></i>
+            Admin</a>
           <div class="panel">
             <ul class="list-style-none">
               <li class="sub-category">
-                <a routerLink="solicitation/user" routerLinkActive="sub-category-active">
+                <a routerLink="admin/user" routerLinkActive="sub-category-active">
                   <i class="far fa-circle"></i><span class="ml-2">Usuários</span>
                 </a>
               </li>

@@ -1,0 +1,127 @@
+<ng-template #load>
+  <loader *ngIf="loading"></loader>
+</ng-template>
+
+<div class="container-fluid bg-white">
+  <div class="row">
+    <div class="col-12 p-2">
+      <div class="input-group input-group-sm m-1 input-width-300">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar nome..." [(ngModel)]="pipeName">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!loading && !isNull else load" class="table-responsive">
+  <table class="table">
+    <thead class="bg-white">
+      <tr>
+        <th scope="col">CGU</th>
+        <th scope="col">Nome</th>
+        <th scope="col">E-mail</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Ação</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <tr *ngFor="let i = index; let user of users | filterName: pipeName">
+        <th scope="row">{{ user.cgu }}</th>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td [ngSwitch]="user.type">
+          <span *ngSwitchCase="'adm'">Admin</span>
+          <span *ngSwitchCase="'student'">Aluno</span>
+          <span *ngSwitchCase="'invited'">Convidado</span>
+          <span *ngSwitchDefault>Não especificado</span>
+        </td>
+        <td>
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#updateType" (click)="getCLickedUser(user)">
+              Alterar tipo
+            </button>
+            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal" (click)="getCLickedUser(user)">
+              Excluir
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div *ngIf="isNull" class="alert alert-success mx-4 mt-4">
+  <h4 class="alert-heading text-center">
+    Nenhuma solicitação pendente!
+  </h4>
+</div>
+
+<!-- Delete User-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Excluir usuário</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButton class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Deseja realmente excluir o usuário <b *ngIf="selectedUser">{{ selectedUser.name }}</b> do <span class="main-color"><b>Cyber</b>Chalk?</span>
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="delete(selectedUser.id)">Excluir</button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update User Type-->
+<div class="modal fade" id="updateType" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Atualizar usuário</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonUpd class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Alterar o tipo de usuário de <b *ngIf="selectedUser">{{ selectedUser.name }}</b> para:
+
+        <select class="form-control minw-130 mt-1" name="type" id="type" #inputSelect>
+          <option disabled selected hidden>Selecione o tipo</option>
+          <option value="adm">Administrador</option>
+          <option value="student">Aluno</option>
+          <option value="invited">Convidado</option>
+        </select>
+        <div *ngIf="typeError">
+          <p class="text-danger">Tipo inválido.</p>
+        </div>
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" (click)="changeUser(selectedUser.id)">Atualizar</button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

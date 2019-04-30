@@ -1,7 +1,7 @@
 import { routing } from './app.routing';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -10,9 +10,13 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 import { ErrorInterceptor } from './helpers/error.interceptor';
 import { HomeComponent } from './home/home.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { UserSolicitationComponent } from './user-solicitation/user-solicitation.component';
+import { UserSolicitationComponent } from './admin/user/user-solicitation/user-solicitation.component';
 import { SolicitationFormComponent } from './solicitation-form/solicitation-form.component';
 import { LoaderComponent } from './common/loader/loader.component';
+import { UserComponent } from './admin/user/user.component';
+import { AllUsersComponent } from './admin/user/all-users/all-users.component';
+import { AllSolicitationsComponent } from './admin/user/all-solicitations/all-solicitations.component';
+import { FilterNamePipe } from './pipes/filter-name.pipe';
 
 @NgModule({
   declarations: [
@@ -22,13 +26,18 @@ import { LoaderComponent } from './common/loader/loader.component';
     DashboardComponent,
     UserSolicitationComponent,
     SolicitationFormComponent,
-    LoaderComponent
+    LoaderComponent,
+    UserComponent,
+    AllUsersComponent,
+    AllSolicitationsComponent,
+    FilterNamePipe
   ],
   imports: [
     routing,
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

@@ -18,4 +18,12 @@ export class UserService {
   getBydId(id:number){
     return this.http.get<User>('http://localhost:8000/api/users/' + id)
   }
+
+  delete(id){
+    return this.http.delete('http://localhost:8000/api/users/' + id)
+  }
+
+  updateType(form, id){
+    return this.http.post('http://localhost:8000/api/users/' + id, form)
+  }
 }

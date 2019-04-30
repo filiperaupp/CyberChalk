@@ -1,0 +1,45 @@
+<ng-template #load>
+  <loader *ngIf="loading"></loader>
+</ng-template>
+
+<div class="container-fluid bg-white">
+  <div class="row">
+    <div class="col-12 p-2">
+      <div class="input-group input-group-sm m-1 input-width-300">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+        <input type="text" class="form-control" aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar nome..." [(ngModel)]="pipeName">
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!loading && !isNull else load" class="table-responsive">
+  <table class="table table-sm">
+    <thead class="bg-white">
+      <tr>
+        <th scope="col">CGU</th>
+        <th scope="col">Nome</th>
+        <th scope="col">E-mail</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <tr *ngFor="let s of solicitations | filterName: pipeName"
+        >
+        <th scope="row">{{ s.cgu }}</th>
+        <td>{{ s.name }}</td>
+        <td>{{ s.email }}</td>
+        <td [ngSwitch]="s.status"
+        [ngClass]="{'text-success': s.status == 'accepted', 'text-danger': s.status == 'rejected', 'text-warning': s.status == 'pending'}">
+          <span *ngSwitchCase="'pending'">Pendente</span>
+          <span *ngSwitchCase="'rejected'">Rejeitada</span>
+          <span *ngSwitchCase="'accepted'">Aceita</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

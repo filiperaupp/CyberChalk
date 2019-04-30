@@ -3,13 +3,13 @@
   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content no-border">
       <div class="modal-header bg-dark">
-        <h5 class="modal-title text-light" id="exampleModalLabel">Login</h5> 
-        <button (click)="logout()">Logout</button><button (click)="fecha()">close</button>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <h5 class="modal-title text-light" id="exampleModalLabel">Login</h5>
+        <button (click)="logout()">Logout</button>
+        <button #closeButton type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span class="text-light" aria-hidden="true">X</span>
         </button>
       </div>
-      <form #f=ngForm method="POST">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit(f)" method="POST">
         <div class="modal-body bg-light">
           <div class="w-100">
             <h5 class="cyberchalk text-center">
@@ -18,29 +18,49 @@
           </div>
           <div class="form-group">
             <label for="email">E-mail</label>
-            <input class="form-control" type="text" name="email" id="email" ngModel><br>
+            <input class="form-control" type="text" name="email" formControlName="email">
+            <div
+              *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)"
+              class="text-danger">
+              <div *ngIf="loginForm.controls['email'].errors.required">
+                E-mail is required.
+              </div>
+              <div *ngIf="loginForm.controls['email'].errors.email">
+                E-mail invalid.
+              </div>
+            </div>
             <label for="password">Senha</label>
-            <input class="form-control" type="password" name="password" id="password" ngModel><br>
+            <input class="form-control" type="password" name="password" formControlName="password">
+            <div
+              *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].touched)"
+              class="text-danger">
+              <div *ngIf="loginForm.controls['password'].errors.required">
+                Password is required.
+              </div>
+              <div *ngIf="loginForm.controls['password'].errors.minlength">
+                Password must contain at least 6 characters.
+              </div>
+            </div>
+          </div>
+          <div *ngIf="unauthorized" class="alert alert-danger">
+            Usuário ou senha incorreto.
           </div>
         </div>
-        <div class="modal-footer bg-light">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
-          <button type="submit" class="btn btn-success" (click)="send(f)" data-dismiss="modal">Logar</button>
+        <div *ngIf="!loading" class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-arrow-left"></i> Voltar
+          </button>
+          <button type="submit" class="btn btn-success"
+            [disabled]="loginForm.pristine || loginForm.invalid">
+            <i class="fas fa-sign-in-alt"></i> Logar
+          </button>
+        </div>
+        <div *ngIf="loading" class="modal-footer bg-light">
+          <div class="w-100">
+            <loader></loader>
+          </div>
         </div>
       </form>
     </div>
   </div>
 </div>
-
-  <!-->form #f=ngForm (ngSubmit)="send(f)" method="POST">
-    Email<br>
-    <input type="text" name="email" id="email" ngModel><br>
-    Senha<br>
-    <input type="password" name="password" id="password" ngModel><br>
-    <button type="submit">Logar</button>
-  </form>
-  <button (click)="logout()">Logout</button> 
-  
-  <br><br>
-  
-  <button-- (click)="pegaProdutos()">Pega!</button-->

@@ -3,20 +3,23 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
-import { UserSolicitationComponent } from './user-solicitation/user-solicitation.component';
-import { SolicitationFormComponent } from './solicitation-form/solicitation-form.component';
+import { UserSolicitationComponent } from './admin/user/user-solicitation/user-solicitation.component';
+import { Role } from './models/role';
+import { UserComponent } from './admin/user/user.component';
+import { AllUsersComponent } from './admin/user/all-users/all-users.component';
+import { AllSolicitationsComponent } from './admin/user/all-solicitations/all-solicitations.component';
 
 const APP_ROUTES: Routes = [
-    { path: '', component: HomeComponent, children:[
-        { path:'login', component:LoginComponent},
-        { path:'solicitation', component:SolicitationFormComponent},
-    ]},
-    { path: 'board', component: DashboardComponent },
-    { path: 'dashboard', component: DashboardComponent, children:[
-        { path: 'solicitation', children: [
-            { path:'user', component: UserSolicitationComponent }
+    { path: '', component: HomeComponent},
+    { path: 'dashboard', component: DashboardComponent, canActivateChild:[AuthGuard], children:[
+        { path: 'admin', data: { roles: [Role.Admin] },  children: [
+            { path:'user', component: UserComponent, children: [
+                { path:'solicitations', component: UserSolicitationComponent },
+                { path:'solicitations-all', component: AllSolicitationsComponent },
+                { path:'all', component: AllUsersComponent },
+                { path: '', redirectTo: 'solicitations', pathMatch:'full' }
+            ]},
         ]},
         { path: '', redirectTo:'login' ,pathMatch:'full'}
     ] },

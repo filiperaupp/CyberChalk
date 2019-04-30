@@ -1,13 +1,14 @@
-<div class="modal fade" id="solicitationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="solicitationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" (blur)="eventClose()"
+  aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content no-border">
       <div class="modal-header bg-dark">
         <h5 class="modal-title text-light" id="exampleModalLabel">Solicitar cadastro</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button #closeButton type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="triggerFalseClick()">
           <span class="text-light" aria-hidden="true">X</span>
         </button>
       </div>
-      <form #f=ngForm (ngSubmit)="onSubmit(f)" method="POST">
+      <form [formGroup]="solicitationForm" (ngSubmit)="onSubmit(f)" method="POST">
         <div class="modal-body bg-light">
           <div class="w-100">
             <h5 class="cyberchalk text-center">
@@ -16,21 +17,66 @@
           </div>
           <div class="form-group">
             <label for="name">Nome</label>
-            <input class="form-control" type="text" name="name" id="name" ngModel><br>
+            <input class="form-control" type="text" name="name" formControlName="name">
+            <div
+              *ngIf="solicitationForm.controls['name'].invalid && (solicitationForm.controls['name'].dirty || solicitationForm.controls['name'].touched)"
+              class="text-danger">
+              <div *ngIf="solicitationForm.controls['name'].errors.required">
+                Name is required.
+              </div>
+            </div>
             <label for="cgu">CGU</label>
-            <input class="form-control" type="text" name="cgu" id="cgu" ngModel><br>
+            <input class="form-control" type="text" name="cgu" formControlName="cgu" maxlength="9">
+            <div
+              *ngIf="solicitationForm.controls['cgu'].invalid && (solicitationForm.controls['cgu'].dirty || solicitationForm.controls['cgu'].touched)"
+              class="text-danger">
+              <div *ngIf="solicitationForm.controls['cgu'].errors.required">
+                CGU is required.
+              </div>
+            </div>
             <label for="email">E-mail</label>
-            <input class="form-control" type="text" name="email" id="email" ngModel><br>
+            <input class="form-control" type="text" name="email" formControlName="email">
+            <div
+              *ngIf="solicitationForm.controls['email'].invalid && (solicitationForm.controls['email'].dirty || solicitationForm.controls['email'].touched)"
+              class="text-danger">
+              <div *ngIf="solicitationForm.controls['email'].errors.required">
+                E-mail is required.
+              </div>
+              <div *ngIf="solicitationForm.controls['email'].errors.email">
+                E-mail invalid.
+              </div>
+            </div>
             <label for="password">Senha</label>
-            <input class="form-control" type="password" name="password" id="password" ngModel><br>
+            <input class="form-control" type="password" name="password" formControlName="password">
+            <div
+              *ngIf="solicitationForm.controls['password'].invalid && (solicitationForm.controls['password'].touched)"
+              class="text-danger">
+              <div *ngIf="solicitationForm.controls['password'].errors.required">
+                Password is required.
+              </div>
+              <div *ngIf="solicitationForm.controls['password'].errors.minlength">
+                Password must contain at least 6 characters.
+              </div>
+            </div>
           </div>
         </div>
-        <div class="modal-footer bg-light">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
-          <button type="submit" class="btn btn-success">
-            <i class="fas fa-paper-plane"></i>
-            Enviar
+        <div *ngIf="!loading && !success" class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-arrow-left"></i> Voltar
           </button>
+          <button type="submit" class="btn btn-success"
+            [disabled]="solicitationForm.pristine || solicitationForm.invalid">
+            <i class="fas fa-paper-plane"></i> Enviar
+          </button>
+        </div>
+        <div *ngIf="loading" class="modal-footer bg-light">
+          <div class="w-100">
+            <loader></loader>
+          </div>
+        </div>
+        <div *ngIf="!loading && success" class="alert alert-success m-3">
+          <h5 class="alert-heading">Solicitação enviada.</h5>
+          <p>Aguarde a aprovação do seu cadastro.</p>
         </div>
       </form>
     </div>

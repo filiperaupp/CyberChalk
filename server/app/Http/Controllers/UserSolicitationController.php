@@ -18,6 +18,11 @@ class UserSolicitationController extends Controller
         return json_encode($solicitations);
     }
 
+    public function getAll(){
+        $solicitations = UserSolicitation::all();
+        return json_encode($solicitations);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -40,7 +45,7 @@ class UserSolicitationController extends Controller
         $newSolicitation->name = $request->name;
         $newSolicitation->email = $request->email;
         $newSolicitation->cgu = $request->cgu;
-        $newSolicitation->password = $request->password;
+        $newSolicitation->password = bcrypt($request->password);
         $newSolicitation->status = 'pending';
         $newSolicitation->save();
 
@@ -80,13 +85,25 @@ class UserSolicitationController extends Controller
      */
     public function updateStatus(Request $request, $id)
     {
+        $request->validate([
+            'idSolicitation' => 'required',
+            'status' => 'required|string'
+        ]);
+
         $solicitation = UserSolicitation::find($id);
 
         if ($solicitation) {
-            $solicitation -> status = 'accepted';
-            $solicitation->save();
+            if ($request->status == "accepted") 
+                $solicitation -> status = 'accepted';
+            else if ($request->status == "rejected")
+                $solicitation -> status = 'rejected';
+            else 
+                return response()->json([
+                    'res' => "Invalid status."
+                ], 400);
         }
-
+        $solicitation->save();
+        return response()->json([], 200);
         
     }
 

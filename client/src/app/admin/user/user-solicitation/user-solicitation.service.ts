@@ -8,8 +8,12 @@ export class UserSolicitationService {
 
   constructor(private http: HttpClient) { }
 
+  getPending(){
+    return this.http.get('http://localhost:8000/api/user-solicitations/pending')
+  }
+
   getAll(){
-    return this.http.get('http://localhost:8000/api/user-solicitations')
+    return this.http.get('http://localhost:8000/api/user-solicitations/')
   }
 
   post(userSolicitation){

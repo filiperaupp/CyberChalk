@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::prefix('auth')->group(function() {
     Route::post('registro', 'AuthController@register');
     Route::post('login', 'AuthController@login');
@@ -32,4 +33,9 @@ Route::get('produtos', 'TestController@index')
 
 Route::post('user-solicitation', 'UserSolicitationController@store');
 Route::post('user-solicitation/{id}', 'UserSolicitationController@updateStatus');
-Route::get('user-solicitations', 'UserSolicitationController@index');
+Route::get('user-solicitations/pending', 'UserSolicitationController@index');
+Route::get('user-solicitations', 'UserSolicitationController@getAll');
+
+Route::get('users', 'UserController@index');
+Route::delete('users/{id}', 'UserController@destroy');
+Route::post('users/{id}', 'UserController@updateType');
