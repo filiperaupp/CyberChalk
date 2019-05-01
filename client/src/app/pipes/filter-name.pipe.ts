@@ -6,10 +6,9 @@ import { UserSolicitation } from '../models/userSolicitation';
 })
 export class FilterNamePipe implements PipeTransform {
 
-  transform(items: UserSolicitation[], procuraTexto: string): UserSolicitation[] {
+  transform(items: any, procuraTexto: string): any {
     if (!items) return[];
     if (!procuraTexto) return items;
-    console.log(items );
     procuraTexto = procuraTexto.toLowerCase();
 
     return items.filter( it => {

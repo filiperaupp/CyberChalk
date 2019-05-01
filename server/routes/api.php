@@ -39,3 +39,7 @@ Route::get('user-solicitations', 'UserSolicitationController@getAll');
 Route::get('users', 'UserController@index');
 Route::delete('users/{id}', 'UserController@destroy');
 Route::post('users/{id}', 'UserController@updateType');
+
+Route::get('categories', 'CategoryController@index');
+Route::post('categories', 'CategoryController@store');
+Route::delete('categories/{id}', 'CategoryController@destroy');

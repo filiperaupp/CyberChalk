@@ -26,18 +26,20 @@
         <li  routerLinkActive="category-active" [routerLinkActiveOptions]="{exact: false}">
           <a class="category accordion">
             <i class="fas fa-user-shield mr-1"></i>
-            Admin</a>
+            Admin
+          </a>
           <div class="panel">
             <ul class="list-style-none">
               <li class="sub-category">
                 <a routerLink="admin/user" routerLinkActive="sub-category-active">
-                  <i class="far fa-circle"></i><span class="ml-2">Usuários</span>
+                  <i class="far fa-circle"></i>
+                  <span class="ml-2">Usuários</span>
                 </a>
               </li>
               <li class="sub-category">
-                <a routerLink="solicitation/category-and-subcategory" routerLinkActive="sub-category-active">
+                <a routerLink="admin/category" routerLinkActive="sub-category-active">
                   <i class="far fa-circle"></i>
-                  <span class="ml-2">Categorias / Subcategorias</span>
+                  <span class="ml-2">Categorias</span>
                 </a>
               </li>
               <li class="sub-category">
@@ -46,6 +48,26 @@
                   <span class="ml-2">Conteúdos / Cursos</span>
                 </a>
               </li>
+            </ul>
+          </div>
+        </li>
+        <li  routerLinkActive="category-active" [routerLinkActiveOptions]="{exact: false}">
+          <a class="category accordion">
+            <i class="fas fa-book mr-1"></i>
+            Manual STADS
+          </a>
+          <div class="panel">
+            <ul class="list-style-none">
+            </ul>
+          </div>
+        </li>
+        <li  routerLinkActive="category-active" [routerLinkActiveOptions]="{exact: false}">
+          <a class="category accordion">
+            <i class="fas fa-code mr-1"></i>
+            Tech & Dev
+          </a>
+          <div class="panel">
+            <ul class="list-style-none">
             </ul>
           </div>
         </li>

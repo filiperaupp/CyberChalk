@@ -26,7 +26,7 @@ export class SolicitationFormComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmit(form) {
+  onSubmit() {
     this.loading = true
     let newSolicitation = this.solicitationForm.value
     this._userSolicitationService.post(newSolicitation)

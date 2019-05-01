@@ -1,0 +1,137 @@
+<ng-template #load>
+  <loader *ngIf="loading"></loader>
+</ng-template>
+
+<div class="container-fluid bg-white">
+  <div class="row mt-3">
+    <div class="col-12 p-0">
+      <button class="btn btn-success btn-sm float-left m-2" data-toggle="modal" data-target="#addModal">
+        <i class="fas fa-plus"></i>
+        Adicionar Categoria
+      </button>
+      <div class="input-group input-group-sm m-2 input-width-300">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+        <input type="text" id="search" class="form-control" aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria..." [(ngModel)]="pipeName">
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!loading && !isNull else load" class="table-responsive">
+  <table class="table">
+    <thead class="bg-white">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Sessão</th>
+        <th scope="col">Ação</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <tr *ngFor="let category of categories | filterName: pipeName">
+        <th scope="row">{{ category.id }}</th>
+        <td>{{ category.name }}</td>
+        <td [ngSwitch]="category.session">
+          <div *ngSwitchCase="1">
+            <span>Manual STADS</span>
+          </div>
+          <div *ngSwitchCase="2">
+            <span>Tech & Dev</span>
+          </div>
+          <div *ngSwitchDefault>Não especificado</div>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delModal" (click)="getClickedCategory(category)">
+            Excluir
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<!-- Modal Add-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content no-border">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Adicionar categoria</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonAdd class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <form [formGroup]="newCategoryForm" (ngSubmit)="onSubmit()" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Nome da categoria</label>
+            <input class="form-control" type="text" name="name" formControlName="name">
+            <div class="text-danger"
+              *ngIf="newCategoryForm.controls['name'].invalid && (newCategoryForm.controls['name'].dirty || newCategoryForm.controls['name'].touched)"
+              class="text-danger">
+              <div *ngIf="newCategoryForm.controls['name'].errors.required">
+                Nome é obrigatório.
+              </div>
+            </div>
+            <label for="session">Sessão</label>
+            <select class="form-control" name="session" id="session" formControlName="session">
+              <option selected hidden disabled>Escolher sessão</option>
+              <option value="1">Manual STADS</option>
+              <option value="2">Tech & Dev</option>
+            </select>
+            <div class="text-danger"
+              *ngIf="newCategoryForm.controls['session'].invalid && (newCategoryForm.controls['session'].dirty || newCategoryForm.controls['session'].touched)"
+              class="text-danger">
+              <div *ngIf="newCategoryForm.controls['session'].errors.required">
+                Sessão é obrigatório.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!loadingAction" class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success"
+            [disabled]="newCategoryForm.pristine || newCategoryForm.invalid">Adicionar</button>
+        </div>
+      </form>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Remove-->
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Rejeitar solicitação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonDel class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div *ngIf="selectedCategory" class="modal-body">
+        Deseja realmente excluir a categoria <b>{{ selectedCategory.name }}</b>?
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="delete(selectedCategory.id)">Excluir</button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

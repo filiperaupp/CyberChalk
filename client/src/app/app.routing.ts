@@ -9,6 +9,7 @@ import { Role } from './models/role';
 import { UserComponent } from './admin/user/user.component';
 import { AllUsersComponent } from './admin/user/all-users/all-users.component';
 import { AllSolicitationsComponent } from './admin/user/all-solicitations/all-solicitations.component';
+import { CategoryComponent } from './admin/category/category.component';
 
 const APP_ROUTES: Routes = [
     { path: '', component: HomeComponent},
@@ -20,6 +21,7 @@ const APP_ROUTES: Routes = [
                 { path:'all', component: AllUsersComponent },
                 { path: '', redirectTo: 'solicitations', pathMatch:'full' }
             ]},
+            { path:'category', component: CategoryComponent}
         ]},
         { path: '', redirectTo:'login' ,pathMatch:'full'}
     ] },

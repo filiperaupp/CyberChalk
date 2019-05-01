@@ -17,6 +17,7 @@ import { UserComponent } from './admin/user/user.component';
 import { AllUsersComponent } from './admin/user/all-users/all-users.component';
 import { AllSolicitationsComponent } from './admin/user/all-solicitations/all-solicitations.component';
 import { FilterNamePipe } from './pipes/filter-name.pipe';
+import { CategoryComponent } from './admin/category/category.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { FilterNamePipe } from './pipes/filter-name.pipe';
     UserComponent,
     AllUsersComponent,
     AllSolicitationsComponent,
-    FilterNamePipe
+    FilterNamePipe,
+    CategoryComponent
   ],
   imports: [
     routing,
