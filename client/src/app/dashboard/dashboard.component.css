@@ -113,6 +113,10 @@
     padding: 5px 5px 5px 15px;
 }
 
+.sub-category a:hover{
+    color: #fff;
+}
+
 .sub-category a{
     color: #8aa4af;
 }

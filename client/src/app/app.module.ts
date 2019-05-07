@@ -17,7 +17,10 @@ import { UserComponent } from './admin/user/user.component';
 import { AllUsersComponent } from './admin/user/all-users/all-users.component';
 import { AllSolicitationsComponent } from './admin/user/all-solicitations/all-solicitations.component';
 import { FilterNamePipe } from './pipes/filter-name.pipe';
-import { CategoryComponent } from './admin/category/category.component';
+import { CategoryComponent } from './admin/category-theme-control/category/category.component';
+import { CategoryContentComponent } from './category-content/category-content.component';
+import { CategoryThemeControlComponent } from './admin/category-theme-control/category-theme-control.component';
+import { ThemeComponent } from './admin/category-theme-control/theme/theme.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,10 @@ import { CategoryComponent } from './admin/category/category.component';
     AllUsersComponent,
     AllSolicitationsComponent,
     FilterNamePipe,
-    CategoryComponent
+    CategoryComponent,
+    CategoryContentComponent,
+    CategoryThemeControlComponent,
+    ThemeComponent
   ],
   imports: [
     routing,

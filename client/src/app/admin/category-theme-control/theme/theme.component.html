@@ -1,0 +1,188 @@
+<ng-template #load>
+  <loader *ngIf="loading"></loader>
+</ng-template>
+
+<div class="container-fluid bg-white">
+  <div class="row">
+    <div class="col-12 p-0">
+      <button class="btn btn-success btn-sm float-left m-2" data-toggle="modal" data-target="#addModal" (click)="newThemeForm.reset()">
+        <i class="fas fa-plus"></i>
+        Adicionar Thema
+      </button>
+      <div class="input-group input-group-sm m-2 input-width-300">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+        <input type="text" id="search" class="form-control" aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria..." [(ngModel)]="pipeName">
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!loading && !isNull else load" class="table-responsive">
+  <table class="table">
+    <thead class="bg-white">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Categoria</th>
+        <th scope="col">Ação</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <tr *ngFor="let theme of themes | filterName: pipeName">
+        <th scope="row">{{ theme.id }}</th>
+        <td>{{ theme.name }}</td>
+        <td>
+          {{ findCategoryName(theme.category_id) }}
+        </td>
+        <td>
+          <div class="btn-group btn-group-toggle">
+            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#updModal" (click)="toUpdate(theme)">
+              <i class="fas fa-pen mr-1"></i>
+              Editar
+            </button>
+            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delModal" (click)="getSelectedTheme(theme)">
+              <i class="fas fa-trash mr-1"></i>
+              Excluir
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<!-- Modal Add-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content no-border">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Adicionar tema</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonAdd class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <form [formGroup]="newThemeForm" (ngSubmit)="onSubmit()" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="category_id">Categoria</label>
+            <select class="form-control mb-1" name="category_id" id="category_id" formControlName="category_id">
+              <option selected hidden disabled>Escolher categoria</option>
+              <option *ngFor="let category of categories" value="{{category.id}}">{{ category.name }}</option>
+            </select>
+            <div class="text-danger"
+              *ngIf="newThemeForm.controls['category_id'].invalid && (newThemeForm.controls['category_id'].dirty || newThemeForm.controls['category_id'].touched)"
+              class="text-danger">
+              <div *ngIf="newThemeForm.controls['category_id'].errors.required">
+                Categoria é obrigatório.
+              </div>
+            </div>
+            <label for="name">Nome do tema</label>
+            <input class="form-control" type="text" name="name" formControlName="name">
+            <div class="text-danger"
+              *ngIf="newThemeForm.controls['name'].invalid && (newThemeForm.controls['name'].dirty || newThemeForm.controls['name'].touched)"
+              class="text-danger">
+              <div *ngIf="newThemeForm.controls['name'].errors.required">
+                Nome é obrigatório.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!loadingAction" class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success"
+            [disabled]="newThemeForm.pristine || newThemeForm.invalid">Adicionar</button>
+        </div>
+      </form>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Remove-->
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Excluir tema</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonDel class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div *ngIf="selectedTheme" class="modal-body">
+        Deseja realmente excluir o tema <b>{{ selectedTheme.name }}</b>?
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="delete(selectedTheme.id)">Excluir</button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Update-->
+<div class="modal fade" id="updModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content no-border">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Editar tema</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonUpd class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <form [formGroup]="newThemeForm" (ngSubmit)="onUpdate()" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="category_id">Categoria</label>
+            <select class="form-control mb-1" name="category_id" id="category_id" formControlName="category_id">
+              <option *ngFor="let category of categories" value="{{category.id}}">{{ category.name }}</option>
+            </select>
+            <div class="text-danger"
+              *ngIf="newThemeForm.controls['category_id'].invalid && (newThemeForm.controls['category_id'].dirty || newThemeForm.controls['category_id'].touched)"
+              class="text-danger">
+              <div *ngIf="newThemeForm.controls['category_id'].errors.required">
+                Categoria é obrigatório.
+              </div>
+            </div>
+            <label for="name">Nome do tema</label>
+            <input class="form-control" type="text" name="name" formControlName="name">
+            <div class="text-danger"
+              *ngIf="newThemeForm.controls['name'].invalid && (newThemeForm.controls['name'].dirty || newThemeForm.controls['name'].touched)"
+              class="text-danger">
+              <div *ngIf="newThemeForm.controls['name'].errors.required">
+                Nome é obrigatório.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!loadingAction" class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success"
+            [disabled]="newThemeForm.pristine || newThemeForm.invalid">Concluir</button>
+        </div>
+      </form>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

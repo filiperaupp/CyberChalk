@@ -1,4 +1,6 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { CategoryService } from '../admin/category-theme-control/category/category.service';
+import { Category } from '../models/category';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,17 +11,29 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild('navTitle') navTitle: ElementRef
 
+  private categories: Category[]
   private toggled = true;
   private title1 = "Cyber";
   private title2 = "Chalk"
 
-  constructor() { }
+  constructor(private _categoryService: CategoryService) { }
 
   ngOnInit() {
     this.setAccordion()
+    this.getAllCategories()
   }
 
-
+  getAllCategories(){
+    this._categoryService.getAll()
+      .subscribe(
+        (data:Category[]) => {
+          this.categories = data
+        },
+        error => {
+          console.log(error)
+        }
+      )
+  }
 
 
   //page move

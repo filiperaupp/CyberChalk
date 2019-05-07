@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Category;
+use App\Theme;
 
-class CategoryController extends Controller
+class ThemeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        return json_encode($categories);
+        $themes = Theme::all();
+        return json_encode($themes);
     }
 
     /**
@@ -36,10 +36,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $newCategory = new Category();
-        $newCategory->name = $request->name;
-        $newCategory->session = $request->session;
-        $newCategory->save();
+        $newTheme = new Theme();
+        $newTheme->name = $request->name;
+        $newTheme->category_id = $request->category_id;
+
+        $newTheme->save();
         return response()->json([
             'res' => 'ok'
         ], 200);
@@ -76,18 +77,19 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $category = Category::find($id);
-        if (isset($category)) {
-            $category->session = $request->session;
-            $category->name = $request->name;
-            $category->save();
+        $theme = Theme::find($id);
+        if (isset($theme)) {
+            $theme->category_id = $request->category_id;
+            $theme->name = $request->name;
+            $theme->save();
             return response()->json([
                 'res' => 'ok'
             ], 200);
         }
-        return response('Not found', 404);
+        return response()->json([
+            'error' => 'not found'
+        ], 404);
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -96,13 +98,15 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::find($id);
-        if (isset($category)) {
-            $category->delete();
+        $theme = Theme::find($id);
+        if (isset($theme)) {
+            $theme->delete();
             return response()->json([
                 'res' => 'ok'
             ], 200);
         }
-        return response('Not found', 404);
+        return response()->json([
+            'error' => 'not found'
+        ], 404);
     }
 }

@@ -1,0 +1,24 @@
+.container-fluid{
+    width: 96%;
+}
+.a-link, .a-link a {
+    color: #999;
+    text-decoration: none;
+}
+
+.a-link:hover {
+    color: #333;
+    background-color: #fff;
+}
+
+.a-link:hover a {
+    color: #333;
+}
+
+
+
+.active{
+    color: #333;
+    background-color: #fff;
+    border-bottom: 5px solid #367FA9;
+}

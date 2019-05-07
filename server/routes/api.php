@@ -43,3 +43,9 @@ Route::post('users/{id}', 'UserController@updateType');
 Route::get('categories', 'CategoryController@index');
 Route::post('categories', 'CategoryController@store');
 Route::delete('categories/{id}', 'CategoryController@destroy');
+Route::put('categories/{id}', 'CategoryController@update');
+
+Route::get('themes', 'ThemeController@index');
+Route::post('themes', 'ThemeController@store');
+Route::delete('themes/{id}', 'ThemeController@destroy');
+Route::put('themes/{id}', 'ThemeController@update');

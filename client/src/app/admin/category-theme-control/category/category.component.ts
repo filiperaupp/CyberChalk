@@ -12,6 +12,7 @@ import { CategoryService } from './category.service';
 export class CategoryComponent implements OnInit {
   @ViewChild('closeButtonAdd') closeButtonAdd: ElementRef;
   @ViewChild('closeButtonDel') closeButtonDel: ElementRef;
+  @ViewChild('closeButtonUpd') closeButtonUpd: ElementRef;
 
   private categories: Category[]
   private loading: boolean = true;
@@ -87,10 +88,35 @@ export class CategoryComponent implements OnInit {
       )
   }
 
+  toUpdate(category){
+    this.selectedCategory = category
+    this.newCategoryForm.controls['session'].setValue(this.selectedCategory.session)
+    this.newCategoryForm.controls['name'].setValue(this.selectedCategory.name)
+  }
+
+  onUpdate(){
+    this.loadingAction = true
+    let updatedCategory = this.newCategoryForm.value
+    this._categoryService.update(this.selectedCategory.id, updatedCategory)
+      .subscribe(
+        res => {
+          console.log(res)
+          this.loadingAction = false
+          this.triggerFalseClick('upd')
+          this.getAll()
+        },
+        error => {
+          console.log(error)
+        }
+      )
+  }
+
   triggerFalseClick(action) {
     let el: HTMLElement
     if (action == 'add')
-      el = this.closeButtonAdd.nativeElement as HTMLElement;
+      el = this.closeButtonAdd.nativeElement as HTMLElement
+    else if (action =='upd')
+      el = this.closeButtonUpd.nativeElement as HTMLElement
     else
       el = this.closeButtonDel.nativeElement as HTMLElement
     el.click();

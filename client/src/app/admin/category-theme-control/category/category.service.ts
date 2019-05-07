@@ -19,4 +19,8 @@ export class CategoryService {
   delete(id){
     return this.http.delete('http://localhost:8000/api/categories/' + id)
   }
+
+  update(id,category){
+    return this.http.put('http://localhost:8000/api/categories/'+id, category)
+  }
 }
