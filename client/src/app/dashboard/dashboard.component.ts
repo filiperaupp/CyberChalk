@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { CategoryService } from '../admin/category-theme-control/category/category.service';
 import { Category } from '../models/category';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,12 +16,22 @@ export class DashboardComponent implements OnInit {
   private toggled = true;
   private title1 = "Cyber";
   private title2 = "Chalk"
+  private admin = true
 
-  constructor(private _categoryService: CategoryService) { }
+  constructor(private _authService: AuthService,
+              private _categoryService: CategoryService) { }
 
   ngOnInit() {
-    this.setAccordion()
+    this.verifyAdmin()
     this.getAllCategories()
+  }
+  
+  ngAfterViewInit(){
+    this.setAccordion()
+  }
+  
+  verifyAdmin(){
+    this.admin = this._authService.verifyAdmin()
   }
 
   getAllCategories(){

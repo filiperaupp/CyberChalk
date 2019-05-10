@@ -21,6 +21,7 @@ import { CategoryComponent } from './admin/category-theme-control/category/categ
 import { CategoryContentComponent } from './category-content/category-content.component';
 import { CategoryThemeControlComponent } from './admin/category-theme-control/category-theme-control.component';
 import { ThemeComponent } from './admin/category-theme-control/theme/theme.component';
+import { MyContentsComponent } from './my-contents/my-contents.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ThemeComponent } from './admin/category-theme-control/theme/theme.compo
     CategoryComponent,
     CategoryContentComponent,
     CategoryThemeControlComponent,
-    ThemeComponent
+    ThemeComponent,
+    MyContentsComponent
   ],
   imports: [
     routing,

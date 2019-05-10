@@ -25,6 +25,34 @@
       <ul class="list-style-none">
         <li routerLinkActive="category-active" [routerLinkActiveOptions]="{exact: false}">
           <a class="category accordion">
+            <i class="fas fa-map-signs mr-1"></i>
+            My way
+          </a>
+          <div class="panel">
+            <ul class="list-style-none">
+              <li class="sub-category">
+                <a routerLink="my-way" routerLinkActive="sub-category-active">
+                  <i class="far fa-circle mr-1"></i>
+                  Perfil
+                </a>
+              </li>
+              <li class="sub-category">
+                <a routerLink="my-contents" routerLinkActive="sub-category-active">
+                  <i class="far fa-circle mr-1"></i>
+                  Meus conteúdos
+                </a>
+              </li>
+              <li class="sub-category">
+                <a routerLink="my-way" routerLinkActive="sub-category-active">
+                  <i class="far fa-circle mr-1"></i>
+                  Material em andamento
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+        <li *ngIf="admin" routerLinkActive="category-active" [routerLinkActiveOptions]="{exact: false}">
+          <a class="category accordion">
             <i class="fas fa-user-shield mr-1"></i>
             Admin
           </a>

@@ -40,12 +40,17 @@ Route::get('users', 'UserController@index');
 Route::delete('users/{id}', 'UserController@destroy');
 Route::post('users/{id}', 'UserController@updateType');
 
-Route::get('categories', 'CategoryController@index');
+Route::get('categories', 'CategoryController@index')
+    ->middleware('auth:api');
 Route::post('categories', 'CategoryController@store');
 Route::delete('categories/{id}', 'CategoryController@destroy');
 Route::put('categories/{id}', 'CategoryController@update');
 
-Route::get('themes', 'ThemeController@index');
+Route::get('themes', 'ThemeController@index')
+    ->middleware('auth:api','adminRole');
 Route::post('themes', 'ThemeController@store');
 Route::delete('themes/{id}', 'ThemeController@destroy');
 Route::put('themes/{id}', 'ThemeController@update');
+
+Route::post('teste', 'TestController@file');
+Route::delete('teste', 'TestController@destroy');

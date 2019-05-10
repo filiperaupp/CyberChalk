@@ -22,6 +22,13 @@ export class AuthService {
     return this.currentUserSubject.value
   }
 
+  public verifyAdmin(): boolean {
+    if (this.currentUserSubject.value.type == 'adm')
+      return true
+    else 
+      return false
+  }
+
   public login(login) {
     return this.http.post('http://localhost:8000/api/auth/login', login)
       .pipe(map((user:User)=> {
@@ -33,12 +40,7 @@ export class AuthService {
       }))
   }
 
-  public getProdutos(){
-    return this.http.get("http://localhost:8000/api/produtos")
-  }
-
   public logout() {
-    
     localStorage.removeItem('currentUser')
     this.currentUserSubject.next(null)
   }
