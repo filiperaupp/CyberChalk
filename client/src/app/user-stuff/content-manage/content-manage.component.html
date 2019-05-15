@@ -1,0 +1,159 @@
+<ng-template #load>
+  <loader *ngIf="loading || loadingEdit"></loader>
+</ng-template>
+
+<div class="container-fluid bg-white py-2 mb-3">
+  <div class="row">
+    <div class="col-auto">
+      <button type="button" class="btn btn-outline-dark" routerLink="/dashboard/my-stuff/contents/list">
+        <i class="fas fa-arrow-left"></i>
+        Voltar
+      </button>
+    </div>
+    <div class="col-12 text-center">
+      <h3>Criar conteúdo</h3>
+    </div>
+  </div>
+  <form *ngIf="!loading && !loadingEdit else load" [formGroup]="contentForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="category">Categoria</label>
+      <select class="form-control mb-1" name="category" id="category" formControlName="category"
+        (change)="findThemes()">
+        <option selected hidden disabled>Escolher categoria</option>
+        <option *ngFor="let category of categories" value="{{category.id}}">{{ category.name }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="theme_id">Tema</label>
+      <select class="form-control mb-1" name="theme" id="theme" formControlName="theme"
+        *ngIf="contentForm.controls['category'].valid && !loading && themeByCategory.length > 0;">
+        <option selected hidden disabled>Escolher tema</option>
+        <option *ngFor="let theme of themeByCategory" value="{{theme.id}}">{{ theme.name }}</option>
+      </select>
+      <div *ngIf="contentForm.controls['category'].invalid && !loading" class="alert alert-light" role="alert">
+        <h6 class="alert-heading">Nenhuma categoria selecionada</h6>
+      </div>
+      <div *ngIf="contentForm.controls['category'].valid && !loading && themeByCategory.length == 0" class="alert alert-light" role="alert">
+        <h6 class="alert-heading">Categoria sem temas</h6>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="title">Título</label>
+      <input type="text" class="form-control" id="title" name="title" formControlName="title">
+    </div>
+    <div class="form-group">
+      <label for="video">Vídeo</label>
+      <input type="file" class="form-control-file" id="video" name="video" accept="video/*" formControlName="video"
+        (change)="onChangeVideo($event)">
+    </div>
+    <div class="form-group">
+      <label for="support_files">Arquivos de apoio</label>
+      <input type="file" multiple class="form-control-file" id="support_files" name="support_files"
+        formControlName="support_files" (change)="onChangeFiles($event)">
+    </div>
+    <div class="form-group">
+      <label for="support_text">Texto de apoio</label>
+      <textarea class="form-control" id="support_text" rows="3" formControlName="support_text"></textarea>
+    </div>
+    <div class="row justify-content-end">
+      <div class="col-auto">
+        <button type="submit" class="btn btn-success" [disabled]="contentForm.pristine || contentForm.invalid">
+          <i class="fas fa-save"></i>
+          Salvar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  <div class="row">
+    <div class="col-12">
+      <h4 class="mr-2">Temas do conteúdo</h4>
+      <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#addThemeModal">
+        <i class="fas fa-plus"></i>
+        Adicionar tema
+      </button>
+    </div>
+    <div class="col-12">
+      <div class="mt-2" *ngIf="!seletedThemes?.length == 0">
+        <p *ngFor="let theme of seletedThemes; let i = index;" class="btn btn-sm btn-outline-dark" (click)="remove(i)">
+          {{ theme.name }}
+          <i class="fas fa-minus-square ml-2"></i>
+        </p>
+      </div>
+      <div *ngIf="seletedThemes?.length == 0" class="alert alert-light" role="alert">
+        <h5 class="alert-heading">Nenhum tema selecionado</h5>
+      </div>
+    </div>
+  </div>
+  
+<div class="modal fade" id="addThemeModal" tabindex="-1" role="dialog" aria-labelledby="addThemeModal"
+  aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark">
+        <h5 class="modal-title text-light" id="exampleModalLabel">Adicionar tema</h5>
+        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <form [formGroup]="addThemeForm">
+            <label for="category_id">Categoria</label>
+            <select class="form-control mb-1" name="category_id" id="category_id" formControlName="category_id"
+              (change)="findThemes()">
+              <option selected hidden disabled>Escolher categoria</option>
+              <option *ngFor="let category of categories" value="{{category.id}}">{{ category.name }}</option>
+            </select>
+            <div class="text-danger"
+              *ngIf="addThemeForm.controls['category_id'].invalid && (addThemeForm.controls['category_id'].dirty || addThemeForm.controls['category_id'].touched)"
+              class="text-danger">
+              <div *ngIf="addThemeForm.controls['category_id'].errors.required">
+                Categoria é obrigatório.
+              </div>
+            </div>
+            <label for="theme_id">Nome do tema</label>
+            <select class="form-control mb-1" name="theme_id" id="theme_id" formControlName="theme_id"
+              *ngIf="addThemeForm.controls['category_id'].valid && !loading; else load">
+              <option selected hidden disabled>Escolher tema</option>
+              <option *ngFor="let theme of themes" value="{{theme.id}}">{{ theme.name }}</option>
+            </select>
+            <div class="text-danger"
+              *ngIf="addThemeForm.controls['theme_id'].invalid && (addThemeForm.controls['theme_id'].dirty || addThemeForm.controls['theme_id'].touched)"
+              class="text-danger">
+              <div *ngIf="addThemeForm.controls['theme_id'].errors.required">
+                Tema é obrigatório.
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" [disabled]="addThemeForm.pristine || addThemeForm.invalid"
+          (click)="addTheme()">
+          Adicionar</button>
+      </div>
+    </div>
+  </div>
+</div>
+-->

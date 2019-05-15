@@ -12,6 +12,10 @@ export class ThemeService {
     return this.http.get('http://localhost:8000/api/themes')
   }
 
+  getByCategoryId(id){
+    return this.http.get('http://localhost:8000/api/themes-by-category/'+id)
+  }
+
   post(newTheme){
     return this.http.post('http://localhost:8000/api/themes', newTheme)
   }

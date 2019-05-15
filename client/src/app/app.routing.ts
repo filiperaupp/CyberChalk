@@ -13,7 +13,9 @@ import { CategoryComponent } from './admin/category-theme-control/category/categ
 import { CategoryContentComponent } from './category-content/category-content.component';
 import { CategoryThemeControlComponent } from './admin/category-theme-control/category-theme-control.component';
 import { ThemeComponent } from './admin/category-theme-control/theme/theme.component';
-import { MyContentsComponent } from './my-contents/my-contents.component';
+import { MyContentsComponent } from './user-stuff/my-contents/my-contents.component';
+import { UserStuffComponent } from './user-stuff/user-stuff.component';
+import { ContentManageComponent } from './user-stuff/content-manage/content-manage.component';
 
 const APP_ROUTES: Routes = [
     { path: '', component: HomeComponent},
@@ -31,7 +33,17 @@ const APP_ROUTES: Routes = [
                 { path: '', redirectTo: 'all', pathMatch: 'full' }
             ]}
         ]},
-        { path: 'my-contents', component: MyContentsComponent },
+        { path: 'my-stuff', component: UserStuffComponent, children:[
+            { path: 'contents', children: [
+                { path: 'list', component: MyContentsComponent },
+                { path: 'content-manage', component: ContentManageComponent },
+                { path: 'content-manage/:id', component: ContentManageComponent },
+                { path: '', redirectTo: 'list', pathMatch: 'full' }
+            ] },
+            { path: '', redirectTo: 'contents/list', pathMatch: 'full' }
+            // { path: 'courses', component: MyCoursesComponenet, children:[
+            // ] },
+        ] },
         { path: 'category/:id', component: CategoryContentComponent },
         { path: '', redirectTo:'login' ,pathMatch:'full'}
     ] },

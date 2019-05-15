@@ -1,0 +1,60 @@
+<ng-template #load>
+  <loader *ngIf="loading"></loader>
+</ng-template>
+
+<div class="container-fluid bg-white">
+  <div class="row">
+    <div class="col-12 p-0">
+      <button class="btn btn-success btn-sm float-left m-2" data-toggle="modal" routerLink="../content-manage">
+        <i class="fas fa-plus"></i>
+        Criar conteúdo
+      </button>
+      <div class="input-group input-group-sm m-2 input-width-300">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+        <input type="text" id="search" class="form-control" aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria...">
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="(!loading && !loadingThemes) && !isNull else load" class="table-responsive">
+  <table class="table">
+    <thead class="bg-white">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Título</th>
+        <th scope="col">Tema</th>
+        <th scope="col">Data</th>
+        <th scope="col">Status</th>
+        <th scope="col">Ação</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <tr *ngFor="let content of contentSolicitations">
+        <th scope="row">{{ content.id }}</th>
+        <td>{{ content.title }}</td>
+        <td> {{ getThemeName(content.theme_id) }}</td>
+        <td>{{ content.created_at | date:'dd/MM/yy'}}</td>
+        <td>Status</td>
+        <td>
+          <div class="btn-group btn-group-toggle">
+            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#updModal"
+              routerLink="../content-manage/{{ content.id }}">
+              <i class="fas fa-pen mr-1"></i>
+              Editar
+            </button>
+            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delModal"
+              (click)="getClickedCategory(category)">
+              <i class="fas fa-trash mr-1"></i>
+              Excluir
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

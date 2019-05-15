@@ -21,7 +21,9 @@ import { CategoryComponent } from './admin/category-theme-control/category/categ
 import { CategoryContentComponent } from './category-content/category-content.component';
 import { CategoryThemeControlComponent } from './admin/category-theme-control/category-theme-control.component';
 import { ThemeComponent } from './admin/category-theme-control/theme/theme.component';
-import { MyContentsComponent } from './my-contents/my-contents.component';
+import { MyContentsComponent } from './user-stuff/my-contents/my-contents.component';
+import { UserStuffComponent } from './user-stuff/user-stuff.component';
+import { ContentManageComponent } from './user-stuff/content-manage/content-manage.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { MyContentsComponent } from './my-contents/my-contents.component';
     CategoryContentComponent,
     CategoryThemeControlComponent,
     ThemeComponent,
-    MyContentsComponent
+    MyContentsComponent,
+    UserStuffComponent,
+    ContentManageComponent
   ],
   imports: [
     routing,

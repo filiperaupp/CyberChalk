@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Theme;
+use App\File;
 
-class ThemeController extends Controller
+class FileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,7 @@ class ThemeController extends Controller
      */
     public function index()
     {
-        $themes = Theme::all();
-        return json_encode($themes);
+        //
     }
 
     /**
@@ -23,10 +22,9 @@ class ThemeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function themeByCategory($id)
+    public function create()
     {
-        $themes = Theme::where('category_id',$id)->get();
-        return json_encode($themes);
+        //
     }
 
     /**
@@ -35,16 +33,14 @@ class ThemeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($idContent, $fileName, $filePath)
     {
-        $newTheme = new Theme();
-        $newTheme->name = $request->name;
-        $newTheme->category_id = $request->category_id;
+        $newFile = new File();
+        $newFile->file_name = $fileName;
+        $newFile->path = $filePath;
+        $newFile->content_solicitation_id = $idContent;
 
-        $newTheme->save();
-        return response()->json([
-            'res' => 'ok'
-        ], 200);
+        $newFile->save();
     }
 
     /**
@@ -78,18 +74,7 @@ class ThemeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $theme = Theme::find($id);
-        if (isset($theme)) {
-            $theme->category_id = $request->category_id;
-            $theme->name = $request->name;
-            $theme->save();
-            return response()->json([
-                'res' => 'ok'
-            ], 200);
-        }
-        return response()->json([
-            'error' => 'not found'
-        ], 404);
+        //
     }
     /**
      * Remove the specified resource from storage.
@@ -99,15 +84,6 @@ class ThemeController extends Controller
      */
     public function destroy($id)
     {
-        $theme = Theme::find($id);
-        if (isset($theme)) {
-            $theme->delete();
-            return response()->json([
-                'res' => 'ok'
-            ], 200);
-        }
-        return response()->json([
-            'error' => 'not found'
-        ], 404);
+        //
     }
 }

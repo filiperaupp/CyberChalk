@@ -48,9 +48,16 @@ Route::put('categories/{id}', 'CategoryController@update');
 
 Route::get('themes', 'ThemeController@index')
     ->middleware('auth:api','adminRole');
+Route::get('themes-by-category/{id}', 'ThemeController@themeByCategory');
 Route::post('themes', 'ThemeController@store');
 Route::delete('themes/{id}', 'ThemeController@destroy');
 Route::put('themes/{id}', 'ThemeController@update');
 
+
 Route::post('teste', 'TestController@file');
 Route::delete('teste', 'TestController@destroy');
+
+//content-solicitation
+Route::get('content-solicitations', 'ContentSolicitationController@index');
+Route::get('content-solicitations/{id}', 'ContentSolicitationController@getById');
+Route::post('content-solicitations', 'ContentSolicitationController@store');

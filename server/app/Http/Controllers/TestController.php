@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\Input;
+
 use Log;
 
 class TestController extends Controller
@@ -21,10 +24,23 @@ class TestController extends Controller
 
     public function file(Request $request){
 
-        
-        $this->path = $request->file('photo')->store('profile_photos','public');
-        Log::debug($this->path);
-        Storage::disk('public')->delete($this->path);
+        $files = $request->photos;
+        Log::debug($request->photos);
+
+        try {
+            foreach($files as $file) {
+                $this->path = $file->store('profile_photos','public');
+                Log::debug('oi');
+            }
+        } catch (\Exception $e) {
+            Log::debug('vazio');            
+        }
+
+        // foreach($files as $file) {
+        //     Log::debug('oi');
+        // }
+        //$this->path = $request->file('photo')->store('profile_photos','public');
+        //Log::debug($this->path);
     }
 
     public function destroy(){
