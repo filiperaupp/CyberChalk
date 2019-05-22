@@ -6,7 +6,9 @@
       </a>
     </div>
     <div>
-      <button (click)="toggleMenu()"> Toggle </button>
+      <button class="h-100 menu-botton" (click)="toggleMenu()">
+        <i class="fas fa-bars"></i>
+      </button>
     </div>
   </div>
   <div class="flex-container">
@@ -112,6 +114,22 @@
                   </a>
                 </li>
               </ng-container>
+            </ul>
+          </div>
+        </li>
+        <li routerLinkActive="category-active" [routerLinkActiveOptions]="{exact: false}">
+          <a class="category accordion">
+            <i class="fas fa-microphone mr-1"></i>
+            Fala Tu!
+          </a>
+          <div class="panel">
+            <ul class="list-style-none">
+                <li class="sub-category">
+                  <a routerLinkActive="sub-category-active">
+                    <i class="far fa-circle"></i>
+                    <span class="ml-2">Entrevistas</span>
+                  </a>
+                </li>
             </ul>
           </div>
         </li>

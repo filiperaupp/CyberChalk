@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
@@ -25,11 +25,7 @@ export class ContentManageComponent implements OnInit {
     support_text: ['', Validators.required]
   })
 
-  addThemeForm = this.fb.group({
-    category_id: ['', Validators.required],
-    theme_id: ['', Validators.required],
-  })
-
+  actionText: string
   id: number
   contentEdit: any
   categories: Category[]
@@ -37,25 +33,33 @@ export class ContentManageComponent implements OnInit {
   themeByCategory: Theme[] = []
 
   loading: boolean = true
-  loadingEdit:boolean = true
+  loadingEdit: boolean = true
 
   files: any[] = []
   video: any = null
 
+  filesToDelete: any[] = []
+  videoToDelete: any = null
+
   constructor(private fb: FormBuilder,
     private active: ActivatedRoute,
+    private router: Router,
     private _categoryService: CategoryService,
     private _themeService: ThemeService,
     private _myContentService: MyContentsService) { }
 
   ngOnInit() {
+    this.id = null
+    this.filesToDelete = []
     this.active.params.subscribe(param => {
       if (param['id']) {
         this.id = param['id']
+        this.actionText = "Editar"
         this.getCategories()
         this.getThemes()
         this.getContent(this.id)
       } else {
+        this.actionText = "Criar"
         this.getCategories()
         this.getThemes()
         this.loadingEdit = false
@@ -72,29 +76,48 @@ export class ContentManageComponent implements OnInit {
   }
 
   onSubmit() {
+    let contentSolicitation = new FormData()
+
     let title = this.contentForm.controls['title'].value
     let support_text = this.contentForm.controls['support_text'].value
     let theme_id = this.contentForm.controls['theme'].value
-    let newContent = new FormData()
 
-    newContent.append('title', title)
-    newContent.append('support_text', support_text)
-    newContent.append('video', this.video)
-    newContent.append('theme_id', theme_id)
+    contentSolicitation.append('title', title)
+    contentSolicitation.append('support_text', support_text)
+    contentSolicitation.append('video', this.video)
+    contentSolicitation.append('theme_id', theme_id)
     if (this.files.length > 0) {
       for (let i = 0; i < this.files.length; i++) {
-        newContent.append('support_files[]', this.files[i])
+        contentSolicitation.append('support_files[]', this.files[i])
       }
     }
-    this._myContentService.post(newContent)
-      .subscribe(
-        res => {
-          console.log(res)
-        },
-        error => {
-          console.log(error)
-        }
-      )
+
+    if (this.id) {
+      contentSolicitation.append('id', `${this.id}`)
+      //files to delete
+      if (this.filesToDelete.length > 0) {
+        this.filesToDelete.forEach(file => {
+          contentSolicitation.append('filesToDelete[]', file.id)
+        });
+      }
+      //video to delete
+      if (this.videoToDelete != null) {
+        contentSolicitation.append('videoToDelete', this.videoToDelete)
+      }
+
+      this._myContentService.postTeste(contentSolicitation)
+        .subscribe(
+          res => console.log(res),
+          error => console.log(error)
+        )
+    } else {
+      this._myContentService.post(contentSolicitation)
+        .subscribe(
+          res => console.log(res),
+          error => console.log(error)
+        )
+    }
+
   }
 
   // To create new content
@@ -123,7 +146,7 @@ export class ContentManageComponent implements OnInit {
       )
   }
 
-  findThemes(){
+  findThemes() {
     let category_id = this.contentForm.controls['category'].value
     this.getThemesByCategory(category_id)
   }
@@ -131,15 +154,33 @@ export class ContentManageComponent implements OnInit {
   // --------------------------------
 
   //Edit content 
+
+  downloadVideo(id) {
+    window.location.href = `http://localhost:8000/api/downloadVideo/${id}`
+  }
+
+  downloadFile(id) {
+    window.location.href = `http://localhost:8000/api/downloadFile/${id}`
+  }
+
   getThemesByCategory(id) {
     this.themeByCategory = this.themes.filter(t => t.category_id == id)
+  }
+  
+  deleteVideo(idVideo) {
+    this.contentEdit.video.splice(0,1)
+    this.videoToDelete = idVideo
+  }
+
+  fileDelete(index) {
+    let selectedFile = this.contentEdit.support_files.splice(index, 1)
+    this.filesToDelete.push(selectedFile[0])
   }
 
   getContent(id) {
     this._myContentService.getById(id)
       .subscribe(
         data => {
-          console.log(data)
           this.contentEdit = data
           this.loadingEdit = false
           this.setFormToContentEdit()
@@ -157,6 +198,7 @@ export class ContentManageComponent implements OnInit {
     this.contentForm.controls['category'].setValue(category_id)
     this.getThemesByCategory(category_id)
     this.contentForm.controls['theme'].setValue(theme_id)
+    this.contentForm.controls['support_text'].setValue(this.contentEdit.support_text)
   }
 
 

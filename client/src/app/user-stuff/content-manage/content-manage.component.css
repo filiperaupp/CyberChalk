@@ -2,6 +2,11 @@
     width: 96%;
 }
 
+a{
+    text-decoration: none;
+    color: #313131;
+}
+
 ul{
     padding: 0;
     list-style: none;
@@ -17,4 +22,14 @@ ul{
 
 .no-border{
     border: 0px !important;
+}
+
+.little-card{
+    border: 1px solid #313131;
+    border-radius: 5px;
+    display: inline;
+}
+
+.pointer{
+    cursor: pointer;
 }

@@ -61,3 +61,16 @@ Route::delete('teste', 'TestController@destroy');
 Route::get('content-solicitations', 'ContentSolicitationController@index');
 Route::get('content-solicitations/{id}', 'ContentSolicitationController@getById');
 Route::post('content-solicitations', 'ContentSolicitationController@store');
+Route::post('content-solicitations/teste', 'ContentSolicitationController@update');
+Route::delete('content-solicitations/{id}', 'ContentSolicitationController@destroy');
+
+//download files
+Route::get('/downloadFile/{id}','FileController@download');
+//donwload video
+Route::get('/downloadVideo/{id}', 'VideoController@download');
+
+Route::get('courses', 'CourseController@index');
+Route::post('courses', 'CourseController@store');
+Route::get('courses/{id}', 'CourseController@getById');
+Route::put('courses/{id}', 'CourseController@update');
+Route::delete('courses/{id}', 'CourseController@destroy');

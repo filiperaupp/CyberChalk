@@ -20,4 +20,11 @@ export class MyContentsService {
     return this.http.get('http://localhost:8000/api/content-solicitations/'+id)
   }
   
+  delete(id){
+    return this.http.delete('http://localhost:8000/api/content-solicitations/'+id)
+  }
+
+  postTeste(updatedContent){
+    return this.http.post('http://localhost:8000/api/content-solicitations/teste', updatedContent)
+  }
 }

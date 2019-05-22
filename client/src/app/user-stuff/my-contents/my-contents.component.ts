@@ -35,9 +35,20 @@ export class MyContentsComponent implements OnInit {
     this._myContentService.getAll()
       .subscribe(
         (res: any[] ) => {
-          console.log(res)
           this.contentSolicitations = res
           this.loading = false
+        },
+        error => {
+          console.log(error)
+        }
+      )
+  }
+
+  delete(id) {
+    this._myContentService.delete(id)
+      .subscribe(
+        res => {
+          console.log(res)
         },
         error => {
           console.log(error)

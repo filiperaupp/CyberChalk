@@ -16,6 +16,8 @@ import { ThemeComponent } from './admin/category-theme-control/theme/theme.compo
 import { MyContentsComponent } from './user-stuff/my-contents/my-contents.component';
 import { UserStuffComponent } from './user-stuff/user-stuff.component';
 import { ContentManageComponent } from './user-stuff/content-manage/content-manage.component';
+import { MyCoursesComponent } from './user-stuff/my-courses/my-courses.component';
+import { CourseManageComponent } from './user-stuff/course-manage/course-manage.component';
 
 const APP_ROUTES: Routes = [
     { path: '', component: HomeComponent},
@@ -40,9 +42,13 @@ const APP_ROUTES: Routes = [
                 { path: 'content-manage/:id', component: ContentManageComponent },
                 { path: '', redirectTo: 'list', pathMatch: 'full' }
             ] },
-            { path: '', redirectTo: 'contents/list', pathMatch: 'full' }
-            // { path: 'courses', component: MyCoursesComponenet, children:[
-            // ] },
+            { path: '', redirectTo: 'contents/list', pathMatch: 'full' },
+            { path: 'courses',  children:[
+                { path: 'list', component: MyCoursesComponent },
+                { path: 'course-manage', component: CourseManageComponent },
+                { path: 'course-manage/:id', component: CourseManageComponent },
+                { path: '', redirectTo:'list', pathMatch:'full' }
+            ] },
         ] },
         { path: 'category/:id', component: CategoryContentComponent },
         { path: '', redirectTo:'login' ,pathMatch:'full'}

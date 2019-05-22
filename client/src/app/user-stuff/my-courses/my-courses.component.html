@@ -5,9 +5,9 @@
 <div class="container-fluid bg-white">
   <div class="row">
     <div class="col-12 p-0">
-      <button class="btn btn-success btn-sm float-left m-2" data-toggle="modal" routerLink="../content-manage">
+      <button class="btn btn-success btn-sm float-left m-2" data-toggle="modal" routerLink="../course-manage">
         <i class="fas fa-plus"></i>
-        Criar conteúdo
+        Criar curso
       </button>
       <div class="input-group input-group-sm m-2 input-width-300">
         <div class="input-group-prepend">
@@ -16,37 +16,35 @@
           </span>
         </div>
         <input type="text" id="search" class="form-control" aria-label="Sizing example input"
-          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria...">
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar curso...">
       </div>
     </div>
   </div>
 </div>
-<div *ngIf="(!loading && !loadingThemes) && !isNull else load" class="table-responsive">
+<div *ngIf="!loading else load" class="table-responsive">
   <table class="table">
     <thead class="bg-white">
       <tr>
-        <th scope="col">ID</th>
         <th scope="col">Título</th>
-        <th scope="col">Tema</th>
+        <th scope="col">Categoria/Tema</th>
         <th scope="col">Data</th>
         <th scope="col">Status</th>
         <th scope="col">Ação</th>
       </tr>
     </thead>
     <tbody class="bg-white">
-      <tr *ngFor="let content of contentSolicitations">
-        <th scope="row">{{ content.id }}</th>
-        <td>{{ content.title }}</td>
-        <td> {{ getThemeName(content.theme_id) }}</td>
-        <td>{{ content.created_at | date:'dd/MM/yy'}}</td>
+      <tr *ngFor="let course of courses">
+        <td>{{ course.title }}</td>
+        <td>{{ getCategoryName(course.theme_id) }}/{{ getThemeName(course.theme_id) }}</td>
+        <td>{{ course.created_at | date:'dd/MM/yy' }}</td>
         <td>Status</td>
         <td>
           <div class="btn-group btn-group-toggle">
-            <button class="btn btn-sm btn-info" routerLink="../content-manage/{{ content.id }}">
+            <button class="btn btn-sm btn-info" routerLink="../course-manage/{{course.id}}" >
               <i class="fas fa-pen mr-1"></i>
               Editar
             </button>
-            <button class="btn btn-sm btn-danger"(click)="delete(content.id)">
+            <button class="btn btn-sm btn-danger" (click)="delete(course.id)">
               <i class="fas fa-trash mr-1"></i>
               Excluir
             </button>

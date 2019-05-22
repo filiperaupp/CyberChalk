@@ -17,6 +17,7 @@ class CreateFilesTable extends Migration
             $table->increments('id');
             $table->string('file_name');
             $table->string('path');
+            $table->string('mimeType');
             $table->integer('content_solicitation_id')->unsigned();
             $table->foreign('content_solicitation_id')->references('id')->on('content_solicitations');
             $table->timestamps();

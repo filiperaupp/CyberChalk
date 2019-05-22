@@ -24,6 +24,8 @@ import { ThemeComponent } from './admin/category-theme-control/theme/theme.compo
 import { MyContentsComponent } from './user-stuff/my-contents/my-contents.component';
 import { UserStuffComponent } from './user-stuff/user-stuff.component';
 import { ContentManageComponent } from './user-stuff/content-manage/content-manage.component';
+import { MyCoursesComponent } from './user-stuff/my-courses/my-courses.component';
+import { CourseManageComponent } from './user-stuff/course-manage/course-manage.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,9 @@ import { ContentManageComponent } from './user-stuff/content-manage/content-mana
     ThemeComponent,
     MyContentsComponent,
     UserStuffComponent,
-    ContentManageComponent
+    ContentManageComponent,
+    MyCoursesComponent,
+    CourseManageComponent
   ],
   imports: [
     routing,

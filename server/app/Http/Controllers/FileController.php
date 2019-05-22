@@ -7,83 +7,53 @@ use App\File;
 
 class FileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function download($id){
+        $theFile = File::find($id);
+        if (isset($theFile)) {
+            $path = \Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($theFile->path);
+            return response()->download($path, $theFile->file_name, array('content-type' => $theFile->mimeType));
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store($idContent, $fileName, $filePath)
+    public function getByContentSolicitationId($id){
+        $filesByContentSolicitation = File::where('content_solicitation_id',$id)->get();
+
+        return json_encode($filesByContentSolicitation);
+        
+    }
+    public function store($idContent, $fileName, $filePath, $fileType)
     {
         $newFile = new File();
         $newFile->file_name = $fileName;
         $newFile->path = $filePath;
+        $newFile->mimeType = $fileType;
         $newFile->content_solicitation_id = $idContent;
 
         $newFile->save();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
+    }
+
+    public function destroyByContentSolicitationId($idContentSolicitation){
+        $theFiles = File::where('content_solicitation_id',$idContentSolicitation)->get();
+
+        if (isset($theFiles)) {
+            foreach ($theFiles as $file) {
+                $file->delete();
+            }
+        }
     }
 }
