@@ -18,10 +18,14 @@ class CreateContentSolicitationsTable extends Migration
             $table->string('title');
             $table->string('video_path')->nullable();
             $table->string('support_text');
+            $table->string('status');
+            $table->integer('position')->nullable();
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('theme_id')->unsigned();
+            $table->integer('theme_id')->unsigned()->nullable();
             $table->foreign('theme_id')->references('id')->on('themes');
+            $table->integer('course_id')->unsigned()->nullable();
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->timestamps();
         });
     }

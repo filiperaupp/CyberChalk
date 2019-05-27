@@ -1,24 +1,19 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
 
+
+import { MyCoursesService } from '../my-courses/my-courses.service';
 import { MyContentsService } from '../my-contents/my-contents.service';
-import { Category } from 'src/app/models/category';
-import { CategoryService } from 'src/app/admin/category-theme-control/category/category.service';
-import { Theme } from 'src/app/models/theme';
-import { ThemeService } from 'src/app/admin/category-theme-control/theme/theme.service';
 
 @Component({
-  selector: 'app-content-manage',
-  templateUrl: './content-manage.component.html',
-  styleUrls: ['./content-manage.component.css']
+  selector: 'app-content-to-course',
+  templateUrl: './content-to-course.component.html',
+  styleUrls: ['./content-to-course.component.css']
 })
-export class ContentManageComponent implements OnInit {
+export class ContentToCourseComponent implements OnInit {
 
   contentForm = this.fb.group({
-    category: ['', Validators.required],
-    theme: ['', Validators.required],
     title: ['', Validators.required],
     video: [''],
     support_files: [''],
@@ -26,14 +21,11 @@ export class ContentManageComponent implements OnInit {
   })
 
   actionText: string
-  id: number
+  idCourse: number
+  idContent: number
   contentEdit: any
-  categories: Category[]
-  themes: Theme[]
-  themeByCategory: Theme[] = []
 
   loading: boolean = true
-  loadingEdit: boolean = true
 
   files: any[] = []
   video: any = null
@@ -43,26 +35,25 @@ export class ContentManageComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private active: ActivatedRoute,
-    private router: Router,
-    private _categoryService: CategoryService,
-    private _themeService: ThemeService,
-    private _myContentService: MyContentsService) { }
+    private _myContentService: MyContentsService,
+    private _myCouseService: MyCoursesService) { }
 
   ngOnInit() {
-    this.id = null
+    this.idCourse = null
     this.filesToDelete = []
+    this.active.parent.params.subscribe(param => {
+      if (param['id']) {
+        this.idCourse = param['id']
+      }
+    })
     this.active.params.subscribe(param => {
       if (param['id']) {
-        this.id = param['id']
+        this.idContent = param['id']
         this.actionText = "Editar"
-        this.getCategories()
-        this.getThemes()
-        this.getContent(this.id)
+        this.getContent(this.idContent)
       } else {
         this.actionText = "Criar"
-        this.getCategories()
-        this.getThemes()
-        this.loadingEdit = false
+        this.loading = false
       }
     })
   }
@@ -80,20 +71,20 @@ export class ContentManageComponent implements OnInit {
 
     let title = this.contentForm.controls['title'].value
     let support_text = this.contentForm.controls['support_text'].value
-    let theme_id = this.contentForm.controls['theme'].value
 
+    contentSolicitation.append('course_id', `${this.idCourse}`)
+    console.log(this.idCourse)
     contentSolicitation.append('title', title)
     contentSolicitation.append('support_text', support_text)
     contentSolicitation.append('video', this.video)
-    contentSolicitation.append('theme_id', theme_id)
     if (this.files.length > 0) {
       for (let i = 0; i < this.files.length; i++) {
         contentSolicitation.append('support_files[]', this.files[i])
       }
     }
 
-    if (this.id) {
-      contentSolicitation.append('id', `${this.id}`)
+    if (this.idContent) {
+      contentSolicitation.append('id', `${this.idContent}`)
       //files to delete
       if (this.filesToDelete.length > 0) {
         this.filesToDelete.forEach(file => {
@@ -112,7 +103,7 @@ export class ContentManageComponent implements OnInit {
           error => console.log(error)
         )
     } else {
-      this._myContentService.post(contentSolicitation)
+      this._myCouseService.addContentToCourse(contentSolicitation)
         .subscribe(
           res => console.log(res),
           error => console.log(error)
@@ -121,51 +112,15 @@ export class ContentManageComponent implements OnInit {
 
   }
 
-  // To create new content
-  getCategories() {
-    this._categoryService.getAll()
-      .subscribe(
-        (data: Category[]) => {
-          this.categories = data;
-        },
-        error => {
-          console.log(error)
-        }
-      )
-  }
-
-  getThemes() {
-    this._themeService.getAll()
-      .subscribe(
-        (data: Theme[]) => {
-          this.themes = data;
-          this.loading = false
-        },
-        error => {
-          console.log(error)
-        }
-      )
-  }
-
-  findThemes() {
-    let category_id = this.contentForm.controls['category'].value
-    this.getThemesByCategory(category_id)
-  }
-
   // --------------------------------
 
   //Edit content 
-
   downloadVideo(id) {
     window.location.href = `http://localhost:8000/api/downloadVideo/${id}`
   }
 
   downloadFile(id) {
     window.location.href = `http://localhost:8000/api/downloadFile/${id}`
-  }
-
-  getThemesByCategory(id) {
-    this.themeByCategory = this.themes.filter(t => t.category_id == id)
   }
   
   deleteVideo(idVideo) {
@@ -183,7 +138,8 @@ export class ContentManageComponent implements OnInit {
       .subscribe(
         data => {
           this.contentEdit = data
-          this.loadingEdit = false
+          console.log(this.contentEdit)
+          this.loading = false
           this.setFormToContentEdit()
         },
         error => {
@@ -194,14 +150,7 @@ export class ContentManageComponent implements OnInit {
 
   setFormToContentEdit() {
     this.contentForm.controls['title'].setValue(this.contentEdit.title)
-    let theme_id = this.contentEdit.theme_id
-    let category_id = this.themes.find(t => t.id == this.contentEdit.theme_id).category_id
-    this.contentForm.controls['category'].setValue(category_id)
-    this.getThemesByCategory(category_id)
-    this.contentForm.controls['theme'].setValue(theme_id)
     this.contentForm.controls['support_text'].setValue(this.contentEdit.support_text)
   }
-
-
 
 }

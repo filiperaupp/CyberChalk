@@ -26,6 +26,12 @@ import { UserStuffComponent } from './user-stuff/user-stuff.component';
 import { ContentManageComponent } from './user-stuff/content-manage/content-manage.component';
 import { MyCoursesComponent } from './user-stuff/my-courses/my-courses.component';
 import { CourseManageComponent } from './user-stuff/course-manage/course-manage.component';
+import { CourseEditComponent } from './user-stuff/course-edit/course-edit.component';
+import { ContentToCourseComponent } from './user-stuff/content-to-course/content-to-course.component';
+import { ContentItemComponent } from './user-stuff/content-item/content-item.component';
+import { ContentCourseControlComponent } from './admin/content-course-control/content-course-control.component';
+import { ContentsComponent } from './admin/content-course-control/contents/contents.component';
+import { CoursesComponent } from './admin/content-course-control/courses/courses.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +54,13 @@ import { CourseManageComponent } from './user-stuff/course-manage/course-manage.
     UserStuffComponent,
     ContentManageComponent,
     MyCoursesComponent,
-    CourseManageComponent
+    CourseManageComponent,
+    CourseEditComponent,
+    ContentToCourseComponent,
+    ContentItemComponent,
+    ContentCourseControlComponent,
+    ContentsComponent,
+    CoursesComponent
   ],
   imports: [
     routing,

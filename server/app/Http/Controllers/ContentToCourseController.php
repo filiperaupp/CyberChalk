@@ -6,39 +6,28 @@ use Illuminate\Http\Request;
 use App\ContentSolicitation;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\VideoController;
-use App\File;
-use App\Video;
 use Log;
 
-class ContentSolicitationController extends Controller
+class ContentToCourseController extends Controller
 {
-
-    public function index()
-    {
-        $contentSolicitations = ContentSolicitation::where('course_id', NULL)->get();
-        return json_encode($contentSolicitations);
-    }
-
-    public function getById($id) {
-        $fileController = new FileController();
-        $videoController = new VideoController();
-
-        $contentSolicitation = ContentSolicitation::find($id);
-        $contentSolicitation->support_files = json_decode($fileController->getByContentSolicitationId($id));
-        $contentSolicitation->video = json_decode($videoController->getByContentSolicitationId($id));
-        return json_encode($contentSolicitation);
-    }
-
-    public function store(Request $request)
-    {
-        
+    public function addContent(Request $request){
         //Log::debug($request);
         $contentSolicitation = new ContentSolicitation();
         $contentSolicitation->user_id = 1;
-        $contentSolicitation->theme_id = $request->theme_id;
+        $contentSolicitation->course_id = $request->course_id;
         $contentSolicitation->title = $request->title;
         $contentSolicitation->support_text = $request->support_text;
-        $contentSolicitation->status = "saved";
+        $contentSolicitation->status = "in course";
+        
+        $lastContent = ContentSolicitation::where('course_id',$request->course_id)->orderBy('position', 'desc')->first();
+        Log::debug($lastContent);
+        if (!isset($lastContent)) {
+            $contentSolicitation->position = 1;
+        } else  {
+            $position = $lastContent->position;
+            $contentSolicitation->position = ($position+1);
+        }
+
         $contentSolicitation->save();
 
         // save video
@@ -74,58 +63,26 @@ class ContentSolicitationController extends Controller
         return response('done',200);
     }
 
-    public function sendToApprove(Request $request, $id){
-        $content = ContentSolicitation::find($id);
+    public function changePosition(Request $request){
+        Log::debug($request);
+        $newLeftId = $request[0];
+        $newRightId = $request[1];
 
-        if(isset($content)) {
-            $content->status = 'pending';
-            $content->save();
-        } else {
-            return response('not found', 404);
-        }
-    }
+        $newLeft = ContentSolicitation::find($newLeftId);
+        $newRight = ContentSolicitation::find($newRightId);
+        $leftPosition = $newLeft->position;
+        
+        $newLeft->position = $newRight->position;
+        $newRight->position = $leftPosition;
+        $newLeft->save();
+        $newRight->save();
 
-    public function contentApprove(Request $request, $id){
-        $content = ContentSolicitation::find($id);
-
-        if(isset($content)) {
-            $content->status = 'approved';
-            $content->save();
-            return json_encode('approved');
-        } else {
-            return response('not found', 404);
-        }
-    }
-
-    public function contentReject(Request $request, $id){
-        $content = ContentSolicitation::find($id);
-
-        if(isset($content)) {
-            $content->status = 'rejected';
-            $content->save();
-            return json_encode('rejected');
-        } else {
-            return response('not found', 404);
-        }
-    }
-
-    public function contentRecycle(Request $request, $id){
-        $content = ContentSolicitation::find($id);
-
-        if(isset($content)) {
-            $content->status = 'recycled';
-            $content->save();
-            return json_encode('recycled');
-        } else {
-            return response('not found', 404);
-        }
     }
 
     public function update(Request $request)
     {
         $id = $request->id;
         $contentSolicitation = ContentSolicitation::find($id);
-        $contentSolicitation->theme_id = $request->theme_id;
         $contentSolicitation->title = $request->title;
         $contentSolicitation->support_text = $request->support_text;
         $contentSolicitation->save();
@@ -182,7 +139,24 @@ class ContentSolicitationController extends Controller
         }
         return response('ok',200);
     }
-    
+
+    public function contentsByCourse($id){
+        $videoController = new VideoController();
+        $fileController = new FileController();
+
+        $allContents = ContentSolicitation::select('id','title','created_at','position')->where('course_id', $id)->orderBy('position')->get();
+        
+        $contentsToSend = array();
+        if (isset($allContents) && sizeOf($allContents) > 0) {
+            foreach ($allContents as $c) {
+                $c->hasVideo = $videoController->hasVideo($c->id);
+                $c->hasFiles = $fileController->howManyFiles($c->id);
+                array_push($contentsToSend,$c);
+            }
+        }
+
+        return json_encode($allContents);
+    }
 
     public function destroy($id)
     {
@@ -193,8 +167,22 @@ class ContentSolicitationController extends Controller
             $fileController->destroyByContentSolicitationId($id);
             $videoController = new VideoController();
             $videoController->removePathByContentId($id);
+            
+            $idCourse = $contentSolicitation->course_id;
 
             $contentSolicitation->delete();
+
+            //re order contents
+            $contentsInTheCourse = ContentSolicitation::where('course_id',$idCourse)->get();
+            if (isset($contentsInTheCourse) && sizeOf($contentsInTheCourse) > 0) {
+                for ($i = 0; $i<sizeof($contentsInTheCourse); $i++) {
+                    $contentsInTheCourse[$i]->position = ($i+1);
+                    $contentsInTheCourse[$i]->save();
+                }
+            }
+
+
+
             return response()->json([
                 'res' => 'ok'
             ], 200);

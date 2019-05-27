@@ -38,13 +38,10 @@ class FileController extends Controller
         $newFile->save();
     }
 
-    public function update(Request $request, $id)
+    public function howManyFiles($contentId)
     {
-        //
-    }
-    public function destroy($id)
-    {
-        //
+        $theFiles = File::where('content_solicitation_id',$contentId)->get();
+        return sizeof($theFiles);
     }
 
     public function destroyByContentSolicitationId($idContentSolicitation){
@@ -52,6 +49,7 @@ class FileController extends Controller
 
         if (isset($theFiles)) {
             foreach ($theFiles as $file) {
+                \Storage::disk('public')->delete($file->path);
                 $file->delete();
             }
         }

@@ -18,6 +18,12 @@ import { UserStuffComponent } from './user-stuff/user-stuff.component';
 import { ContentManageComponent } from './user-stuff/content-manage/content-manage.component';
 import { MyCoursesComponent } from './user-stuff/my-courses/my-courses.component';
 import { CourseManageComponent } from './user-stuff/course-manage/course-manage.component';
+import { CourseEditComponent } from './user-stuff/course-edit/course-edit.component';
+import { ContentToCourseComponent } from './user-stuff/content-to-course/content-to-course.component';
+import { ContentItemComponent } from './user-stuff/content-item/content-item.component';
+import { ContentCourseControlComponent } from './admin/content-course-control/content-course-control.component';
+import { ContentsComponent } from './admin/content-course-control/contents/contents.component';
+import { CoursesComponent } from './admin/content-course-control/courses/courses.component';
 
 const APP_ROUTES: Routes = [
     { path: '', component: HomeComponent},
@@ -29,10 +35,15 @@ const APP_ROUTES: Routes = [
                 { path: 'all', component: AllUsersComponent },
                 { path: '', redirectTo: 'solicitations', pathMatch:'full' }
             ]},
-            { path:'categories', component: CategoryThemeControlComponent, children:[
+            { path: 'categories', component: CategoryThemeControlComponent, children:[
                 { path: 'all', component: CategoryComponent },
                 { path: 'themes', component: ThemeComponent },
                 { path: '', redirectTo: 'all', pathMatch: 'full' }
+            ]},
+            { path: 'contents-and-courses', component: ContentCourseControlComponent, children:[
+                { path: 'contents', component: ContentsComponent },
+                { path: 'courses', component: CoursesComponent },
+                { path: '', redirectTo: 'contents', pathMatch: 'full' }
             ]}
         ]},
         { path: 'my-stuff', component: UserStuffComponent, children:[
@@ -46,7 +57,12 @@ const APP_ROUTES: Routes = [
             { path: 'courses',  children:[
                 { path: 'list', component: MyCoursesComponent },
                 { path: 'course-manage', component: CourseManageComponent },
-                { path: 'course-manage/:id', component: CourseManageComponent },
+                { path: 'course-manage/:id', component: CourseEditComponent, children: [
+                    { path: '', component: ContentItemComponent },                    
+                    { path: 'create-content', component: ContentToCourseComponent },
+                    { path: 'edit-content/:id', component: ContentToCourseComponent },
+                    { path: '', redirectTo: '', pathMatch: 'full' }
+                ]},
                 { path: '', redirectTo:'list', pathMatch:'full' }
             ] },
         ] },

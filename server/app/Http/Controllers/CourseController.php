@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Course;
+use Log;
 class CourseController extends Controller
 {
 
@@ -23,7 +24,47 @@ class CourseController extends Controller
         $newCourse->theme_id = $request->theme_id;
         $newCourse->title = $request->title;
         $newCourse->description = $request->description;
+        $newCourse->status = 'saved';
         $newCourse->save();
+    }
+
+    public function sendToApprove(Request $request, $id){
+        $course = Course::find($id);
+
+        if(isset($course)) {
+            $course->status = 'pending';
+            $course->save();
+            
+        } else {
+            return response('not found', 400);
+        }
+    }
+
+    public function changeStatus(Request $request, $id) {
+        $course = Course::find($id);
+
+        if(isset($course)) {
+            $newStatus = $request->action;
+            switch ($newStatus) {
+                case 'approve':
+                    $course->status = 'approved';
+                    break;
+                case 'recycle': 
+                    $course->status = 'recycled';
+                    break;
+                case 'reject':
+                    $course->status = 'rejected';
+                    break;
+                default:
+                    return response('',400);
+                    break;
+            }
+            $course->save();
+            return json_encode($course->status);
+            
+        } else {
+            return response('not found', 400);
+        }
     }
 
     public function update(Request $request, $id) {

@@ -19,7 +19,7 @@ class CreateVideosTable extends Migration
             $table->string('path');
             $table->string('mimeType');
             $table->integer('content_solicitation_id')->unsigned();
-            $table->foreign('content_solicitation_id')->references('id')->on('content_solicitations');
+            $table->foreign('content_solicitation_id')->references('id')->on('content_solicitations')->onDelete('cascade');
 
             $table->timestamps();
         });

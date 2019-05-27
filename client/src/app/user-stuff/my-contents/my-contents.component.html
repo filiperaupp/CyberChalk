@@ -22,10 +22,9 @@
   </div>
 </div>
 <div *ngIf="(!loading && !loadingThemes) && !isNull else load" class="table-responsive">
-  <table class="table">
+  <table class="table table-bordered">
     <thead class="bg-white">
       <tr>
-        <th scope="col">ID</th>
         <th scope="col">Título</th>
         <th scope="col">Tema</th>
         <th scope="col">Data</th>
@@ -35,24 +34,100 @@
     </thead>
     <tbody class="bg-white">
       <tr *ngFor="let content of contentSolicitations">
-        <th scope="row">{{ content.id }}</th>
         <td>{{ content.title }}</td>
-        <td> {{ getThemeName(content.theme_id) }}</td>
+        <td>{{ getThemeName(content.theme_id) }}</td>
         <td>{{ content.created_at | date:'dd/MM/yy'}}</td>
-        <td>Status</td>
+        <td [ngSwitch]="content.status">
+          <div class="text-info" *ngSwitchCase="'saved'">Salvo</div>
+          <div class="text-warning" *ngSwitchCase="'pending'">Em aprovação</div>
+          <div class="text-success" *ngSwitchCase="'approved'">Aceito</div>
+          <div class="text-danger" *ngSwitchCase="'rejected'">Rejeitado</div>
+          <div *ngSwitchDefault>Não encontrado</div>
+        </td>
         <td>
           <div class="btn-group btn-group-toggle">
-            <button class="btn btn-sm btn-info" routerLink="../content-manage/{{ content.id }}">
+            <button class="btn btn-sm btn-info" routerLink="../content-manage/{{ content.id }}"
+              [disabled]="content.status=='pending'">
               <i class="fas fa-pen mr-1"></i>
-              Editar
             </button>
-            <button class="btn btn-sm btn-danger"(click)="delete(content.id)">
+            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delModal"
+              (click)="getSelectedContent(content)">
               <i class="fas fa-trash mr-1"></i>
-              Excluir
+            </button>
+            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#sendModal"
+              [disabled]="content.status=='pending'" (click)="getSelectedContent(content)">
+              <i class="fas fa-paper-plane"></i>
             </button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
+</div>
+
+<!-- Modal Remove-->
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Excluir conteúdo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonDel class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div *ngIf="selectedContent" class="modal-body">
+        Deseja realmente excluir o conteúdo <b>{{ selectedContent.title }}</b>?
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-arrow-left mr-1"></i>
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" (click)="delete(selectedContent.id)">
+          <i class="fas fa-trash mr-1"></i>
+          Excluir
+        </button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal send to approve-->
+<div class="modal fade" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Excluir conteúdo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonDel class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div *ngIf="selectedContent" class="modal-body">
+        Deseja realmente enviar o conteúdo <b>{{ selectedContent.title }}</b>?<br>
+        <small>Obs: envie apenas quando o mesmo estiver completo.</small>
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-arrow-left mr-1"></i>
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-success" (click)="sendContent(selectedContent.id)">
+          <i class="fas fa-paper-plane"></i>
+          Enviar
+        </button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

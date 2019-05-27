@@ -63,14 +63,29 @@ Route::get('content-solicitations/{id}', 'ContentSolicitationController@getById'
 Route::post('content-solicitations', 'ContentSolicitationController@store');
 Route::post('content-solicitations/teste', 'ContentSolicitationController@update');
 Route::delete('content-solicitations/{id}', 'ContentSolicitationController@destroy');
+Route::post('content-to-approve/{id}', 'ContentSolicitationController@sendToApprove'); //status 'pending'
+//Content status control
+Route::post('content-approve/{id}', 'ContentSolicitationController@contentApprove');
+Route::post('content-recycle/{id}', 'ContentSolicitationController@contentRecycle');
+Route::post('content-reject/{id}', 'ContentSolicitationController@contentReject');
 
 //download files
 Route::get('/downloadFile/{id}','FileController@download');
 //donwload video
 Route::get('/downloadVideo/{id}', 'VideoController@download');
 
+//courses
 Route::get('courses', 'CourseController@index');
 Route::post('courses', 'CourseController@store');
 Route::get('courses/{id}', 'CourseController@getById');
 Route::put('courses/{id}', 'CourseController@update');
 Route::delete('courses/{id}', 'CourseController@destroy');
+Route::post('send-to-approve/{id}', 'CourseController@sendToApprove');
+Route::post('change-status/{id}', 'CourseController@changeStatus');
+
+//content to courses
+Route::post('add-content-in-course', 'ContentToCourseController@addContent');
+Route::get('contents-by-course/{id}', 'ContentToCourseController@contentsByCourse');
+Route::delete('contents-by-course/{id}', 'ContentToCourseController@destroy');
+Route::post('change-position', 'ContentToCourseController@changePosition');
+

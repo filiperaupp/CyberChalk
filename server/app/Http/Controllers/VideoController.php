@@ -34,5 +34,17 @@ class VideoController extends Controller
         
     }
 
+    public function hasVideo($contentId)
+    {
+        $video = Video::where('content_solicitation_id',$contentId)->get();
+        return sizeof($video);
+    }
+
+    public function removePathByContentId($id){
+        $video = Video::where('content_solicitation_id',$id)->get();
+        if (isset($video) && sizeof($video) > 0)
+            \Storage::disk('public')->delete($video[0]->path);
+    }
+
 
 }

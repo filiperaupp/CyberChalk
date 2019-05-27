@@ -1,5 +1,5 @@
 import { FormBuilder, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { MyContentsService } from './my-contents.service';
 import { ThemeService } from 'src/app/admin/category-theme-control/theme/theme.service';
 import { Theme } from 'src/app/models/theme';
@@ -10,20 +10,16 @@ import { Theme } from 'src/app/models/theme';
   styleUrls: ['./my-contents.component.css']
 })
 export class MyContentsComponent implements OnInit {
+  @ViewChild('closeButtonDel') closeButtonDel: ElementRef;
 
-  newFileForm = this.fb.group({
-    photo: ['', Validators.required],
-  })
-
-  private loading: boolean = true;
+  private loading: boolean = true
+  private loadingAction = false
   private loadingThemes:boolean = false
   private contentSolicitations: any[]
   private themes: Theme[] = []
+  private selectedContent: any
 
-  fileData = new FormData()
-
-  constructor(private fb: FormBuilder,
-              private _myContentService: MyContentsService,
+  constructor(private _myContentService: MyContentsService,
               private _themeService: ThemeService) { }
 
   ngOnInit() {
@@ -44,14 +40,36 @@ export class MyContentsComponent implements OnInit {
       )
   }
 
+  getSelectedContent(content){
+    this.selectedContent = content
+  }
+
+  removeFromList(){
+    let removedContentIndex = this.contentSolicitations.indexOf(this.selectedContent)
+    this.contentSolicitations.splice(removedContentIndex,1)
+  }
+
+  sendContent(idContent){
+    let content = new FormData()
+    content.append('content', '')
+    this._myContentService.sendToApprove(idContent, content)
+      .subscribe(
+        res => console.log(res),
+        error => console.log(error)
+      )
+  }
+
   delete(id) {
+    this.loadingAction = true
     this._myContentService.delete(id)
       .subscribe(
         res => {
-          console.log(res)
+          this.loadingAction = false
+          this.removeFromList()
+          this.triggerFalseClick()
         },
         error => {
-          console.log(error)
+          this.loadingAction = false
         }
       )
   }
@@ -75,4 +93,8 @@ export class MyContentsComponent implements OnInit {
       )
   }
 
+  triggerFalseClick() {
+    let  el = this.closeButtonDel.nativeElement as HTMLElement
+    el.click();
+  }
 }

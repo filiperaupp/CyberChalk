@@ -1,0 +1,54 @@
+<ng-template #load>
+  <loader *ngIf="loading"></loader>
+</ng-template>
+<div *ngIf="!loading else load" class="row">
+  <div *ngFor="let content of contentsInCourse; let i = index;" class="col-12 col-md-6 col-lg-3 mb-2">
+    <div class="card bg-light m-0 h-100">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-3">
+            {{ i+1 | number: '2.0-0' }}
+          </div>
+          <div class="col-9 text-right">
+            <div class="btn-group btn-group-toggle">
+              <button [disabled]="i == 0" class="btn btn-sm btn-dark" (click)="changePosition((i-1),i)">
+                <i class="fas fa-chevron-left mr-1"></i>
+              </button>
+              <button [disabled]="i == (contentsInCourse.length-1)" class="btn btn-sm btn-dark" (click)="changePosition(i,(i+1))">
+                <i class="fas fa-chevron-right mr-1"></i>
+              </button>
+              <button class="btn btn-sm btn-info" routerLink="../edit-content/{{content.id}}">
+                <i class="fas fa-pen mr-1"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="delete(content.id,index)">
+                <i class="fas fa-trash mr-1"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ content.title }}</h5>
+        <p class="card-text">
+          <i *ngIf="content.hasVideo > 0; else noVideo" class="fas fa-check-square text-success"></i>
+          <ng-template #noVideo>
+            <i class="fas fa-window-close" style="color: #ee0000"></i>
+          </ng-template>
+          Vídeo
+          <br>
+          <i *ngIf="content.hasFiles > 0; else noFiles" class="fas fa-check-square text-success"></i>
+          <ng-template #noFiles>
+            <i class="fas fa-window-close" style="color: #ee0000" (click)="fileDelete(i)"></i>
+          </ng-template>
+          Arquivos de Apoio ({{ content.hasFiles }})
+        </p>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">{{ content.created_at | date:'dd/MM/yyyy' }}</small>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="contentsInCourse.length == 0" class="col-12">
+    <h5 class="alert alert-info mt-2 text-center">Nenhum conteúdo cadastrado.</h5>
+  </div>
+</div>

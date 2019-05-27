@@ -1,0 +1,177 @@
+<ng-template #load>
+  <loader *ngIf="loading"></loader>
+</ng-template>
+
+<div class="container-fluid bg-white">
+  <div class="row">
+    <div class="col-12 p-0">
+      <div class="input-group input-group-sm m-2 input-width-300">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+        <input type="text" id="search" class="form-control" aria-label="Sizing example input"
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria...">
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!loading && !isNull else load" class="table-responsive">
+  <table class="table table-bordered">
+    <thead class="bg-white">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Título</th>
+        <th scope="col">Categoria/Tema</th>
+        <th scope="col">Criador</th>
+        <th scope="col">Data</th>
+        <th scope="col">Itens</th>
+        <th scope="col">Status</th>
+        <th scope="col">Ação</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white">
+      <tr *ngFor="let course of courses">
+        <th scope="row">{{ course.id }}</th>
+        <td> {{ course.title }}</td>
+        <td> categoria/tema </td>
+        <td> Criador </td>
+        <td> {{ course.created_at }} </td>
+        <td> course.qtd </td>
+        <td [ngSwitch]="course.status">
+          <div class="text-info" *ngSwitchCase="'saved'">Salvo</div>
+          <div class="text-warning" *ngSwitchCase="'pending'">Em aprovação</div>
+          <div class="text-info" *ngSwitchCase="'recycled'">Em reciclagem</div>
+          <div class="text-success" *ngSwitchCase="'approved'">Aceito</div>
+          <div class="text-danger" *ngSwitchCase="'rejected'">Rejeitado</div>
+          <div *ngSwitchDefault>Não encontrado</div>
+        </td>
+        <td>
+          <div class="btn-group btn-group-toggle">
+            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveModal"
+              (click)="getSelectedCourse(course)">
+              <i class="fas fa-check"></i>
+            </button>
+            <button class="btn btn-sm btn-dark">
+              <i class="fas fa-eye mr-1"></i>
+            </button>
+            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#recycleModal"
+              (click)="getSelectedCourse(course)">
+              <i class="fas fa-recycle"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal"
+              (click)="getSelectedCourse(course)">
+              <i class="fas fa-trash mr-1"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!--------------------------------- M O D A L ' S  --------------------------------->
+<!-- Modal approve-->
+<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Aprovar curso</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonApprove class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div *ngIf="selectedCourse" class="modal-body">
+        Deseja realmente <b>aprovar</b> o curso <b>{{ selectedCourse.title }}</b>?<br>
+        <small class="text-secondary">Obs: Após aprovado, o mesmo será disponibilizado nos materiais da
+          plataforma.</small>
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-arrow-left mr-1"></i>
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-success" (click)="changeStatus('approve')">
+          <i class="fas fa-check"></i>
+          Aprovar
+        </button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal recycle-->
+<div class="modal fade" id="recycleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Reciclar curso</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonRecycle class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div *ngIf="selectedCourse" class="modal-body">
+        Deseja realmente <b>reciclar</b> o curso <b>{{ selectedCourse.title }}</b>?<br>
+        <small class="text-secondary">Obs: O criador poderá fazer os reajustes e, posteriormente, reencaminhar o
+          curso.</small>
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-arrow-left mr-1"></i>
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-info" (click)="changeStatus('recycle')">
+          <i class="fas fa-recycle"></i>
+          Reciclar
+        </button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal delete-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Deletar curso</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonReject class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div *ngIf="selectedCourse" class="modal-body">
+        Deseja realmente <b>deletar</b> o curso <b>{{ selectedCourse.title }}</b>?<br>
+        <small class="text-secondary">Obs: Após deletado, o criador nao poderá mais editar esse curso.</small>
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-arrow-left mr-1"></i>
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" (click)="changeStatus('reject')">
+          <i class="fas fa-trash mr-1"></i>
+          Deletar
+        </button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

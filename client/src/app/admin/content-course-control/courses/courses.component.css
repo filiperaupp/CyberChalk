@@ -1,0 +1,16 @@
+.table-responsive{
+    width: 96%;
+    margin: auto
+}
+
+.no-border{
+    border: 0px !important;
+}
+
+.container-fluid{
+    width: 96%;
+}
+
+.input-width-300{
+    width: 300px;
+}

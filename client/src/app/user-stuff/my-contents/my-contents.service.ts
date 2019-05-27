@@ -27,4 +27,26 @@ export class MyContentsService {
   postTeste(updatedContent){
     return this.http.post('http://localhost:8000/api/content-solicitations/teste', updatedContent)
   }
+
+  sendToApprove(idContent, content) {
+    return this.http.post('http://localhost:8000/api/content-to-approve/'+idContent, content)
+  }
+
+  // CONTENT STATUS CONTROL
+  changeStatus(action, idContent, content) {
+    switch (action) {
+      case 'approve':
+        return this.http.post('http://localhost:8000/api/content-approve/'+idContent, content)
+        break;
+      case 'reject':
+        return this.http.post('http://localhost:8000/api/content-reject/'+idContent, content)
+        break;
+      case 'recycle':
+        return this.http.post('http://localhost:8000/api/content-recycle/'+idContent, content)
+        break
+      default:
+        console.log('change status fail')
+        break;
+    }
+  }
 }

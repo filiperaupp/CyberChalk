@@ -28,4 +28,29 @@ export class MyCoursesService {
   delete(id){
     return this.http.delete('http://localhost:8000/api/courses/'+id)
   }
+
+  //Contents to course
+  addContentToCourse(content){
+    return this.http.post('http://localhost:8000/api/add-content-in-course/', content)
+  }
+  getContentsByCourseId(idCourse){
+    return this.http.get('http://localhost:8000/api/contents-by-course/'+ idCourse)
+  }
+  deleteContent(idContent){
+    return this.http.delete('http://localhost:8000/api/contents-by-course/'+ idContent)
+  }
+  changePosition(newLeftId,newRightId) {
+    return this.http.post('http://localhost:8000/api/change-position/', [newLeftId,newRightId])
+  }
+  //pending status
+  sendToApprovre(idCourse,course) {
+    return this.http.post('http://localhost:8000/api/send-to-approve/'+idCourse,course)
+  }
+
+  //change status by admin
+  changeStatus(idCourse, action){
+    return this.http.post('http://localhost:8000/api/change-status/'+idCourse, action)
+  }
+
+
 }
