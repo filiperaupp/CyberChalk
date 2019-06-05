@@ -9,26 +9,26 @@ export class MyCoursesService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(){
-    return this.http.get('http://localhost:8000/api/courses')
+  getCoursesByUser(){
+    return this.http.get('http://localhost:8000/api/courses-by-user')
   }
-
+  
   post(course){
     return this.http.post('http://localhost:8000/api/courses', course)
   }
-
+  
   getById(id){
     return this.http.get('http://localhost:8000/api/courses/'+id)
   }
-
+  
   update(id,course){
     return this.http.put('http://localhost:8000/api/courses/'+id, course)
   }
-
+  
   delete(id){
     return this.http.delete('http://localhost:8000/api/courses/'+id)
   }
-
+  
   //Contents to course
   addContentToCourse(content){
     return this.http.post('http://localhost:8000/api/add-content-in-course/', content)
@@ -46,11 +46,14 @@ export class MyCoursesService {
   sendToApprovre(idCourse,course) {
     return this.http.post('http://localhost:8000/api/send-to-approve/'+idCourse,course)
   }
-
+  
   //change status by admin
-  changeStatus(idCourse, action){
-    return this.http.post('http://localhost:8000/api/change-status/'+idCourse, action)
+  changeStatus(idCourse, status){
+    return this.http.post('http://localhost:8000/api/change-status/'+idCourse, status)
   }
-
-
+  //admin use
+  getAll(){
+    return this.http.get('http://localhost:8000/api/courses')
+  }
+  
 }

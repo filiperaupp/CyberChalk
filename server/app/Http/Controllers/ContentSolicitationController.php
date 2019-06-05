@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\ContentSolicitation;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\VideoController;
 use App\File;
 use App\Video;
+use App\Theme;
+use App\Category;
+use App\User;
 use Log;
 
 class ContentSolicitationController extends Controller
@@ -15,7 +19,35 @@ class ContentSolicitationController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
         $contentSolicitations = ContentSolicitation::where('course_id', NULL)->get();
+        if (isset($contentSolicitations)) {
+            foreach ($contentSolicitations as $content) {
+                $theme = Theme::find($content->theme_id);
+                $category = Category::find($theme->category_id);
+                $creator = User::find($content->user_id);
+
+                $content->themeName = $theme->name;
+                $content->categoryName = $category->name;
+                $content->creator = $creator->name;
+            }
+        }
+        return json_encode($contentSolicitations);
+    }
+
+    public function getContentsByUser()
+    {
+        $user = Auth::user();
+        $contentSolicitations = ContentSolicitation::where([['course_id', NULL],['user_id',$user->id]])->get();
+        if (isset($contentSolicitations)) {
+            foreach ($contentSolicitations as $content) {
+                $theme = Theme::find($content->theme_id);
+                $category = Category::find($theme->category_id);
+
+                $content->themeName = $theme->name;
+                $content->categoryName = $category->name;
+            }
+        }
         return json_encode($contentSolicitations);
     }
 
@@ -29,12 +61,17 @@ class ContentSolicitationController extends Controller
         return json_encode($contentSolicitation);
     }
 
+    public function getByThemeId($id){
+        $contents = ContentSolicitation::where('theme_id', $id) -> get();
+        return json_encode($contents);
+    }
+
     public function store(Request $request)
     {
-        
+        $user = Auth::user();
         //Log::debug($request);
         $contentSolicitation = new ContentSolicitation();
-        $contentSolicitation->user_id = 1;
+        $contentSolicitation->user_id = $user->id;
         $contentSolicitation->theme_id = $request->theme_id;
         $contentSolicitation->title = $request->title;
         $contentSolicitation->support_text = $request->support_text;
@@ -74,48 +111,31 @@ class ContentSolicitationController extends Controller
         return response('done',200);
     }
 
-    public function sendToApprove(Request $request, $id){
+    public function contentChangeStatus(Request $request, $id){
         $content = ContentSolicitation::find($id);
-
         if(isset($content)) {
-            $content->status = 'pending';
+            switch ($request->status) {
+                case 'pending':
+                    $content->status = 'pending';
+                    break;
+                case 'approved':
+                    $content->status = 'approved';
+                    break;
+                case 'rejected':
+                    $content->status = 'rejected';
+                    break;
+                case 'recycled':
+                    $content->status = 'recycled';
+                    break;
+                case 'canceled':
+                    $content->status = 'saved';
+                    break;      
+                default:
+                    return response('',400);
+                    break;
+            }
             $content->save();
-        } else {
-            return response('not found', 404);
-        }
-    }
-
-    public function contentApprove(Request $request, $id){
-        $content = ContentSolicitation::find($id);
-
-        if(isset($content)) {
-            $content->status = 'approved';
-            $content->save();
-            return json_encode('approved');
-        } else {
-            return response('not found', 404);
-        }
-    }
-
-    public function contentReject(Request $request, $id){
-        $content = ContentSolicitation::find($id);
-
-        if(isset($content)) {
-            $content->status = 'rejected';
-            $content->save();
-            return json_encode('rejected');
-        } else {
-            return response('not found', 404);
-        }
-    }
-
-    public function contentRecycle(Request $request, $id){
-        $content = ContentSolicitation::find($id);
-
-        if(isset($content)) {
-            $content->status = 'recycled';
-            $content->save();
-            return json_encode('recycled');
+            return json_encode($content->status);
         } else {
             return response('not found', 404);
         }

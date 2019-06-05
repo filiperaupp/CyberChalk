@@ -32,6 +32,10 @@ import { ContentItemComponent } from './user-stuff/content-item/content-item.com
 import { ContentCourseControlComponent } from './admin/content-course-control/content-course-control.component';
 import { ContentsComponent } from './admin/content-course-control/contents/contents.component';
 import { CoursesComponent } from './admin/content-course-control/courses/courses.component';
+import { FilterStatusPipe } from './pipes/filter-status.pipe';
+import { ThemeContentComponent } from './category-content/theme-content/theme-content.component';
+import { ShowContentComponent } from './category-content/show-content/show-content.component';
+import { ShowCourseComponent } from './category-content/show-course/show-course.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +64,11 @@ import { CoursesComponent } from './admin/content-course-control/courses/courses
     ContentItemComponent,
     ContentCourseControlComponent,
     ContentsComponent,
-    CoursesComponent
+    CoursesComponent,
+    FilterStatusPipe,
+    ThemeContentComponent,
+    ShowContentComponent,
+    ShowCourseComponent
   ],
   imports: [
     routing,

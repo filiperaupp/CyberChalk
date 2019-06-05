@@ -1,0 +1,68 @@
+.container-fluid{
+    width: 96%;
+}
+
+.main-color{
+    color: #3c8dbc;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+.card:hover{
+    border: 2px solid #3c8dbc;
+    cursor: pointer;
+}
+
+div.scrollmenu {
+    min-width: 100%;
+    width: auto;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.card{
+    display: inline-block;
+    box-shadow: 7px 7px 7px -3px rgba(0,0,0,0.47);
+    border: 2px solid transparent;
+}
+
+.title-ellipsis{
+    display: -webkit-box!important;
+    /* autoprefixer: ignore next */
+    -webkit-line-clamp: 2;
+    -moz-line-clamp: 2;
+    -ms-line-clamp: 2;
+    -o-line-clamp: 2;
+    line-clamp: 2;
+    /* autoprefixer: ignore next */
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -ms-box-orient: vertical;
+    -o-box-orient: vertical;
+    box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+.text-ellipsis{
+    display: -webkit-box!important;
+    /* autoprefixer: ignore next */
+    -webkit-line-clamp: 3;
+    -moz-line-clamp: 3;
+    -ms-line-clamp: 3;
+    -o-line-clamp: 3;
+    line-clamp: 3;
+    /* autoprefixer: ignore next */
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -ms-box-orient: vertical;
+    -o-box-orient: vertical;
+    box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+}

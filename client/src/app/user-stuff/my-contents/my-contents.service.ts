@@ -12,6 +12,10 @@ export class MyContentsService {
     return this.http.get('http://localhost:8000/api/content-solicitations')
   }
 
+  getContentsByUser(){
+    return this.http.get('http://localhost:8000/api/content-by-user')
+  }
+
   post(newContent){
     return this.http.post('http://localhost:8000/api/content-solicitations',newContent)
   }
@@ -33,20 +37,7 @@ export class MyContentsService {
   }
 
   // CONTENT STATUS CONTROL
-  changeStatus(action, idContent, content) {
-    switch (action) {
-      case 'approve':
-        return this.http.post('http://localhost:8000/api/content-approve/'+idContent, content)
-        break;
-      case 'reject':
-        return this.http.post('http://localhost:8000/api/content-reject/'+idContent, content)
-        break;
-      case 'recycle':
-        return this.http.post('http://localhost:8000/api/content-recycle/'+idContent, content)
-        break
-      default:
-        console.log('change status fail')
-        break;
-    }
+  changeStatus(idContent, status) {
+    return this.http.post('http://localhost:8000/api/content-change-status/'+idContent, status)
   }
 }

@@ -1,0 +1,22 @@
+.container-fluid{
+    width: 96%;
+}
+
+.card{
+    box-sizing: content-box;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.btn{
+    border-radius: 0;
+}
+
+.main-color{
+    background-color: #3c8dbc;
+    color: #fff;
+}
+
+.main-color:hover{
+    background-color: #367fa9;
+}

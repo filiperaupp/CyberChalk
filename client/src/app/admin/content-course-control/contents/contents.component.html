@@ -3,16 +3,31 @@
 </ng-template>
 
 <div class="container-fluid bg-white">
-  <div class="row">
-    <div class="col-12 p-0">
-      <div class="input-group input-group-sm m-2 input-width-300">
+  <div class="row pt-2">
+    <div class="col-12 col-lg-4 col-md-6">
+      <div class="input-group input-group-sm">
         <div class="input-group-prepend">
           <span class="input-group-text" id="inputGroup-sizing-sm">
             <i class="fas fa-search"></i>
           </span>
         </div>
         <input type="text" id="search" class="form-control" aria-label="Sizing example input"
-          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria...">
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria..." [(ngModel)]="text">
+      </div>
+    </div>
+    <div class="col-12 col-lg-5 col-md-6">
+      <div class="form-group row">
+        <label for="status" class="col-sm-auto col-form-label col-form-label-sm">Status</label>
+        <div class="col-sm">
+          <select class="form-control form-control-sm" name="status" id="status" [(ngModel)]="status">
+            <option value="">Todos</option>
+            <option value="pending">Em aprovação</option>
+            <option value="recycled">Em reciclagem</option>
+            <option value="rejected">Rejeitado</option>
+            <option value="approved">Aceito</option>
+            <option value="saved">Salvo</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
@@ -31,11 +46,11 @@
       </tr>
     </thead>
     <tbody class="bg-white">
-      <tr *ngFor="let content of contents">
+      <tr *ngFor="let content of contents | filterStatus: text: status">
         <th scope="row">{{ content.id }}</th>
         <td> {{ content.title }}</td>
-        <td> categoria/tema </td>
-        <td> Criador </td>
+        <td> {{ content.categoryName }}/{{ content.themeName }} </td>
+        <td> {{ content.creator }}</td>
         <td> {{ content.created_at | date:'dd/MM/yyyy' }}</td>
         <td [ngSwitch]="content.status">
           <div class="text-info" *ngSwitchCase="'saved'">Salvo</div>
@@ -48,25 +63,32 @@
         <td>
           <div class="btn-group btn-group-toggle">
             <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#approveModal"
-              (click)="getSelectedContent(content)">
+              (click)="getSelectedContent(content)" [disabled]="content.status == 'saved'">
               <i class="fas fa-check"></i>
             </button>
             <button class="btn btn-sm btn-dark">
-              <i class="fas fa-eye mr-1"></i>
+              <i class="fas fa-eye"></i>
             </button>
             <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#recycleModal"
-              (click)="getSelectedContent(content)">
+              (click)="getSelectedContent(content)" [disabled]="content.status == 'saved'">
               <i class="fas fa-recycle"></i>
             </button>
             <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectModal"
-              (click)="getSelectedContent(content)">
-              <i class="fas fa-trash mr-1"></i>
+              (click)="getSelectedContent(content)" [disabled]="content.status == 'saved'">
+              <i class="fas fa-times"></i>
             </button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
+</div>
+<div class="container-fluid" *ngIf="contents | filterStatus: text: status as result;">
+  <div class="row">
+    <div *ngIf="!loading && status == 'pending' && result.length == 0" class="alert alert-success text-center w-100">
+      <h5>Nenhum conteúdo "Em aprovação" pendente!</h5>
+    </div>
+  </div>
 </div>
 
 <!--------------------------------- M O D A L ' S  --------------------------------->
@@ -91,7 +113,7 @@
           <i class="fas fa-arrow-left mr-1"></i>
           Cancelar
         </button>
-        <button type="button" class="btn btn-success" (click)="changeStatus('approve')">
+        <button type="button" class="btn btn-success" (click)="changeStatus('approved')">
           <i class="fas fa-check"></i>
           Aprovar
         </button>
@@ -126,7 +148,7 @@
           <i class="fas fa-arrow-left mr-1"></i>
           Cancelar
         </button>
-        <button type="button" class="btn btn-info" (click)="changeStatus('recycle')">
+        <button type="button" class="btn btn-info" (click)="changeStatus('recycled')">
           <i class="fas fa-recycle"></i>
           Reciclar
         </button>
@@ -159,7 +181,7 @@
           <i class="fas fa-arrow-left mr-1"></i>
           Cancelar
         </button>
-        <button type="button" class="btn btn-danger" (click)="changeStatus('reject')">
+        <button type="button" class="btn btn-danger" (click)="changeStatus('rejected')">
           <i class="fas fa-trash mr-1"></i>
           Rejeitar
         </button>

@@ -43,11 +43,13 @@ Route::post('users/{id}', 'UserController@updateType');
 Route::get('categories', 'CategoryController@index')
     ->middleware('auth:api');
 Route::post('categories', 'CategoryController@store');
+Route::get('categories/{id}', 'CategoryController@getById');
 Route::delete('categories/{id}', 'CategoryController@destroy');
 Route::put('categories/{id}', 'CategoryController@update');
 
 Route::get('themes', 'ThemeController@index')
     ->middleware('auth:api','adminRole');
+Route::get('themes/{id}', 'ThemeController@getById');
 Route::get('themes-by-category/{id}', 'ThemeController@themeByCategory');
 Route::post('themes', 'ThemeController@store');
 Route::delete('themes/{id}', 'ThemeController@destroy');
@@ -58,16 +60,14 @@ Route::post('teste', 'TestController@file');
 Route::delete('teste', 'TestController@destroy');
 
 //content-solicitation
-Route::get('content-solicitations', 'ContentSolicitationController@index');
+Route::get('content-solicitations', 'ContentSolicitationController@index')->middleware('auth:api');
 Route::get('content-solicitations/{id}', 'ContentSolicitationController@getById');
-Route::post('content-solicitations', 'ContentSolicitationController@store');
+Route::post('content-solicitations', 'ContentSolicitationController@store')->middleware('auth:api');
 Route::post('content-solicitations/teste', 'ContentSolicitationController@update');
 Route::delete('content-solicitations/{id}', 'ContentSolicitationController@destroy');
-Route::post('content-to-approve/{id}', 'ContentSolicitationController@sendToApprove'); //status 'pending'
+Route::get('content-by-user', 'ContentSolicitationController@getContentsByUser')->middleware('auth:api');
 //Content status control
-Route::post('content-approve/{id}', 'ContentSolicitationController@contentApprove');
-Route::post('content-recycle/{id}', 'ContentSolicitationController@contentRecycle');
-Route::post('content-reject/{id}', 'ContentSolicitationController@contentReject');
+Route::post('content-change-status/{id}', 'ContentSolicitationController@contentChangeStatus');
 
 //download files
 Route::get('/downloadFile/{id}','FileController@download');
@@ -75,17 +75,22 @@ Route::get('/downloadFile/{id}','FileController@download');
 Route::get('/downloadVideo/{id}', 'VideoController@download');
 
 //courses
-Route::get('courses', 'CourseController@index');
-Route::post('courses', 'CourseController@store');
+Route::get('courses', 'CourseController@index')->middleware('auth:api');
+Route::post('courses', 'CourseController@store')->middleware('auth:api');
 Route::get('courses/{id}', 'CourseController@getById');
 Route::put('courses/{id}', 'CourseController@update');
 Route::delete('courses/{id}', 'CourseController@destroy');
 Route::post('send-to-approve/{id}', 'CourseController@sendToApprove');
 Route::post('change-status/{id}', 'CourseController@changeStatus');
+Route::get('courses-by-user', 'CourseController@allCoursesByUser')->middleware('auth:api');
 
 //content to courses
 Route::post('add-content-in-course', 'ContentToCourseController@addContent');
 Route::get('contents-by-course/{id}', 'ContentToCourseController@contentsByCourse');
 Route::delete('contents-by-course/{id}', 'ContentToCourseController@destroy');
 Route::post('change-position', 'ContentToCourseController@changePosition');
+
+//list material of a theme
+Route::get('contents-by-theme/{id}', 'ContentSolicitationController@getByThemeId');
+Route::get('courses-by-theme/{id}', 'CourseController@getByThemeId');
 

@@ -3,13 +3,48 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\ContentSolicitation;
 use App\Course;
+use App\Theme;
+use App\Category;
+use App\User;
 use Log;
 class CourseController extends Controller
 {
 
     public function index(){
         $courses = Course::all();
+        if (isset($courses) && sizeOf($courses)>0) {
+            foreach ($courses as $course) {
+                $theme = Theme::find($course->theme_id);
+                $category = Category::find($theme->category_id);
+                $user = User::find($course->user_id);
+                $contents = ContentSolicitation::where('course_id',$course->id)->get();
+
+                $course->themeName = $theme->name;
+                $course->categoryName = $category->name;
+                $course->creatorName = $user->name;
+                $course->qtdContent = sizeOf($contents);
+            }
+        }
+        return json_encode($courses);
+    }
+
+    public function allCoursesByUser(){
+        $userId = Auth::user()->id;
+        $courses = Course::where('user_id', $userId)->get();
+        if (isset($courses) && sizeOf($courses)>0) {
+            foreach ($courses as $course) {
+                $theme = Theme::find($course->theme_id);
+                $category = Category::find($theme->category_id);
+                $countContents = ContentSolicitation::where('course_id',$course->id)->count();
+
+                $course->themeName = $theme->name;
+                $course->categoryName = $category->name;
+                $course->itens = $countContents;
+            }
+        }
         return json_encode($courses);
     }
 
@@ -18,9 +53,15 @@ class CourseController extends Controller
         return json_encode($course);
     }
 
+    public function getByThemeId($id){
+        $courses = Course::where('theme_id',$id)->get();
+        return json_encode($courses);
+    }
+
     public function store(Request $request){
+        $user = Auth::user();
         $newCourse = new Course();
-        $newCourse->user_id = 1;
+        $newCourse->user_id = $user->id;
         $newCourse->theme_id = $request->theme_id;
         $newCourse->title = $request->title;
         $newCourse->description = $request->description;
@@ -42,28 +83,30 @@ class CourseController extends Controller
 
     public function changeStatus(Request $request, $id) {
         $course = Course::find($id);
-
         if(isset($course)) {
-            $newStatus = $request->action;
-            switch ($newStatus) {
-                case 'approve':
+            switch ($request->status) {
+                case 'pending':
+                    $course->status = 'pending';
+                    break;
+                case 'approved':
                     $course->status = 'approved';
                     break;
-                case 'recycle': 
+                case 'recycled': 
                     $course->status = 'recycled';
                     break;
-                case 'reject':
+                case 'rejected':
                     $course->status = 'rejected';
                     break;
+                case 'canceled':
+                    $course->status = 'saved';
+                    break;      
                 default:
-                    return response('',400);
-                    break;
+                break;
             }
             $course->save();
+            Log::debug($course);
             return json_encode($course->status);
             
-        } else {
-            return response('not found', 400);
         }
     }
 
@@ -73,6 +116,7 @@ class CourseController extends Controller
             $course->theme_id = $request->theme_id;
             $course->title = $request->title;
             $course->description = $request->description;
+            $course->status = 'saved';
             $course->save();
             return response('ok',200);
         } else {

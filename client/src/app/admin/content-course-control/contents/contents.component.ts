@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 
 import { MyContentsService } from 'src/app/user-stuff/my-contents/my-contents.service';
+import { FilterStatusPipe } from 'src/app/pipes/filter-status.pipe';
 
 @Component({
   selector: 'app-contents',
@@ -18,6 +19,9 @@ export class ContentsComponent implements OnInit {
 
   loading: boolean = true
   loadingAction: boolean = false
+
+  filterStatus: FilterStatusPipe
+  status = 'pending'
 
   constructor(private _myContentsService: MyContentsService) { }
 
@@ -41,16 +45,17 @@ export class ContentsComponent implements OnInit {
   }
 
 
-  changeStatus(action){
+  changeStatus(status){
     this.loadingAction = true
-    let idContent = this.selectedContent.id
-    this._myContentsService.changeStatus(action,idContent,this.selectedContent)
+    let newStatus = new FormData();
+    newStatus.append('status',status)
+    this._myContentsService.changeStatus(this.selectedContent.id,newStatus)
       .subscribe(
         (res) => {
           console.log(res)
           this.loadingAction = false
           this.selectedContent.status = res
-          this.triggerFalseClick(action)
+          this.triggerFalseClick(status)
         },
         (error) => console.log(error)
       )
@@ -59,13 +64,13 @@ export class ContentsComponent implements OnInit {
   triggerFalseClick(action) {
     let  el: HTMLElement
     switch (action) {
-      case 'approve':
+      case 'approved':
         el = this.closeButtonApprove.nativeElement as HTMLElement
         break;
-      case 'reject':
+      case 'rejected':
         el = this.closeButtonReject.nativeElement as HTMLElement
         break;
-      case 'recycle':
+      case 'recycled':
         el = this.closeButtonRecycle.nativeElement as HTMLElement        
         break
       default:

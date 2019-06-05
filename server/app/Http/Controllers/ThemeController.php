@@ -4,37 +4,39 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Theme;
+use App\ContentSolicitation;
+use App\Course;
 
 class ThemeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index()
     {
         $themes = Theme::all();
         return json_encode($themes);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function themeByCategory($id)
     {
         $themes = Theme::where('category_id',$id)->get();
+
+        if(isset($themes) && sizeOf($themes)>0) {
+            foreach ($themes as $theme) {
+                $theme->contents = ContentSolicitation::where([['theme_id',$theme->id],['status','approved']])->count();
+                $theme->courses = Course::where('theme_id',$theme->id)->count();
+            }
+        }
+
         return json_encode($themes);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function getById($id){
+        $theme = Theme::find($id);
+        if (isset($theme)) {
+            return json_encode($theme);
+        }
+    }
+
     public function store(Request $request)
     {
         $newTheme = new Theme();
@@ -47,35 +49,6 @@ class ThemeController extends Controller
         ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $theme = Theme::find($id);
@@ -91,12 +64,7 @@ class ThemeController extends Controller
             'error' => 'not found'
         ], 404);
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy($id)
     {
         $theme = Theme::find($id);

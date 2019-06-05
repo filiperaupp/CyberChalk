@@ -1,0 +1,11 @@
+.container-fluid{
+    width: 96%;
+}
+
+.main-color{
+    color: #3c8dbc;
+}
+
+.border-row{
+    border-bottom: 2px solid #858585;
+}

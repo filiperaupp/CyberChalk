@@ -1,4 +1,5 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+
 import { CategoryService } from '../admin/category-theme-control/category/category.service';
 import { Category } from '../models/category';
 import { AuthService } from '../services/auth.service';

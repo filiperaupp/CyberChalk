@@ -3,21 +3,36 @@
 </ng-template>
 
 <div class="container-fluid bg-white">
-  <div class="row">
-    <div class="col-12 p-0">
-      <div class="input-group input-group-sm m-2 input-width-300">
+  <div class="row pt-2">
+    <div class="col-12 col-lg-4 col-md-6">
+      <div class="input-group input-group-sm">
         <div class="input-group-prepend">
           <span class="input-group-text" id="inputGroup-sizing-sm">
             <i class="fas fa-search"></i>
           </span>
         </div>
         <input type="text" id="search" class="form-control" aria-label="Sizing example input"
-          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria...">
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria..." [(ngModel)]="text">
+      </div>
+    </div>
+    <div class="col-12 col-lg-5 col-md-6">
+      <div class="form-group row">
+        <label for="status" class="col-sm-auto col-form-label col-form-label-sm">Status</label>
+        <div class="col-sm">
+          <select class="form-control form-control-sm" name="status" id="status" [(ngModel)]="status">
+            <option value="">Todos</option>
+            <option value="pending">Em aprovação</option>
+            <option value="recycled">Em reciclagem</option>
+            <option value="rejected">Rejeitado</option>
+            <option value="approved">Aceito</option>
+            <option value="saved">Salvo</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
 </div>
-<div *ngIf="!loading && !isNull else load" class="table-responsive">
+<div *ngIf="!loading else load" class="table-responsive">
   <table class="table table-bordered">
     <thead class="bg-white">
       <tr>
@@ -32,13 +47,13 @@
       </tr>
     </thead>
     <tbody class="bg-white">
-      <tr *ngFor="let course of courses">
+      <tr *ngFor="let course of courses | filterStatus: text: status as result">
         <th scope="row">{{ course.id }}</th>
         <td> {{ course.title }}</td>
-        <td> categoria/tema </td>
-        <td> Criador </td>
+        <td> {{ course.categoryName }}/{{ course.themeName }} </td>
+        <td> {{ course.creatorName }} </td>
         <td> {{ course.created_at }} </td>
-        <td> course.qtd </td>
+        <td> {{ course.qtdContent }} </td>
         <td [ngSwitch]="course.status">
           <div class="text-info" *ngSwitchCase="'saved'">Salvo</div>
           <div class="text-warning" *ngSwitchCase="'pending'">Em aprovação</div>
@@ -70,6 +85,13 @@
     </tbody>
   </table>
 </div>
+<div class="container-fluid" *ngIf="courses | filterStatus: text: status as result;">
+  <div class="row">
+    <div *ngIf="!loading && status == 'pending' && result.length == 0" class="alert alert-success text-center w-100">
+       <h5>Nenhum curso "Em aprovação" pendente!</h5>
+    </div>
+  </div>
+</div>
 
 <!--------------------------------- M O D A L ' S  --------------------------------->
 <!-- Modal approve-->
@@ -93,7 +115,7 @@
           <i class="fas fa-arrow-left mr-1"></i>
           Cancelar
         </button>
-        <button type="button" class="btn btn-success" (click)="changeStatus('approve')">
+        <button type="button" class="btn btn-success" (click)="changeStatus('approved')">
           <i class="fas fa-check"></i>
           Aprovar
         </button>
@@ -128,7 +150,7 @@
           <i class="fas fa-arrow-left mr-1"></i>
           Cancelar
         </button>
-        <button type="button" class="btn btn-info" (click)="changeStatus('recycle')">
+        <button type="button" class="btn btn-info" (click)="changeStatus('recycled')">
           <i class="fas fa-recycle"></i>
           Reciclar
         </button>
@@ -154,7 +176,7 @@
         </button>
       </div>
       <div *ngIf="selectedCourse" class="modal-body">
-        Deseja realmente <b>deletar</b> o curso <b>{{ selectedCourse.title }}</b>?<br>
+        Deseja realmente <b>rejeitar</b> o curso <b>{{ selectedCourse.title }}</b>?<br>
         <small class="text-secondary">Obs: Após deletado, o criador nao poderá mais editar esse curso.</small>
       </div>
       <div *ngIf="!loadingAction" class="modal-footer">
@@ -162,9 +184,9 @@
           <i class="fas fa-arrow-left mr-1"></i>
           Cancelar
         </button>
-        <button type="button" class="btn btn-danger" (click)="changeStatus('reject')">
+        <button type="button" class="btn btn-danger" (click)="changeStatus('rejected')">
           <i class="fas fa-trash mr-1"></i>
-          Deletar
+          Rejeitar
         </button>
       </div>
       <div *ngIf="loadingAction" class="modal-footer">

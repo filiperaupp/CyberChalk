@@ -1,8 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 
 import { MyCoursesService } from './my-courses.service';
-import { CategoryService } from 'src/app/admin/category-theme-control/category/category.service';
-import { ThemeService } from 'src/app/admin/category-theme-control/theme/theme.service';
 import { Theme } from 'src/app/models/theme';
 import { Category } from 'src/app/models/category';
 
@@ -12,7 +10,9 @@ import { Category } from 'src/app/models/category';
   styleUrls: ['./my-courses.component.css']
 })
 export class MyCoursesComponent implements OnInit {
-  @ViewChild('closeButtonDel') closeButtonDel: ElementRef;
+  @ViewChild('closeButtonDelete') closeButtonDelete: ElementRef;
+  @ViewChild('closeButtonSend') closeButtonSend: ElementRef;
+  @ViewChild('closeButtonCancel') closeButtonCancel: ElementRef;
 
   courses: any[] = []
   themes: Theme[] = []
@@ -22,42 +22,47 @@ export class MyCoursesComponent implements OnInit {
   loading = true
   loadingAction = false
 
-  constructor(private _myCoursesService: MyCoursesService,
-    private _categoryService: CategoryService,
-    private _themeServixce: ThemeService) { }
+  constructor(private _myCoursesService: MyCoursesService) { }
 
   ngOnInit() {
     this.getAll()
-    this.getAllCategories()
   }
 
   getAll() {
-    this._myCoursesService.getAll()
+    this._myCoursesService.getCoursesByUser()
       .subscribe(
-        (data: any[]) => this.courses = data,
+        (data: any[]) => {
+          console.log(data)
+          this.courses = data
+          this.loading = false
+        },
         (error) => console.log(error)
       )
   }
 
-  getSelectedCourse(course){
+  getSelectedCourse(course) {
     this.selectedCourse = course
   }
 
-  removeFromList(){
+  removeFromList() {
     let removedContentIndex = this.courses.indexOf(this.selectedCourse)
-    this.courses.splice(removedContentIndex,1)
+    this.courses.splice(removedContentIndex, 1)
   }
 
-  sendCourse(idCourse){
-    let course = new FormData()
-    course.append('course', JSON.stringify(this.selectedCourse))
-    this._myCoursesService.sendToApprovre(idCourse,course)
+  changeStatus(status) {
+    this.loadingAction = true
+    let newStatus = new FormData()
+    newStatus.append('status', status)
+    this._myCoursesService.changeStatus(this.selectedCourse.id, newStatus)
       .subscribe(
-        res => console.log(res),
-        error => console.log(error)
+        res => {
+          this.selectedCourse.status = res
+          this.loadingAction = false
+          this.triggerFalseClick(status)
+        }
       )
   }
-  
+
   delete(id) {
     this.loadingAction = true
     this._myCoursesService.delete(id)
@@ -65,50 +70,28 @@ export class MyCoursesComponent implements OnInit {
         res => {
           this.loadingAction = false
           this.removeFromList()
-          this.triggerFalseClick()
+          this.triggerFalseClick('delete')
         },
         error => {
           console.log(error)
-          this.loadingAction = false
-          this.removeFromList()
-          this.triggerFalseClick()
         }
       )
   }
 
-  getAllCategories() {
-    this._categoryService.getAll()
-      .subscribe(
-        (data: Category[]) => {
-          this.categories = data
-          this.getAllThemes()
-        }
-      )
-  }
-
-  getAllThemes() {
-    this._themeServixce.getAll()
-      .subscribe(
-        (data: Theme[]) => {
-          this.themes = data
-          this.loading = false
-        }
-      )
-  }
-
-  getThemeName(idTheme) {
-    let themeName = this.themes.find(t => t.id == idTheme).name
-    return themeName
-  }
-
-  getCategoryName(idTheme) {
-    let idCategory = this.themes.find(t => t.id == idTheme).category_id
-    let categoryName = this.categories.find(c => c.id == idCategory).name
-    return categoryName
-  }
-
-  triggerFalseClick() {
-    let  el = this.closeButtonDel.nativeElement as HTMLElement
+  triggerFalseClick(action) {
+    let el: HTMLElement
+    switch (action) {
+      case 'delete':
+        el = this.closeButtonDelete.nativeElement as HTMLElement
+        break;
+      case 'pending':
+        el = this.closeButtonSend.nativeElement as HTMLElement
+        break;
+      case 'canceled':
+        el = this.closeButtonCancel.nativeElement as HTMLElement
+      default:
+        break;
+    }
     el.click();
   }
 

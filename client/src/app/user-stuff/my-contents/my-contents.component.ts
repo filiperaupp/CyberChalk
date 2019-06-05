@@ -1,8 +1,5 @@
-import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { MyContentsService } from './my-contents.service';
-import { ThemeService } from 'src/app/admin/category-theme-control/theme/theme.service';
-import { Theme } from 'src/app/models/theme';
 
 @Component({
   selector: 'app-my-contents',
@@ -10,25 +7,23 @@ import { Theme } from 'src/app/models/theme';
   styleUrls: ['./my-contents.component.css']
 })
 export class MyContentsComponent implements OnInit {
-  @ViewChild('closeButtonDel') closeButtonDel: ElementRef;
+  @ViewChild('closeButtonDelete') closeButtonDelete: ElementRef;
+  @ViewChild('closeButtonSend') closeButtonSend: ElementRef;
+  @ViewChild('closeButtonCancel') closeButtonCancel: ElementRef;
 
   private loading: boolean = true
   private loadingAction = false
-  private loadingThemes:boolean = false
   private contentSolicitations: any[]
-  private themes: Theme[] = []
   private selectedContent: any
 
-  constructor(private _myContentService: MyContentsService,
-              private _themeService: ThemeService) { }
+  constructor(private _myContentService: MyContentsService) { }
 
   ngOnInit() {
     this.getAll()
-    this.getAllThemes()
   }
 
   getAll(){
-    this._myContentService.getAll()
+    this._myContentService.getContentsByUser()
       .subscribe(
         (res: any[] ) => {
           this.contentSolicitations = res
@@ -49,13 +44,17 @@ export class MyContentsComponent implements OnInit {
     this.contentSolicitations.splice(removedContentIndex,1)
   }
 
-  sendContent(idContent){
-    let content = new FormData()
-    content.append('content', '')
-    this._myContentService.sendToApprove(idContent, content)
+  changeStatus(status){
+    this.loadingAction = true
+    let newStatus = new FormData()
+    newStatus.append('status',status)
+    this._myContentService.changeStatus(this.selectedContent.id, newStatus)
       .subscribe(
-        res => console.log(res),
-        error => console.log(error)
+        res => {
+          this.selectedContent.status = res
+          this.loadingAction = false
+          this.triggerFalseClick(status)
+        }
       )
   }
 
@@ -66,7 +65,7 @@ export class MyContentsComponent implements OnInit {
         res => {
           this.loadingAction = false
           this.removeFromList()
-          this.triggerFalseClick()
+          this.triggerFalseClick('delete')
         },
         error => {
           this.loadingAction = false
@@ -74,27 +73,20 @@ export class MyContentsComponent implements OnInit {
       )
   }
 
-  getThemeName(id){
-    return this.themes.find(t => t.id == id).name
-  }
-
-  getAllThemes(){
-    this.loadingThemes = true
-    this._themeService.getAll()
-      .subscribe(
-        (data: Theme[]) => {
-          this.themes = data
-          this.loadingThemes = false
-        },
-        error => {
-          console.log(error)
-          this.loadingThemes = false
-        }
-      )
-  }
-
-  triggerFalseClick() {
-    let  el = this.closeButtonDel.nativeElement as HTMLElement
+  triggerFalseClick(action) {
+    let el: HTMLElement
+    switch (action) {
+      case 'delete':
+        el = this.closeButtonDelete.nativeElement as HTMLElement
+        break;
+      case 'pending':
+        el = this.closeButtonSend.nativeElement as HTMLElement
+        break;
+      case 'canceled':
+          el = this.closeButtonCancel.nativeElement as HTMLElement
+      default:
+        break;
+    }
     el.click();
   }
 }

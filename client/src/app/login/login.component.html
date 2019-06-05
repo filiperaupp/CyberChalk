@@ -48,11 +48,13 @@
         </div>
         <div *ngIf="!loading" class="modal-footer bg-light">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            <i class="fas fa-arrow-left"></i> Voltar
+            <i class="fas fa-arrow-left"></i> 
+            Voltar
           </button>
           <button type="submit" class="btn btn-success"
             [disabled]="loginForm.pristine || loginForm.invalid">
-            <i class="fas fa-sign-in-alt"></i> Logar
+            <i class="fas fa-sign-in-alt"></i> 
+            Logar
           </button>
         </div>
         <div *ngIf="loading" class="modal-footer bg-light">

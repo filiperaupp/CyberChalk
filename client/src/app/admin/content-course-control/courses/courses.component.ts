@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { MyCoursesService } from 'src/app/user-stuff/my-courses/my-courses.service';
+import { FilterStatusPipe } from 'src/app/pipes/filter-status.pipe';
 
 @Component({
   selector: 'app-courses',
@@ -18,6 +19,9 @@ export class CoursesComponent implements OnInit {
   loading:boolean = true
   loadingAction:boolean = false
 
+  filterStatus: FilterStatusPipe
+  status = 'pending'
+
   constructor(private _myCoursesService: MyCoursesService) { }
 
   ngOnInit() {
@@ -29,6 +33,7 @@ export class CoursesComponent implements OnInit {
       .subscribe(
         (data: any[]) => {
           this.courses = data
+          console.log(data)
           this.loading = false
         },
         (error) => console.log(error)
@@ -41,10 +46,10 @@ export class CoursesComponent implements OnInit {
 
   changeStatus(action){
     this.loadingAction = true
-    let idContent = this.selectedCourse.id
+    let idCourse = this.selectedCourse.id
     let formAction = new FormData()
-    formAction.append('action', action)
-    this._myCoursesService.changeStatus(idContent, formAction)
+    formAction.append('status', action)
+    this._myCoursesService.changeStatus(idCourse, formAction)
       .subscribe(
         (res) => {
           console.log(res)
@@ -59,13 +64,13 @@ export class CoursesComponent implements OnInit {
   triggerFalseClick(action) {
     let  el: HTMLElement
     switch (action) {
-      case 'approve':
+      case 'approved':
         el = this.closeButtonApprove.nativeElement as HTMLElement
         break;
-      case 'reject':
+      case 'rejected':
         el = this.closeButtonReject.nativeElement as HTMLElement
         break;
-      case 'recycle':
+      case 'recycled':
         el = this.closeButtonRecycle.nativeElement as HTMLElement        
         break
       default:

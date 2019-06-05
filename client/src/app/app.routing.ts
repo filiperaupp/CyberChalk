@@ -24,6 +24,9 @@ import { ContentItemComponent } from './user-stuff/content-item/content-item.com
 import { ContentCourseControlComponent } from './admin/content-course-control/content-course-control.component';
 import { ContentsComponent } from './admin/content-course-control/contents/contents.component';
 import { CoursesComponent } from './admin/content-course-control/courses/courses.component';
+import { ThemeContentComponent } from './category-content/theme-content/theme-content.component';
+import { ShowContentComponent } from './category-content/show-content/show-content.component';
+import { ShowCourseComponent } from './category-content/show-course/show-course.component';
 
 const APP_ROUTES: Routes = [
     { path: '', component: HomeComponent},
@@ -66,7 +69,11 @@ const APP_ROUTES: Routes = [
                 { path: '', redirectTo:'list', pathMatch:'full' }
             ] },
         ] },
-        { path: 'category/:id', component: CategoryContentComponent },
+        { path:'category/:id', component: CategoryContentComponent },
+        { path:'category/:idCa/theme/:idTh', component: ThemeContentComponent },
+        { path:'category/:idCa/theme/:idTh/content/:idCo', component: ShowContentComponent },
+        { path:'category/:idCa/theme/:idTh/course/:idCou', component: ShowCourseComponent },
+
         { path: '', redirectTo:'login' ,pathMatch:'full'}
     ] },
     

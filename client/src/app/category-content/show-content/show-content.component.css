@@ -1,0 +1,13 @@
+.container-fluid{
+    width: 96%;
+}
+
+.main-color{
+    color: #3c8dbc;
+}
+
+.card{
+    width: fit-content;
+    display: inline-block;
+    cursor: pointer;
+}

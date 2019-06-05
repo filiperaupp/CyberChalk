@@ -1,0 +1,101 @@
+<ng-template #load>
+  <loader *ngIf="loading"></loader>
+</ng-template>
+
+<div *ngIf="!isShowContent else showContent">
+  <div *ngIf="!loading else load" class="container-fluid bg-white my-2">
+    <div class="row">
+      <div class="col-alto">
+        <button class="btn btn-sm btn-outline-dark m-2" routerLink="../../">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+        </button>
+      </div>
+      <div class="col-12 text-center">
+        <h2>{{ theme.name }}</h2>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <h5 (click)="content = true">Conteúdos avulsos</h5>
+      </div>
+      <div class="col-12 p-0">
+        <div class="scrollmenu py-2 pl-2">
+          <a *ngFor="let content of contents" routerLink="content/{{ content.id }}">
+            <div class="card mr-2" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title title-ellipsis" style="min-height: 48px;">{{ content.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">By: Filipe Oliveira Raupp</h6>
+                <p class="card-text text-ellipsis" style="min-height: 72px;">
+                  Esse curso irá abordar os conceitos iniciais da lógica de programação,
+                  mostrando dicas e macetes para que
+                </p>
+              </div>
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col-9">
+                    <button class="btn btn-sm btn-light">
+                      Clique para iniciar!
+                    </button>
+                  </div>
+                  <div class="col-3 text-right">
+                    <h5 class="m-0 main-color">
+                      <i class="fas fa-thumbs-up"></i>
+                      26
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div *ngIf="contents.length == 0" class="w-auto alert alert-warning mx-2">
+          <h5>Nenhum conteúdo nesse tema.</h5>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <h5>Cursos</h5>
+      </div>
+      <div class="col-12 p-0">
+        <div class="scrollmenu py-2 pl-2 mb-2">
+          <a *ngFor="let course of courses" routerLink="course/{{ course.id }}">
+            <div class="card mr-2" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title title-ellipsis" style="min-height: 48px;">{{ course.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">By: Filipe Oliveira Raupp</h6>
+                <p class="card-text text-ellipsis" style="min-height: 72px;">
+                  {{ course.description }}
+                </p>
+              </div>
+              <div class="card-footer">
+                <div class="row">
+                  <div class="col-9">
+                    <button class="btn btn-sm btn-light">
+                      Clique para iniciar!
+                    </button>
+                  </div>
+                  <div class="col-3 text-right">
+                    <h5 class="m-0 main-color">
+                      <i class="fas fa-thumbs-up"></i>
+                      26
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div *ngIf="courses.length == 0" class="w-auto alert alert-warning mx-2">
+          <h5>Nenhum curso nesse tema.</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #showContent>
+  <show-content [id]=selectedContent.id></show-content>
+</ng-template>
