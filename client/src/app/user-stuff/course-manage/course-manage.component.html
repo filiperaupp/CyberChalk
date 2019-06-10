@@ -1,5 +1,5 @@
 <ng-template #load>
-  <loader *ngIf="loading || loadingEdit"></loader>
+  <loader *ngIf="loading || loadingAction"></loader>
 </ng-template>
 
 <div class="container-fluid bg-white py-2 mb-3">
@@ -48,7 +48,7 @@
     </div>
     <div class="row justify-content-end">
       <div class="col-auto">
-        <button type="submit" class="btn btn-success" [disabled]="courseForm.invalid">
+        <button *ngIf="!loadingAction else load" type="submit" class="btn btn-success" [disabled]="courseForm.invalid">
           <i class="fas fa-save"></i>
           Salvar
         </button>

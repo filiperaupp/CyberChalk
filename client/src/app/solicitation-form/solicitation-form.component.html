@@ -25,15 +25,6 @@
                 Name is required.
               </div>
             </div>
-            <label for="cgu">CGU</label>
-            <input class="form-control" type="text" name="cgu" formControlName="cgu" maxlength="9">
-            <div
-              *ngIf="solicitationForm.controls['cgu'].invalid && (solicitationForm.controls['cgu'].dirty || solicitationForm.controls['cgu'].touched)"
-              class="text-danger">
-              <div *ngIf="solicitationForm.controls['cgu'].errors.required">
-                CGU is required.
-              </div>
-            </div>
             <label for="email">E-mail</label>
             <input class="form-control" type="text" name="email" formControlName="email">
             <div

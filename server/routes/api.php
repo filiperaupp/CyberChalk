@@ -39,6 +39,10 @@ Route::get('user-solicitations', 'UserSolicitationController@getAll');
 Route::get('users', 'UserController@index');
 Route::delete('users/{id}', 'UserController@destroy');
 Route::post('users/{id}', 'UserController@updateType');
+//profile photo
+Route::post('profile-photo','UserController@changeProfilePhoto')->middleware('auth:api');
+//update name and email of USER
+Route::put('user-update', 'UserController@updateUser')->middleware('auth:api');
 
 Route::get('categories', 'CategoryController@index')
     ->middleware('auth:api');
@@ -77,7 +81,7 @@ Route::get('/downloadVideo/{id}', 'VideoController@download');
 //courses
 Route::get('courses', 'CourseController@index')->middleware('auth:api');
 Route::post('courses', 'CourseController@store')->middleware('auth:api');
-Route::get('courses/{id}', 'CourseController@getById');
+Route::get('courses/{id}', 'CourseController@getById')->middleware('auth:api');
 Route::put('courses/{id}', 'CourseController@update');
 Route::delete('courses/{id}', 'CourseController@destroy');
 Route::post('send-to-approve/{id}', 'CourseController@sendToApprove');
@@ -85,12 +89,30 @@ Route::post('change-status/{id}', 'CourseController@changeStatus');
 Route::get('courses-by-user', 'CourseController@allCoursesByUser')->middleware('auth:api');
 
 //content to courses
-Route::post('add-content-in-course', 'ContentToCourseController@addContent');
+Route::post('add-content-in-course', 'ContentToCourseController@addContent')->middleware('auth:api');
 Route::get('contents-by-course/{id}', 'ContentToCourseController@contentsByCourse');
 Route::delete('contents-by-course/{id}', 'ContentToCourseController@destroy');
 Route::post('change-position', 'ContentToCourseController@changePosition');
+//With status done or not
+Route::get('contents-by-course-is-done/{id}', 'ContentToCourseController@contentsByCourseWithProgress')
+    ->middleware('auth:api');
+
+
 
 //list material of a theme
-Route::get('contents-by-theme/{id}', 'ContentSolicitationController@getByThemeId');
-Route::get('courses-by-theme/{id}', 'CourseController@getByThemeId');
+Route::get('contents-by-theme/{id}', 'ContentSolicitationController@getByThemeId')->middleware('auth:api');
+Route::get('courses-by-theme/{id}', 'CourseController@getByThemeId')->middleware('auth:api');
+
+//Progress
+Route::post('progress', 'ProgressController@store')->middleware('auth:api');
+Route::post('progress-undo', 'ProgressController@destroy')->middleware('auth:api');
+Route::get('courses-in-progress', 'ProgressController@getPercentage')->middleware('auth:api');
+
+//like
+Route::post('like', 'LikeController@store')->middleware('auth:api');
+Route::post('unlike', 'LikeController@destroy')->middleware('auth:api');
+
+//get user logged
+Route::get('user-logged','AuthController@getUser')->middleware('auth:api');
+
 

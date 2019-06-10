@@ -34,6 +34,7 @@ export class ContentManageComponent implements OnInit {
 
   loading: boolean = true
   loadingEdit: boolean = true
+  loadingAction: boolean = false
 
   files: any[] = []
   video: any = null
@@ -76,6 +77,7 @@ export class ContentManageComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loadingAction = true
     let contentSolicitation = new FormData()
 
     let title = this.contentForm.controls['title'].value
@@ -108,13 +110,19 @@ export class ContentManageComponent implements OnInit {
 
       this._myContentService.postTeste(contentSolicitation)
         .subscribe(
-          res => console.log(res),
+          res => {
+            this.loadingAction = false
+            this.router.navigate(['../list'])
+          }, 
           error => console.log(error)
         )
     } else {
       this._myContentService.post(contentSolicitation)
         .subscribe(
-          res => console.log(res),
+          res => {
+            this.loadingAction = false
+            this.router.navigate(['dashboard/my-stuff/contents/list'])
+          },
           error => console.log(error)
         )
     }

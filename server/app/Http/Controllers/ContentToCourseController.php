@@ -6,14 +6,16 @@ use Illuminate\Http\Request;
 use App\ContentSolicitation;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\ProgressController;
+use Illuminate\Support\Facades\Auth;
 use Log;
 
 class ContentToCourseController extends Controller
 {
     public function addContent(Request $request){
-        //Log::debug($request);
+        $user = Auth::user();
         $contentSolicitation = new ContentSolicitation();
-        $contentSolicitation->user_id = 1;
+        $contentSolicitation->user_id = $user->id;
         $contentSolicitation->course_id = $request->course_id;
         $contentSolicitation->title = $request->title;
         $contentSolicitation->support_text = $request->support_text;
@@ -139,19 +141,32 @@ class ContentToCourseController extends Controller
         }
         return response('ok',200);
     }
-
+    //Content simple list
     public function contentsByCourse($id){
         $videoController = new VideoController();
         $fileController = new FileController();
 
         $allContents = ContentSolicitation::select('id','title','created_at','position')->where('course_id', $id)->orderBy('position')->get();
         
-        $contentsToSend = array();
         if (isset($allContents) && sizeOf($allContents) > 0) {
             foreach ($allContents as $c) {
                 $c->hasVideo = $videoController->hasVideo($c->id);
                 $c->hasFiles = $fileController->howManyFiles($c->id);
-                array_push($contentsToSend,$c);
+            }
+        }
+
+        return json_encode($allContents);
+    }
+    //Define status if are done or not
+    public function contentsByCourseWithProgress($id){
+        $user = Auth::user();
+        $progressController = new ProgressController();
+
+        $allContents = ContentSolicitation::select('id','title','created_at','position')->where('course_id', $id)->orderBy('position')->get();
+        
+        if (isset($allContents) && sizeOf($allContents) > 0) {
+            foreach ($allContents as $content) {
+                $content->isDone = $progressController->getProgressByContent($content->id,$user->id);
             }
         }
 

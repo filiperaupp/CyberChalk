@@ -6,6 +6,15 @@
     color: #3c8dbc;
 }
 
+.btn-theme-color{
+    background-color: #3c8dbc;
+    color: #fff;
+}
+
+.btn-theme-color:hover{
+    background-color: #2b7eab;
+}
+
 a{
     text-decoration: none;
     color: inherit;
@@ -13,7 +22,6 @@ a{
 
 .card:hover{
     border: 2px solid #3c8dbc;
-    cursor: pointer;
 }
 
 div.scrollmenu {
@@ -26,7 +34,7 @@ div.scrollmenu {
 .card{
     display: inline-block;
     box-shadow: 7px 7px 7px -3px rgba(0,0,0,0.47);
-    border: 2px solid transparent;
+    border: 2px solid rgba(0,0,0,.125);
 }
 
 .title-ellipsis{
@@ -65,4 +73,8 @@ div.scrollmenu {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
+}
+
+.pointer{
+    cursor: pointer;
 }

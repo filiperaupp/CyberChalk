@@ -9,6 +9,7 @@ use App\Course;
 use App\Theme;
 use App\Category;
 use App\User;
+use App\Http\Controllers\LikeController;
 use Log;
 class CourseController extends Controller
 {
@@ -54,7 +55,16 @@ class CourseController extends Controller
     }
 
     public function getByThemeId($id){
+        $user = Auth::user();
+        $likeController = new LikeController();
         $courses = Course::where('theme_id',$id)->get();
+        if(isset($courses) && sizeOf($courses)>0) {
+            foreach ($courses as $course) {
+                $course->likes = $likeController->likesInCourse($course->id);
+                $course->isLike = $likeController->isLikeCourse($user->id, $course->id);
+                $course->creator = User::find($course->user_id)->name;
+            }
+        }
         return json_encode($courses);
     }
 
@@ -132,5 +142,12 @@ class CourseController extends Controller
         } else {
             return response('not found', 400);
         }
+    }
+
+    public function getCourseInfo($idCourse){
+        $course = Course::find($idCourse);
+        $course->theme = Theme::find($course->theme_id);
+        $course->category = Category::find($course->theme->category_id);
+        return $course;
     }
 }

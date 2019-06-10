@@ -44,7 +44,6 @@ class UserSolicitationController extends Controller
         $newSolicitation = new UserSolicitation();
         $newSolicitation->name = $request->name;
         $newSolicitation->email = $request->email;
-        $newSolicitation->cgu = $request->cgu;
         $newSolicitation->password = bcrypt($request->password);
         $newSolicitation->status = 'pending';
         $newSolicitation->save();

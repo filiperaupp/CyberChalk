@@ -2,7 +2,7 @@
   <loader *ngIf="loading"></loader>
 </ng-template>
 
-<div *ngIf="!loading else load" class="container-fluid bg-white mt-2">
+<div *ngIf="!loading else load" class="container-fluid bg-white mt-2 mb-2">
   <div class="row">
     <div class="col-alto">
       <button class="btn btn-sm btn-outline-dark m-2" routerLink="../../">
@@ -10,33 +10,57 @@
         Voltar
       </button>
     </div>
+    <div class="col-12">
+      <div *ngIf="!selectedContent else theContentOn" class="alert alert-secondary text-center" style="height: 500px">
+        <h3 class="align-middle text-secondary" style="margin-top: 200px;">Selecione um conteúdo para começar</h3>
+      </div>
+      <ng-template #theContentOn>
+        <show-content [idContent]="selectedContent.id"></show-content>
+      </ng-template>
+    </div>
+    <div *ngIf="selectedContent" class="col-12 text-right">
+      <div class="btn-group">
+        <button class="btn btn-secondary" [disabled]="getIndex() == 0" (click)="changeContent('previous')">
+          <i class="fas fa-chevron-left"></i>
+          Anterior
+        </button>
+        <button *ngIf="!(getIndex() == (contents.length - 1)); else finishButton" class="btn btn-secondary"
+          (click)="changeContent('next')">
+          Próximo
+          <i class="fas fa-chevron-right"></i>
+        </button>
+        <ng-template #finishButton>
+          <button class="btn btn-success" (click)="finishCourse()">
+            Concluir
+            <i class="fas fa-check-double"></i>
+          </button>
+        </ng-template>
+      </div>
+    </div>
     <div class="col-12 text-center my-2">
       <h4>{{ course.title }}</h4>
     </div>
     <div class="col-12">
-      <div *ngIf="!selectedContent else theContentOn" class="alert alert-secondary text-center">
-        <h5>Selecione um conteúdo para começar</h5>
-      </div>
-      <ng-template #theContentOn>
-        <show-content [idContent] = "selectedContent.id" ></show-content>
-      </ng-template>
-    </div>
-
-    <div class="col-12">
+      <hr>
       <h5>Descrição do curso</h5>
     </div>
     <div class="col-12">
       <p>{{ course.description }}</p>
     </div>
     <div class="col-12">
+      <hr>
       <h5>Lista de conteúdos</h5>
     </div>
     <div class="col-12 pb-3">
-      <div *ngFor="let content of contents; let i = index" class="row m-0 p-2 bg-light border-row" (click)="startContent(content)">
-        <div class="col-auto">
-          <i class="fas fa-arrow-left"></i>
+      <div *ngFor="let content of contents; let i = index" class="row m-0 bg-light border-row list-item"
+        [ngClass]="{active: content.id == selectedContent?.id}">
+        <div class="col-auto m-2">
+          <i *ngIf="!content.isDone" class="far fa-square pointer" (click)="doneOrUndo(content,'done')"></i>
+          <i *ngIf="content.isDone" class="fas fa-check-square pointer" (click)="doneOrUndo(content, 'undo')"
+            [ngClass]="content.id == selectedContent?.id ? 'active' : 'normal-color'">
+          </i>
         </div>
-        <div class="col">
+        <div class="col m-2 pointer" (click)="startContent(content)">
           {{ i+1 | number: '2.0-0'}} - {{ content.title }}
         </div>
       </div>

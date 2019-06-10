@@ -13,7 +13,6 @@ export class SolicitationFormComponent implements OnInit {
 
   solicitationForm = this.fb.group({
     name: ['', Validators.required],
-    cgu: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   })

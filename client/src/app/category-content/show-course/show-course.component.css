@@ -9,3 +9,26 @@
 .border-row{
     border-bottom: 2px solid #858585;
 }
+
+.pointer{
+    cursor: pointer;
+}
+
+.list-item:hover{
+    background-color: #5fb5c2 !important; 
+    color: #fff !important;
+}
+
+
+.normal-color{
+    color: #17a2b8;
+}
+
+.normal-color:hover{
+    color:white;
+}
+
+.active{
+    background-color: #5fb5c2 !important; 
+    color: #fff ;
+}

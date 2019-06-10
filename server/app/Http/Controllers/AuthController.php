@@ -13,7 +13,6 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|',
-            'cgu' => 'required|string',
             'type' => 'required|string',
             'idSolicitation' => 'required'
         ]);
@@ -22,14 +21,18 @@ class AuthController extends Controller
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $solicitation->password,       
-            'cgu' => $request->cgu,
+            'password' => $solicitation->password,
             'type' => $request->type,
         ]);
         $user->save();
         return response()->json([
             'res' => "Register Successful"
         ], 201);
+    }
+
+    public function getUser(){
+        $user = Auth::user();
+        return json_encode($user);
     }
 
 
@@ -54,7 +57,6 @@ class AuthController extends Controller
 
         return response()->json([
             'name' => $user->name,
-            'cgu' => $user->cgu,
             'type' => $user->type,
             'email' => $request->email,
             'token' => $token

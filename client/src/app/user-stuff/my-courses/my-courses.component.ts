@@ -32,7 +32,6 @@ export class MyCoursesComponent implements OnInit {
     this._myCoursesService.getCoursesByUser()
       .subscribe(
         (data: any[]) => {
-          console.log(data)
           this.courses = data
           this.loading = false
         },

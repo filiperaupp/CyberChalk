@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\ContentSolicitation;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\LikeController;
 use App\File;
 use App\Video;
 use App\Theme;
@@ -62,7 +63,16 @@ class ContentSolicitationController extends Controller
     }
 
     public function getByThemeId($id){
+        $user = Auth::user();
+        $likeController = new LikeController();
         $contents = ContentSolicitation::where('theme_id', $id) -> get();
+        if(isset($contents) && sizeOf($contents)>0) {
+            foreach ($contents as $content) {
+                $content->likes = $likeController->likesInContent($content->id);
+                $content->isLike = $likeController->isLikeContent($user->id, $content->id);
+                $content->creator = User::find($content->user_id)->name;
+            }
+        }
         return json_encode($contents);
     }
 
@@ -108,7 +118,7 @@ class ContentSolicitationController extends Controller
                 Log::debug('vazio');       
             }
         }
-        return response('done',200);
+        return json_encode('done',200);
     }
 
     public function contentChangeStatus(Request $request, $id){
@@ -220,5 +230,10 @@ class ContentSolicitationController extends Controller
             ], 200);
         }
         return response('Not found', 404);
+    }
+
+    public function countContentsByCourse($idCourse){
+        $countContents = ContentSolicitation::where('course_id',$idCourse)->count();
+        return ($countContents);
     }
 }

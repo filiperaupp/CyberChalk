@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
@@ -29,6 +29,7 @@ export class CourseManageComponent implements OnInit {
 
 
   loading = false
+  loadingAction: boolean = false
   id: number
   actionText: string
 
@@ -36,6 +37,7 @@ export class CourseManageComponent implements OnInit {
     private _categoryService: CategoryService,
     private _themeService: ThemeService,
     private active: ActivatedRoute,
+    private route: Router,
     private _myCoursesService: MyCoursesService) { }
 
   ngOnInit() {
@@ -56,17 +58,24 @@ export class CourseManageComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loadingAction = true
     let course = this.courseForm.value
     if (this.id) {
       this._myCoursesService.update(this.id, course)
         .subscribe(
-          res => console.log(res),
+          res => {
+            this.loadingAction = false
+            this.route.navigate(['/dashboard/my-stuff/courses/list'])
+          },
           error => console.log(error)
         )
     } else {
       this._myCoursesService.post(course)
         .subscribe(
-          res => console.log(res),
+          res => {
+            this.loadingAction = false
+            this.route.navigate(['/dashboard/my-stuff/courses/list'])
+          },
           error => console.log(error)
         )
     }

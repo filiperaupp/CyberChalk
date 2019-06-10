@@ -1,0 +1,25 @@
+.photo {
+    height: 250px;
+    width: 250px;
+    border-radius: 125px;
+}
+
+.cover{
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    position: relative !important;
+}
+
+.max-width{
+    max-width: 328px;
+}
+
+.ng-valid:not(form)  {
+    border-left: 5px solid #42A948; /* green */
+  }
+  
+  .ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+  }
+

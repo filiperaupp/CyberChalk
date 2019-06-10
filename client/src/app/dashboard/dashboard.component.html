@@ -1,3 +1,7 @@
+<ng-template #load>
+  <loader></loader>
+</ng-template>
+
 <div class="container-fluid">
   <div class="row nav">
     <div class="side-title" id="navTitle" #navTitle>
@@ -13,12 +17,14 @@
   </div>
   <div class="flex-container">
     <div class="side-menu" id="sideMenu">
-      <div class="user">
+      <div *ngIf="user else load" class="user">
         <div class="float-left">
-          <img class="user-photo" src="../../assets/images/home-image.jpg" alt="" srcset="">
+          <div class="user-photo cover" [style.background-image]="urlImage()">
+
+          </div>
         </div>
         <div class="float-left ml-3">
-          <p class="username">Filipe Oliveira Raupp</p>
+          <p class="username">{{ user.name }}</p>
         </div>
       </div>
       <div class="main-navigation">
@@ -33,7 +39,7 @@
           <div class="panel">
             <ul class="list-style-none">
               <li class="sub-category">
-                <a routerLink="my-way" routerLinkActive="sub-category-active">
+                <a routerLink="profile" routerLinkActive="sub-category-active">
                   <i class="far fa-circle mr-1"></i>
                   Perfil
                 </a>
@@ -45,7 +51,7 @@
                 </a>
               </li>
               <li class="sub-category">
-                <a routerLink="my-way" routerLinkActive="sub-category-active">
+                <a routerLink="progress" routerLinkActive="sub-category-active">
                   <i class="far fa-circle mr-1"></i>
                   Material em andamento
                 </a>
@@ -135,7 +141,7 @@
         </li>
       </ul>
     </div>
-    <div class="board" id="board">
+    <div class="board p-2" id="board">
       <router-outlet></router-outlet>
     </div>
   </div>

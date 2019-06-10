@@ -27,6 +27,8 @@ import { CoursesComponent } from './admin/content-course-control/courses/courses
 import { ThemeContentComponent } from './category-content/theme-content/theme-content.component';
 import { ShowContentComponent } from './category-content/show-content/show-content.component';
 import { ShowCourseComponent } from './category-content/show-course/show-course.component';
+import { MyProgressComponent } from './user-stuff/my-progress/my-progress.component';
+import { ProfileComponent } from './user-stuff/profile/profile.component';
 
 const APP_ROUTES: Routes = [
     { path: '', component: HomeComponent},
@@ -49,6 +51,7 @@ const APP_ROUTES: Routes = [
                 { path: '', redirectTo: 'contents', pathMatch: 'full' }
             ]}
         ]},
+        { path: 'profile', component: ProfileComponent },
         { path: 'my-stuff', component: UserStuffComponent, children:[
             { path: 'contents', children: [
                 { path: 'list', component: MyContentsComponent },
@@ -69,6 +72,7 @@ const APP_ROUTES: Routes = [
                 { path: '', redirectTo:'list', pathMatch:'full' }
             ] },
         ] },
+        { path:'progress', component: MyProgressComponent },
         { path:'category/:id', component: CategoryContentComponent },
         { path:'category/:idCa/theme/:idTh', component: ThemeContentComponent },
         { path:'category/:idCa/theme/:idTh/content/:idCo', component: ShowContentComponent },

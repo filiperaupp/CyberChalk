@@ -21,16 +21,13 @@
   <table class="table table-sm">
     <thead class="bg-white">
       <tr>
-        <th scope="col">CGU</th>
         <th scope="col">Nome</th>
         <th scope="col">E-mail</th>
         <th scope="col">Status</th>
       </tr>
     </thead>
     <tbody class="bg-white">
-      <tr *ngFor="let s of solicitations | filterName: pipeName"
-        >
-        <th scope="row">{{ s.cgu }}</th>
+      <tr *ngFor="let s of solicitations | filterName: pipeName">
         <td>{{ s.name }}</td>
         <td>{{ s.email }}</td>
         <td [ngSwitch]="s.status"

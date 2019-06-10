@@ -6,7 +6,6 @@
   <table class="table">
     <thead class="bg-white">
       <tr>
-        <th scope="col">CGU</th>
         <th scope="col">Nome</th>
         <th scope="col">E-mail</th>
         <th scope="col">Tipo</th>
@@ -15,7 +14,6 @@
     </thead>
     <tbody class="bg-white">
       <tr *ngFor="let s of solicitations; index as i;">
-        <th scope="row">{{ s.cgu }}</th>
         <td>{{ s.name }}</td>
         <td>{{ s.email }}</td>
         <td>

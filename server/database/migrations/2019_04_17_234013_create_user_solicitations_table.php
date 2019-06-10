@@ -16,7 +16,6 @@ class CreateUserSolicitationsTable extends Migration
         Schema::create('user_solicitations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('cgu');
             $table->string('email');
             $table->string('password');
             $table->string('status');

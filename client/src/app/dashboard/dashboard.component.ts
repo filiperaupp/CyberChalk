@@ -3,6 +3,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CategoryService } from '../admin/category-theme-control/category/category.service';
 import { Category } from '../models/category';
 import { AuthService } from '../services/auth.service';
+import { DashboardService } from './dashboard.service';
+import { SharedService } from '../services/shared.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,13 +20,19 @@ export class DashboardComponent implements OnInit {
   private title1 = "Cyber";
   private title2 = "Chalk"
   private admin = true
+  private user
 
   constructor(private _authService: AuthService,
-              private _categoryService: CategoryService) { }
+              private _dashboardService: DashboardService,
+              private _sharedService: SharedService) { }
 
   ngOnInit() {
     this.verifyAdmin()
     this.getAllCategories()
+    this._sharedService.changeEmitted$
+      .subscribe(
+        text => this.getAllCategories()
+      )
   }
   
   ngAfterViewInit(){
@@ -36,10 +44,12 @@ export class DashboardComponent implements OnInit {
   }
 
   getAllCategories(){
-    this._categoryService.getAll()
+    this. user = null
+    this._dashboardService.getData()
       .subscribe(
-        (data:Category[]) => {
-          this.categories = data
+        (responseList) => {
+          this.categories = responseList[0] as Category[]
+          this.user = responseList[1]
         },
         error => {
           console.log(error)
@@ -86,6 +96,10 @@ export class DashboardComponent implements OnInit {
         }
       });
     }
+  }
+
+  urlImage(){
+    return 'url(http://localhost:8000/storage/'+this.user.profile_photo+')'
   }
 
   // @HostListener('window:resize', ['$event'])

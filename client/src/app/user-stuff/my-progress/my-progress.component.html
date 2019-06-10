@@ -1,0 +1,41 @@
+<ng-template #load>
+    <loader *ngIf="loading"></loader>
+</ng-template>
+
+<div *ngIf="!loading else load" class="container-fluid bg-white mt-2">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2>Cursos em andamento</h2>
+        </div>
+    </div>
+    <hr>
+    <div class="row pb-2">
+        <div *ngFor="let course of courses" class="col-12 col-md-6 col-lg-3">
+            <div class="card p-0 mb-2">
+                <div class="card-header p-2">
+                    <h5 class="m-0">{{ course.title }}</h5>
+                </div>
+                <div class="card-body p-2">
+                    <small><b>Categoria/Tema:</b> {{ course.category.name }}/{{ course.theme.name }}</small>
+                    <br>
+                    <small><b>Criador:</b> {{ course.creator }}</small>
+                    <br>
+                    <div class="w-100">
+                        Progresso:
+                        <span *ngIf="course.contentsDone != course.totalContents" class="m-0 text-warning">Em andamento</span>
+                        <span *ngIf="course.contentsDone == course.totalContents" class="m-0 text-success">Concluído</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped" role="progressbar"
+                            [ngClass]="course.contentsDone == course.totalContents ? 'bg-success' : 'bg-warning'"
+                            [style.width.%]="(course.contentsDone*100)/course.totalContents" aria-valuenow="25"
+                            aria-valuemin="0" aria-valuemax="100">
+                            {{ (course.contentsDone*100)/course.totalContents | number: '1.0-1' }}%
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

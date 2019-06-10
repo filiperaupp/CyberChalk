@@ -66,6 +66,13 @@
     border-radius: 50%;
 }
 
+.cover{
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    position: relative !important;
+}
+
 .username{
     color: #fff;
     font-size: 12px;

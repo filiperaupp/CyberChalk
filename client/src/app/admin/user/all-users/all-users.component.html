@@ -22,7 +22,6 @@
   <table class="table">
     <thead class="bg-white">
       <tr>
-        <th scope="col">CGU</th>
         <th scope="col">Nome</th>
         <th scope="col">E-mail</th>
         <th scope="col">Tipo</th>
@@ -31,7 +30,6 @@
     </thead>
     <tbody class="bg-white">
       <tr *ngFor="let i = index; let user of users | filterName: pipeName">
-        <th scope="row">{{ user.cgu }}</th>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td [ngSwitch]="user.type">

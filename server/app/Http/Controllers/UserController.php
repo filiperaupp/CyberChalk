@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 
 class UserController extends Controller
@@ -41,6 +42,29 @@ class UserController extends Controller
         return response()->json([
             'res' => 'Invalid Id'
         ], 400);
+    }
+
+    public function updateUser(Request $request){
+        $authUser = Auth::user();
+        $user = User::find($authUser->id);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        return json_encode('ok');
+    }
+
+    public function changeProfilePhoto(Request $request) {
+        $idUser = Auth::user()->id;
+
+        $user = User::find($idUser);
+        if (isset($request->profile_photo)) {
+            $photo = $request->profile_photo;
+            $user->profile_photo = $photo->store('profile_photos','public');
+            $user->save();
+            return json_encode($user->profile_photo);
+        }
     }
 
     

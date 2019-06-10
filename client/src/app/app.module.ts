@@ -36,6 +36,8 @@ import { FilterStatusPipe } from './pipes/filter-status.pipe';
 import { ThemeContentComponent } from './category-content/theme-content/theme-content.component';
 import { ShowContentComponent } from './category-content/show-content/show-content.component';
 import { ShowCourseComponent } from './category-content/show-course/show-course.component';
+import { MyProgressComponent } from './user-stuff/my-progress/my-progress.component';
+import { ProfileComponent } from './user-stuff/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +70,9 @@ import { ShowCourseComponent } from './category-content/show-course/show-course.
     FilterStatusPipe,
     ThemeContentComponent,
     ShowContentComponent,
-    ShowCourseComponent
+    ShowCourseComponent,
+    MyProgressComponent,
+    ProfileComponent
   ],
   imports: [
     routing,

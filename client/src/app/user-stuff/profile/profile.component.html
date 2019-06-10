@@ -1,0 +1,87 @@
+<ng-template #load>
+  <loader *ngIf="loading || loadingAction"></loader>
+</ng-template>
+<div class="container-fluid bg-white p-2">
+  <div *ngIf="!loading else load" class="row">
+    <div class="col-12 text-center">
+      <h3>Perfil do usuário</h3>
+      <hr>
+    </div>
+    <div class="col-12 col-md-12 col-lg-4">
+      <div class="photo cover bg-light m-auto" [style.background-image]="urlImage()">
+        <label class="btn btn-sm btn-info" for="profilePhoto">
+          <i class="fas fa-pen"></i>
+          Editar foto
+        </label>
+        <input id="profilePhoto" type="file" style="display: none" accept="image/*" (change)="changePhoto($event)">
+      </div>
+    </div>
+    <div class="col-12 col-md-12 col-lg-8 mt-2">
+      <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+        <p>
+          <b>
+            <h5>Nome</h5>
+          </b>
+          <span *ngIf="!inEdit">
+            {{ user.name }}
+          </span>
+        </p>
+        <input *ngIf="inEdit" type="text" class="form-control mb-2 max-width" name="name" formControlName="name">
+        <div
+          *ngIf="inEdit && editForm.controls['name'].invalid && (editForm.controls['name'].dirty || editForm.controls['name'].touched)"
+          class="text-danger">
+          <div *ngIf="editForm.controls['name'].errors.required">
+            Name is required.
+          </div>
+        </div>
+
+        <p>
+          <b>
+            <h5>Email</h5>
+          </b>
+          <span *ngIf="!inEdit">
+            {{ user.email }}
+          </span>
+        </p>
+        <input *ngIf="inEdit" type="text" class="form-control mb-2 max-width" name="email" formControlName="email">
+        <div
+          *ngIf="inEdit && editForm.controls['email'].invalid && (editForm.controls['email'].dirty || editForm.controls['email'].touched)"
+          class="text-danger">
+          <div *ngIf="editForm.controls['email'].errors.required">
+            E-mail is required.
+          </div>
+          <div *ngIf="editForm.controls['email'].errors.email">
+            E-mail invalid.
+          </div>
+        </div>
+
+        <p>
+          <b>
+            <h5>Tipo</h5>
+          </b>
+          <span [ngSwitch]="user.type">
+            <span *ngSwitchCase="'adm'">Admin</span>
+            <span *ngSwitchCase="'student'">Aluno</span>
+            <span *ngSwitchCase="'invited'">Convidado</span>
+            <span *ngSwitchDefault>Não especificado</span>
+          </span>
+        </p>
+        <div *ngIf="!loadingAction else load">
+          <button *ngIf="inEdit" class="btn btn-outline-dark mr-2" (click)="inEdit = false">
+            <i class="fas fa-arrow-left"></i>
+            Voltar
+          </button>
+          <button *ngIf="!inEdit" class="btn btn-info" (click)="inEdit = true">
+            <i class="fas fa-pen"></i>
+            Editar dados
+          </button>
+          <button *ngIf="inEdit" type="submit" class="btn btn-success"
+            [disabled]="editForm.pristine || editForm.invalid">
+            <i class="fas fa-save"></i>
+            Salvar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
