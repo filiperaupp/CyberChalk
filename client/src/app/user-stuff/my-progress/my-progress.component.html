@@ -9,7 +9,7 @@
         </div>
     </div>
     <hr>
-    <div class="row pb-2">
+    <div class="row pb-2 px-2">
         <div *ngFor="let course of courses" class="col-12 col-md-6 col-lg-3">
             <div class="card p-0 mb-2">
                 <div class="card-header p-2">
@@ -22,8 +22,10 @@
                     <br>
                     <div class="w-100">
                         Progresso:
-                        <span *ngIf="course.contentsDone != course.totalContents" class="m-0 text-warning">Em andamento</span>
-                        <span *ngIf="course.contentsDone == course.totalContents" class="m-0 text-success">Concluído</span>
+                        <span *ngIf="course.contentsDone != course.totalContents" class="m-0 text-warning">
+                            Em andamento</span>
+                        <span *ngIf="course.contentsDone == course.totalContents"
+                            class="m-0 text-success">Concluído</span>
                     </div>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped" role="progressbar"
@@ -36,6 +38,9 @@
 
                 </div>
             </div>
+        </div>
+        <div *ngIf="!loading && courses.length == 0" class="col-12 alert alert-warning text-center">
+            <h5>Sem material em andamento.</h5>
         </div>
     </div>
 </div>

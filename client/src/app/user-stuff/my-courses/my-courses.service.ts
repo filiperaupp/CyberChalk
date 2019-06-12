@@ -20,6 +20,10 @@ export class MyCoursesService {
   getById(id){
     return this.http.get('http://localhost:8000/api/courses/'+id)
   }
+
+  getCourseFullContents(idCourse){
+    return this.http.get('http://localhost:8000/api/course-full-contents/'+idCourse)
+  }
   
   update(id,course){
     return this.http.put('http://localhost:8000/api/courses/'+id, course)

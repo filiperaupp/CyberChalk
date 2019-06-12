@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\ContentSolicitation;
 use App\Http\Controllers\FileController;
@@ -36,6 +37,26 @@ class ContentSolicitationController extends Controller
         return json_encode($contentSolicitations);
     }
 
+    public function usersTopFive(){
+        $idUsers = ContentSolicitation::select('user_id', DB::raw('COUNT(*) as qtd'))->groupBy('user_id')->orderBy('qtd','desc')->take(5)->get();
+        return $idUsers;
+    }
+
+    public function getLastestContents(){
+        $lastContents = ContentSolicitation::select('id','title','theme_id','user_id')->where([['course_id', NULL],['status','approved']])->orderBy('id','desc')->take(4)->get();
+
+        $contents = array();
+        if (isset($lastContents) && sizeOf($lastContents) > 0) {
+            foreach ($lastContents as $content) {
+                $content->theme = Theme::select('id','name','category_id')->find($content->theme_id);
+                $content->category = Category::select('id','name')->find($content->theme->category_id);
+                $content->creator = User::select('name')->find($content->user_id);
+                array_push($contents, $content);
+            }
+        }
+        return json_encode($contents);
+    }
+
     public function getContentsByUser()
     {
         $user = Auth::user();
@@ -60,6 +81,23 @@ class ContentSolicitationController extends Controller
         $contentSolicitation->support_files = json_decode($fileController->getByContentSolicitationId($id));
         $contentSolicitation->video = json_decode($videoController->getByContentSolicitationId($id));
         return json_encode($contentSolicitation);
+    }
+
+    public function fullContentsByCourse($idCourse) {
+        $fileController = new FileController();
+        $videoController = new VideoController();
+        $contentsByCourse = ContentSolicitation::where('course_id',$idCourse)->get();
+
+        $contents = array();
+        if (isset($contentsByCourse) && sizeOf($contentsByCourse) > 0) {
+            foreach ($contentsByCourse as $content) {
+                $content->support_files = json_decode($fileController->getByContentSolicitationId($content->id));
+                $content->video = json_decode($videoController->getByContentSolicitationId($content->id));
+                array_push($contents, $content);
+            }
+        }
+
+        return $contents;
     }
 
     public function getByThemeId($id){
@@ -136,6 +174,10 @@ class ContentSolicitationController extends Controller
                     break;
                 case 'recycled':
                     $content->status = 'recycled';
+                    Log::debug($request->recycleMensage);
+                    if (isset($request->recycleMensage)) {
+                        $content->recycle_mensage = $request->recycleMensage;
+                    }
                     break;
                 case 'canceled':
                     $content->status = 'saved';
@@ -158,6 +200,8 @@ class ContentSolicitationController extends Controller
         $contentSolicitation->theme_id = $request->theme_id;
         $contentSolicitation->title = $request->title;
         $contentSolicitation->support_text = $request->support_text;
+        $contentSolicitation->recycle_mensage = NULL;
+        $contentSolicitation->status = 'saved';
         $contentSolicitation->save();
 
         //Add new Files
@@ -210,7 +254,7 @@ class ContentSolicitationController extends Controller
                 }
             }
         }
-        return response('ok',200);
+        return json_encode('ok',200);
     }
     
 

@@ -62,7 +62,7 @@ class ContentToCourseController extends Controller
                 Log::debug('vazio');       
             }
         }
-        return response('done',200);
+        return json_encode('done',200);
     }
 
     public function changePosition(Request $request){

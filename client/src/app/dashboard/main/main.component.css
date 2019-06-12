@@ -1,0 +1,60 @@
+div.scrollmenu {
+    min-width: 100%;
+    width: auto;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.card{
+    display: inline-block;
+    box-shadow: 7px 7px 7px -3px rgba(0,0,0,0.47);
+    border: 2px solid rgba(0,0,0,.125);
+}
+
+.card-hover:hover{
+    border: 2px solid #3c8dbc;
+    cursor: pointer;
+}
+
+.user-photo{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.cover{
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    position: relative !important;
+}
+
+.ellipsis{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.golden{
+    color: #ffd522;
+}
+
+.silver{
+    color: #bec2cb;
+}
+
+.copper{
+    color: #b87333;
+}
+
+.none{
+    display: none;
+}
+
+.left-border-painting{
+    border-left: 2px solid #ccc;
+}
+
+.right-border-painting{
+    border-right: 2px solid #ccc;
+}

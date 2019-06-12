@@ -4,11 +4,13 @@
 
 <div class="container-fluid bg-white">
   <div class="row">
-    <div class="col-12 p-0">
+    <div class="col-12 col-lg-auto p-0">
       <button class="btn btn-success btn-sm float-left m-2" data-toggle="modal" routerLink="../course-manage">
         <i class="fas fa-plus"></i>
         Criar curso
       </button>
+    </div>
+    <div class="col-12 col-lg-auto p-0">
       <div class="input-group input-group-sm m-2 input-width-300">
         <div class="input-group-prepend">
           <span class="input-group-text" id="inputGroup-sizing-sm">
@@ -16,8 +18,26 @@
           </span>
         </div>
         <input type="text" id="search" class="form-control" aria-label="Sizing example input"
-          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar curso...">
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar curso..." [(ngModel)]="text">
       </div>
+    </div>
+    <div class="col-12 col-lg-4 form-inline p-2">
+      <label for="status" class="col-sm-auto col-form-label col-form-label-sm p-0 mr-2">Status</label>
+      <select class="form-control form-control-sm" name="status" id="status" [(ngModel)]="status">
+        <option value="">Todos</option>
+        <option value="pending">Em aprovação</option>
+        <option value="recycled">Em reciclagem</option>
+        <option value="rejected">Rejeitado</option>
+        <option value="approved">Aceito</option>
+        <option value="saved">Salvo</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <small class="text-muted">
+        Obs: Para enviar um curso, o mesmo deve conter, no mínimo, 02 conteúdos.
+      </small>
     </div>
   </div>
 </div>
@@ -34,7 +54,7 @@
       </tr>
     </thead>
     <tbody class="bg-white">
-      <tr *ngFor="let course of courses">
+      <tr *ngFor="let course of courses | filterStatus: text: status">
         <td>{{ course.title }}</td>
         <td>{{ course.categoryName }}/{{ course.themeName }}</td>
         <td>{{ course.created_at | date:'dd/MM/yy' }}</td>
@@ -164,7 +184,7 @@
           Voltar
         </button>
         <button type="button" class="btn btn-danger" (click)="changeStatus('canceled')">
-            <i class="fas fa-times mr-1"></i>
+          <i class="fas fa-times mr-1"></i>
           Cancelar
         </button>
       </div>

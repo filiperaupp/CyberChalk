@@ -1,3 +1,4 @@
+import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 
@@ -16,14 +17,21 @@ export class ContentsComponent implements OnInit {
 
   contents: any[] = []
   selectedContent: any
+  selectedShowContent: any
 
   loading: boolean = true
   loadingAction: boolean = false
+  loadingShow: boolean = true
 
   filterStatus: FilterStatusPipe
   status = 'pending'
 
-  constructor(private _myContentsService: MyContentsService) { }
+  formMensage = this.fb.group({
+    recycleMensage: ['', Validators.required]
+  })
+
+  constructor(private _myContentsService: MyContentsService,
+              private fb: FormBuilder) { }
 
   ngOnInit() {
     this.getAllContents()
@@ -44,15 +52,30 @@ export class ContentsComponent implements OnInit {
     this.selectedContent = content
   }
 
+  showContent(content){
+    this.loadingShow = true
+    this._myContentsService.getById(content.id)
+      .subscribe(
+        data => {
+          this.selectedShowContent = data
+          this.loadingShow = false
+        }
+      )
+
+  }
+
 
   changeStatus(status){
     this.loadingAction = true
     let newStatus = new FormData();
     newStatus.append('status',status)
+    if (status == 'recycled') {
+      let mensage = this.formMensage.controls['recycleMensage'].value
+      newStatus.append('recycleMensage', mensage)
+    }
     this._myContentsService.changeStatus(this.selectedContent.id,newStatus)
       .subscribe(
         (res) => {
-          console.log(res)
           this.loadingAction = false
           this.selectedContent.status = res
           this.triggerFalseClick(status)

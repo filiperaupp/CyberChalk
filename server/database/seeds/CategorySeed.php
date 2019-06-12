@@ -30,5 +30,12 @@ class CategorySeed extends Seeder
             'session' => '1',
             ]
         );
+
+        DB::table('categories')->insert(
+            [
+            'name' => 'Entrevistas',
+            'session' => '3',
+            ]
+        );
     }
 }

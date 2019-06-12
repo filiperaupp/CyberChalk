@@ -1,6 +1,6 @@
 import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { CategoryService } from 'src/app/admin/category-theme-control/category/category.service';
 import { Category } from 'src/app/models/category';
@@ -28,7 +28,8 @@ export class CourseEditComponent implements OnInit {
   courseEdit: any
 
 
-  loading = false
+  loading = true
+  loadingAction = false
   id: number
   actionText: string
 
@@ -38,6 +39,7 @@ export class CourseEditComponent implements OnInit {
     private _categoryService: CategoryService,
     private _themeService: ThemeService,
     private active: ActivatedRoute,
+    private route: Router,
     private _myCoursesService: MyCoursesService) { }
 
   ngOnInit() {
@@ -53,16 +55,21 @@ export class CourseEditComponent implements OnInit {
         this.actionText = "Criar"
         this.getAllCategories()
         this.getAllThemes()
+        this.loading = false
       }
     })
   }
 
   onSubmit() {
+    this.loadingAction = true
     let course = this.courseForm.value
     if (this.id) {
       this._myCoursesService.update(this.id, course)
         .subscribe(
-          res => console.log(res),
+          res => {
+            this.loadingAction = false
+            this.route.navigate(['dashboard/my-stuff/courses'])
+          },
           error => console.log(error)
         )
     } else {
@@ -80,6 +87,7 @@ export class CourseEditComponent implements OnInit {
         (data: any) => {
           this.courseEdit = data
           this.setFormToCourseEdit()
+          this.loading = false
         }
       )
   }
@@ -99,6 +107,7 @@ export class CourseEditComponent implements OnInit {
   }
 
   findThemes() {
+    this.courseForm.controls['theme_id'].setValue('')
     let category_id = this.courseForm.controls['category'].value
     this.getThemesByCategory(category_id)
   }

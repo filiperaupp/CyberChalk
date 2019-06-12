@@ -43,6 +43,8 @@ Route::post('users/{id}', 'UserController@updateType');
 Route::post('profile-photo','UserController@changeProfilePhoto')->middleware('auth:api');
 //update name and email of USER
 Route::put('user-update', 'UserController@updateUser')->middleware('auth:api');
+//top five
+Route::get('top-users', 'UserController@getTopFive');
 
 Route::get('categories', 'CategoryController@index')
     ->middleware('auth:api');
@@ -72,6 +74,8 @@ Route::delete('content-solicitations/{id}', 'ContentSolicitationController@destr
 Route::get('content-by-user', 'ContentSolicitationController@getContentsByUser')->middleware('auth:api');
 //Content status control
 Route::post('content-change-status/{id}', 'ContentSolicitationController@contentChangeStatus');
+//last contents
+Route::get('lastest-contents', 'ContentSolicitationController@getLastestContents');
 
 //download files
 Route::get('/downloadFile/{id}','FileController@download');
@@ -87,6 +91,9 @@ Route::delete('courses/{id}', 'CourseController@destroy');
 Route::post('send-to-approve/{id}', 'CourseController@sendToApprove');
 Route::post('change-status/{id}', 'CourseController@changeStatus');
 Route::get('courses-by-user', 'CourseController@allCoursesByUser')->middleware('auth:api');
+Route::get('course-full-contents/{id}', 'CourseController@getCourseFullContents');
+//last courses
+Route::get('lastest-courses','CourseController@getLastestCourses');
 
 //content to courses
 Route::post('add-content-in-course', 'ContentToCourseController@addContent')->middleware('auth:api');

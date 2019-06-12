@@ -16,8 +16,8 @@ class CreateContentSolicitationsTable extends Migration
         Schema::create('content_solicitations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->string('video_path')->nullable();
-            $table->string('support_text');
+            $table->string('recycle_mensage', 400)->nullable();
+            $table->string('support_text', 1500);
             $table->string('status');
             $table->integer('position')->nullable();
             $table->integer('user_id')->unsigned();

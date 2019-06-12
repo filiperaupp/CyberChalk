@@ -3,12 +3,15 @@
 </ng-template>
 
 <div class="container-fluid bg-white">
+
   <div class="row">
-    <div class="col-12 p-0">
+    <div class="col-12 col-lg-auto p-0">
       <button class="btn btn-success btn-sm float-left m-2" data-toggle="modal" routerLink="../content-manage">
         <i class="fas fa-plus"></i>
         Criar conteúdo
       </button>
+    </div>
+    <div class="col-12 col-lg-auto p-0">
       <div class="input-group input-group-sm m-2 input-width-300">
         <div class="input-group-prepend">
           <span class="input-group-text" id="inputGroup-sizing-sm">
@@ -16,10 +19,22 @@
           </span>
         </div>
         <input type="text" id="search" class="form-control" aria-label="Sizing example input"
-          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar categoria...">
+          aria-describedby="inputGroup-sizing-sm" placeholder="Pesquisar curso..." [(ngModel)]="text">
       </div>
     </div>
+    <div class="col-12 col-lg-4 form-inline p-2">
+      <label for="status" class="col-sm-auto col-form-label col-form-label-sm p-0 mr-2">Status</label>
+      <select class="form-control form-control-sm" name="status" id="status" [(ngModel)]="status">
+        <option value="">Todos</option>
+        <option value="pending">Em aprovação</option>
+        <option value="recycled">Em reciclagem</option>
+        <option value="rejected">Rejeitado</option>
+        <option value="approved">Aceito</option>
+        <option value="saved">Salvo</option>
+      </select>
+    </div>
   </div>
+
 </div>
 <div *ngIf="(!loading && !loadingThemes) && !isNull else load" class="table-responsive">
   <table class="table table-bordered">
@@ -33,7 +48,7 @@
       </tr>
     </thead>
     <tbody class="bg-white">
-      <tr *ngFor="let content of contentSolicitations">
+      <tr *ngFor="let content of contentSolicitations | filterStatus: text: status">
         <td>{{ content.title }}</td>
         <td>{{ content.categoryName }}/{{ content.themeName }}</td>
         <td>{{ content.created_at | date:'dd/MM/yy'}}</td>
@@ -41,14 +56,18 @@
           <div class="text-info" *ngSwitchCase="'saved'">Salvo</div>
           <div class="text-warning" *ngSwitchCase="'pending'">
             Em aprovação
-            <div class="btn-group btn-group-toogle">
-              <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#cancelModal"
-                (click)="getSelectedContent(content)">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
+            <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#cancelModal"
+              (click)="getSelectedContent(content)">
+              <i class="fas fa-times"></i>
+            </button>
           </div>
-          <div class="text-info" *ngSwitchCase="'recycled'">Em reciclagem</div>
+          <div class="text-info" *ngSwitchCase="'recycled'">
+            Em reciclagem
+            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#mensageModal"
+              (click)="getSelectedContent(content)">
+              <i class="fas fa-envelope"></i>
+            </button>
+          </div>
           <div class="text-success" *ngSwitchCase="'approved'">Aceito</div>
           <div class="text-danger" *ngSwitchCase="'rejected'">Rejeitado</div>
           <div *ngSwitchDefault>Não encontrado</div>
@@ -56,7 +75,7 @@
         <td style="width: 50px;">
           <div class="btn-group btn-group-toggle">
             <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#sendModal"
-              [disabled]="content.status=='pending' || content.status=='approved' || content.status=='rejected'" 
+              [disabled]="content.status=='pending' || content.status=='approved' || content.status=='rejected'"
               (click)="getSelectedContent(content)">
               <i class="fas fa-paper-plane"></i>
             </button>
@@ -162,7 +181,7 @@
           Voltar
         </button>
         <button type="button" class="btn btn-danger" (click)="changeStatus('canceled')">
-            <i class="fas fa-times mr-1"></i>
+          <i class="fas fa-times mr-1"></i>
           Cancelar
         </button>
       </div>
@@ -170,6 +189,25 @@
         <div class="w-100">
           <loader></loader>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal mensage-->
+<div class="modal fade" id="mensageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div *ngIf="selectedContent" class="modal-body">
+        <h5>Mensagem de reciclagem</h5> 
+        {{ selectedContent.recycle_mensage }}
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          <i class="fas fa-arrow-left mr-1"></i>
+          Voltar
+        </button>
       </div>
     </div>
   </div>

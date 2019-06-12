@@ -1,0 +1,93 @@
+<ng-template #load>
+  <loader></loader>
+</ng-template>
+
+<div class="container-fluid bg-white">
+  <div class="row">
+    <div class="col-12 text-center">
+      <h3>Bem-vindo(a) ao <b>Cyber</b>Chalk</h3>
+    </div>
+  </div>
+  <div *ngIf="!loading else load" class="row">
+    <div class="col-12">
+      <hr>
+      <h5>Top 5 de participação</h5>
+    </div>
+    <div class="col-12">
+      <div class="scrollmenu p-2">
+
+        <div *ngFor="let user of topUsers; let i = index" class="card mr-3" style="width: 14rem;">
+          <div class="card-header p-1 text-center">
+            {{ ranking[i] }}
+            <div class="user-photo bg-light m-auto cover" [style.background-image]="urlImage(i)">
+
+            </div>
+            <div class="ellipsis">
+              <i class="fas fa-trophy"
+                [ngClass]="{golden: (i == 0), silver: (i == 1), copper: (i == 2), none: (i >= 3)}"></i>
+              {{ user.name }}
+            </div>
+          </div>
+          <div class="card-body p-2">
+            <p class="m-0 text-muted">
+              Cursos: ({{ user.courses | number:'2.0-0' }})
+            </p>
+            <p class="m-0 text-muted">
+              Conteúdos totais: ({{ user.contents | number:'2.0-0' }})
+            </p>
+          </div>
+        </div>
+
+      </div>
+      <hr>
+    </div>
+    <div class="col-12 text-center">
+      <h3>Últimas postagens</h3>
+    </div>
+    <div class="col-12 col-lg-6 right-border-painting">
+      <div class="w-100 text-center">
+        <h5>Conteúdos</h5>
+      </div>
+      <div class="row p-2 pb-3">
+        <div *ngFor="let content of latestContents" class="col-12 col-lg-6 mb-2"
+          routerLink="../category/{{content.category.id}}/theme/{{content.theme_id}}/content/{{content.id}}">
+          <div class="card p-0 w-100 card-hover">
+            <div class="card-header p-2">
+              <h5 class="m-0">{{ content.title }}</h5>
+            </div>
+            <div class="card-body p-2">
+              <p class="m-0 text-muted">By: {{ content.creator.name }}</p>
+              <p class="m-0 text-muted">{{ content.category.name }}/{{ content.theme.name }}</p>
+              <div class="w-100 text-center">
+                <small class="text-muted">Clique para iniciar!</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-12 col-lg-6 left-border-painting">
+      <div class="w-100 text-center">
+        <h5>Cursos</h5>
+      </div>
+      <div class="row p-2 pb-3">
+        <div *ngFor="let course of latestCourses" class="col-12 col-lg-6 mb-2"
+          routerLink="../category/{{course.category.id}}/theme/{{course.theme_id}}/course/{{course.id}}">
+          <div class="card p-0 w-100 card-hover">
+            <div class="card-header p-2">
+              <h5 class="m-0">{{ course.title }}</h5>
+            </div>
+            <div class="card-body p-2">
+              <p class="m-0 text-muted">By: {{ course.creator.name }}</p>
+              <p class="m-0 text-muted">{{ course.category.name }}/{{ course.theme.name }}</p>
+              <div class="w-100 text-center">
+                <small class="text-muted">Clique para iniciar!</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

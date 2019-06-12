@@ -5,6 +5,7 @@ import { Category } from '../models/category';
 import { AuthService } from '../services/auth.service';
 import { DashboardService } from './dashboard.service';
 import { SharedService } from '../services/shared.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,7 +25,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(private _authService: AuthService,
               private _dashboardService: DashboardService,
-              private _sharedService: SharedService) { }
+              private _sharedService: SharedService,
+              private route: Router) { }
 
   ngOnInit() {
     this.verifyAdmin()
@@ -99,7 +101,15 @@ export class DashboardComponent implements OnInit {
   }
 
   urlImage(){
-    return 'url(http://localhost:8000/storage/'+this.user.profile_photo+')'
+    if (this.user.profile_photo != null)
+      return 'url(http://localhost:8000/storage/'+this.user.profile_photo+')'
+    else
+      return 'url(../../../../assets/images/user.png)'
+  }
+
+  logout(){
+    this._authService.logout();
+    this.route.navigate([''])
   }
 
   // @HostListener('window:resize', ['$event'])

@@ -45,7 +45,6 @@ export class ContentItemComponent implements OnInit {
         (data: any[]) => {
           this.contentsInCourse = data
           this.loading = false
-          console.log(this.contentsInCourse)
         },
         (error) => console.log(error)
       )

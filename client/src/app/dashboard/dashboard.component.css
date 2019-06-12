@@ -74,11 +74,9 @@
 }
 
 .username{
-    color: #fff;
-    font-size: 12px;
-    display: inline;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    color: white;
+    line-height: 1;
+    font-size: 13px;
 }
 /*--------------------------*/
 /*---Menu Options--------*/

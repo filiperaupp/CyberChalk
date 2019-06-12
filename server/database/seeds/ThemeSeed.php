@@ -38,5 +38,12 @@ class ThemeSeed extends Seeder
             'category_id' => '2',
             ]
         );
+
+        DB::table('themes')->insert(
+            [
+            'name' => 'Geral',
+            'category_id' => '4',
+            ]
+        );
     }
 }

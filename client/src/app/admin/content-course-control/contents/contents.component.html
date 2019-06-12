@@ -1,5 +1,5 @@
 <ng-template #load>
-  <loader *ngIf="loading"></loader>
+  <loader></loader>
 </ng-template>
 
 <div class="container-fluid bg-white">
@@ -66,7 +66,8 @@
               (click)="getSelectedContent(content)" [disabled]="content.status == 'saved'">
               <i class="fas fa-check"></i>
             </button>
-            <button class="btn btn-sm btn-dark">
+            <button class="btn btn-sm btn-dark" data-toggle="modal" data-target="#showModal"
+              (click)="showContent(content)">
               <i class="fas fa-eye"></i>
             </button>
             <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#recycleModal"
@@ -138,26 +139,32 @@
           <span #closeButtonRecycle class="text-light" aria-hidden="true">X</span>
         </button>
       </div>
-      <div *ngIf="selectedContent" class="modal-body">
-        Deseja realmente <b>reciclar</b> o conteúdo <b>{{ selectedContent.title }}</b>?<br>
-        <small class="text-secondary">Obs: O criador poderá fazer os reajustes e, posteriormente, reencaminhar o
-          conteúdo.</small>
-      </div>
-      <div *ngIf="!loadingAction" class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          <i class="fas fa-arrow-left mr-1"></i>
-          Cancelar
-        </button>
-        <button type="button" class="btn btn-info" (click)="changeStatus('recycled')">
-          <i class="fas fa-recycle"></i>
-          Reciclar
-        </button>
-      </div>
-      <div *ngIf="loadingAction" class="modal-footer">
-        <div class="w-100">
-          <loader></loader>
+      <form [formGroup]="formMensage">
+        <div *ngIf="selectedContent" class="modal-body">
+          Deseja realmente <b>reciclar</b> o conteúdo <b>{{ selectedContent.title }}</b>?<br>
+          <small class="text-secondary">Obs: O criador poderá fazer os reajustes e, posteriormente, reencaminhar o
+            conteúdo.</small>
+          <p class="m-0">Motivo da recicalgem: </p>
+          <textarea class="w-100" rows="3" maxlength="200" formControlName="recycleMensage"></textarea>
         </div>
-      </div>
+        <div *ngIf="!loadingAction" class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-arrow-left mr-1"></i>
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-info" (click)="changeStatus('recycled')"
+            [disabled]="formMensage.pristine || formMensage.invalid">
+            <i class="fas fa-recycle"></i>
+            Reciclar
+          </button>
+        </div>
+        <div *ngIf="loadingAction" class="modal-footer">
+          <div class="w-100">
+            <loader></loader>
+          </div>
+        </div>
+      </form>
+
     </div>
   </div>
 </div>
@@ -190,6 +197,59 @@
         <div class="w-100">
           <loader></loader>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal show content-->
+<div class="modal fade bd-example-modal-lg" id="showModal" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 *ngIf="!loadingShow" class="modal-title">{{ selectedShowContent.title }}</h5>
+        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="!loadingShow else load" class="row">
+          <div class="col-12">
+            <h5>Vídeo</h5>
+            <div class="w-100 bg-dark text-center" *ngIf="selectedShowContent.video.length > 0 else noVideo">
+              <video style="height: 25vw;" controls>
+                <source src="http://localhost:8000/storage/{{ selectedShowContent.video[0].path }}"
+                  type="{{ selectedShowContent.video[0].mimeType }}">
+              </video>
+            </div>
+            <ng-template #noVideo>
+              <div class="alert alert-warning">
+                <h6>Conteúdo sem vídeo.</h6>
+              </div>
+            </ng-template>
+          </div>
+          <div class="col-12 p-2">
+            <h5>Arquivos de apoio</h5>
+            <div class="card border-info p-1 m-1 bg-info text-white" *ngFor="let file of selectedShowContent.support_files">
+              <p class="m-0">
+                {{ file.file_name }}
+              </p>
+            </div>
+            <div *ngIf="selectedShowContent.support_files.length == 0" class="alert alert-warning">
+              <h6>Conteúdo sem arquivos.</h6>
+            </div>
+          </div>
+          <div class="col-12">
+            <h5>Texto de apoio</h5>
+            <p class="m-0">
+              {{ selectedShowContent.support_text }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

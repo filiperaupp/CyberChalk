@@ -26,6 +26,7 @@ export class ContentToCourseComponent implements OnInit {
   contentEdit: any
 
   loading: boolean = true
+  loadingAction: boolean = false
 
   files: any[] = []
   video: any = null
@@ -35,6 +36,7 @@ export class ContentToCourseComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private active: ActivatedRoute,
+    private route: Router,
     private _myContentService: MyContentsService,
     private _myCouseService: MyCoursesService) { }
 
@@ -67,13 +69,13 @@ export class ContentToCourseComponent implements OnInit {
   }
 
   onSubmit() {
+    this.loadingAction = true
     let contentSolicitation = new FormData()
 
     let title = this.contentForm.controls['title'].value
     let support_text = this.contentForm.controls['support_text'].value
 
     contentSolicitation.append('course_id', `${this.idCourse}`)
-    console.log(this.idCourse)
     contentSolicitation.append('title', title)
     contentSolicitation.append('support_text', support_text)
     contentSolicitation.append('video', this.video)
@@ -94,18 +96,23 @@ export class ContentToCourseComponent implements OnInit {
       //video to delete
       if (this.videoToDelete != null) {
         contentSolicitation.append('videoToDelete', this.videoToDelete)
-        console.log(this.videoToDelete)
       }
 
       this._myContentService.postTeste(contentSolicitation)
         .subscribe(
-          res => console.log(res),
+          res => {
+            this.loadingAction = false
+            this.route.navigate(['dashboard/my-stuff/courses/course-manage/'+this.idCourse])
+          },
           error => console.log(error)
         )
     } else {
       this._myCouseService.addContentToCourse(contentSolicitation)
         .subscribe(
-          res => console.log(res),
+          res => {
+            this.loadingAction = false
+            this.route.navigate(['dashboard/my-stuff/courses/course-manage/'+this.idCourse])
+          },
           error => console.log(error)
         )
     }
@@ -138,7 +145,6 @@ export class ContentToCourseComponent implements OnInit {
       .subscribe(
         data => {
           this.contentEdit = data
-          console.log(this.contentEdit)
           this.loading = false
           this.setFormToContentEdit()
         },

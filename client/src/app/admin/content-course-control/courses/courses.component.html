@@ -68,7 +68,8 @@
               (click)="getSelectedCourse(course)">
               <i class="fas fa-check"></i>
             </button>
-            <button class="btn btn-sm btn-dark">
+            <button class="btn btn-sm btn-dark" data-toggle="modal" data-target="#showModal"
+              (click)="showCourse(course)">
               <i class="fas fa-eye mr-1"></i>
             </button>
             <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#recycleModal"
@@ -193,6 +194,76 @@
         <div class="w-100">
           <loader></loader>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal show content-->
+<div class="modal fade bd-example-modal-lg" id="showModal" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 *ngIf="!loadingShow" class="modal-title">{{ selectedShowCourse.title }}</h5>
+        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="!loadingShow else load" class="row">
+          <div *ngIf="!showing else templateContent" class="col-12">
+            <div class="alert alert-secondary text-center">
+              <h5>Selecione um conteúdo para vizualizar</h5>
+            </div>
+          </div>
+          <ng-template #templateContent>
+            <div class="col-12">
+              <h5>Vídeo</h5>
+              <div class="w-100 bg-dark text-center" *ngIf="selectedContent.video.length > 0 else noVideo">
+                <video style="height: 25vw;" controls>
+                  <source src="http://localhost:8000/storage/{{ selectedContent.video[0].path }}"
+                    type="{{ selectedContent.video[0].mimeType }}">
+                </video>
+              </div>
+              <ng-template #noVideo>
+                <div class="alert alert-warning">
+                  <h6>Conteúdo sem vídeo.</h6>
+                </div>
+              </ng-template>
+            </div>
+            <div class="col-12 p-2">
+              <h5>Arquivos de apoio</h5>
+              <div class="card border-info p-1 m-1 bg-info text-white" *ngFor="let file of selectedContent.support_files">
+                <p class="m-0">
+                  {{ file.file_name }}
+                </p>
+              </div>
+              <div *ngIf="selectedContent.support_files.length == 0" class="alert alert-warning">
+                <h6>Conteúdo sem arquivos.</h6>
+              </div>
+            </div>
+            <div class="col-12">
+              <h5>Texto de apoio</h5>
+              <p class="m-0">
+                {{ selectedContent.support_text }}
+              </p>
+            </div>
+          </ng-template>
+        </div>
+        <div *ngIf="!loadingShow" class="row p-2">
+          <h5>Lista de conteúdos</h5>
+          <div *ngFor="let content of selectedShowCourse.contents" class="w-100 bg-light item-content" 
+            [ngClass]="{active: content == selectedContent}">
+            <p class="m-0 p-2" (click)="selectedContent = content; showing = true">
+              {{ content.title }}
+            </p> 
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

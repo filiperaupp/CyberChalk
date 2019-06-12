@@ -4,13 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ContentSolicitationController;
+use App\Http\Controllers\CourseController;
 use App\User;
+use Log;
 
 class UserController extends Controller
 {
     public function index(){
         $users = User::all();
         return json_encode($users);
+    }
+
+    public function getTopFive(){
+        $contentController = new ContentSolicitationController();
+        $courseController = new CourseController();
+        $topFive = $contentController->usersTopFive();
+        
+        $users = array();
+        if(isset($topFive) && sizeOf($topFive) > 0) {
+            foreach ($topFive as $member) {
+                $user = User::find($member->user_id);
+                $user->contents = $member->qtd;
+                $user->courses = $courseController->countCourses($user->id);
+                array_push($users, $user);
+            }
+        }
+        return json_encode($users);
+
     }
 
     public function destroy($id){

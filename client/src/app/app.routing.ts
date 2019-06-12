@@ -29,6 +29,7 @@ import { ShowContentComponent } from './category-content/show-content/show-conte
 import { ShowCourseComponent } from './category-content/show-course/show-course.component';
 import { MyProgressComponent } from './user-stuff/my-progress/my-progress.component';
 import { ProfileComponent } from './user-stuff/profile/profile.component';
+import { MainComponent } from './dashboard/main/main.component';
 
 const APP_ROUTES: Routes = [
     { path: '', component: HomeComponent},
@@ -78,7 +79,8 @@ const APP_ROUTES: Routes = [
         { path:'category/:idCa/theme/:idTh/content/:idCo', component: ShowContentComponent },
         { path:'category/:idCa/theme/:idTh/course/:idCou', component: ShowCourseComponent },
 
-        { path: '', redirectTo:'login' ,pathMatch:'full'}
+        { path: 'main', component: MainComponent },
+        { path: '', redirectTo:'main' ,pathMatch:'full'}
     ] },
     
     

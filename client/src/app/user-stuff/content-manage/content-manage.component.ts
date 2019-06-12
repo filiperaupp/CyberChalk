@@ -112,7 +112,7 @@ export class ContentManageComponent implements OnInit {
         .subscribe(
           res => {
             this.loadingAction = false
-            this.router.navigate(['../list'])
+            this.router.navigate(['dashboard/my-stuff/contents/list'])
           }, 
           error => console.log(error)
         )

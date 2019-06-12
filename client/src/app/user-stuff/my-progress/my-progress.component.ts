@@ -22,7 +22,6 @@ export class MyProgressComponent implements OnInit {
       .subscribe(
         (data) => {
           this.courses = data
-          console.log(data)
           this.loading = false
         }
       )

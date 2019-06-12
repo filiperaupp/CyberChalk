@@ -15,9 +15,13 @@ export class CoursesComponent implements OnInit {
 
   courses: any[] = []
   selectedCourse: any
+  selectedShowCourse: any
+  selectedContent
 
   loading:boolean = true
   loadingAction:boolean = false
+  loadingShow:boolean = true
+  showing: boolean = false
 
   filterStatus: FilterStatusPipe
   status = 'pending'
@@ -33,7 +37,6 @@ export class CoursesComponent implements OnInit {
       .subscribe(
         (data: any[]) => {
           this.courses = data
-          console.log(data)
           this.loading = false
         },
         (error) => console.log(error)
@@ -44,6 +47,20 @@ export class CoursesComponent implements OnInit {
     this.selectedCourse = course
   }
 
+  showCourse(course){
+    this.showing = false
+    this.loadingShow = true
+    this._myCoursesService.getCourseFullContents(course.id)
+      .subscribe(
+        data => {
+          this.selectedShowCourse = data
+          console.log(this.selectedShowCourse.title)
+          this.loadingShow = false
+        }
+      )
+
+  }
+
   changeStatus(action){
     this.loadingAction = true
     let idCourse = this.selectedCourse.id
@@ -52,7 +69,6 @@ export class CoursesComponent implements OnInit {
     this._myCoursesService.changeStatus(idCourse, formAction)
       .subscribe(
         (res) => {
-          console.log(res)
           this.loadingAction = false
           this.selectedCourse.status = res
           this.triggerFalseClick(action)

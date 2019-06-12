@@ -3,6 +3,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { MyCoursesService } from './my-courses.service';
 import { Theme } from 'src/app/models/theme';
 import { Category } from 'src/app/models/category';
+import { FilterStatusPipe } from 'src/app/pipes/filter-status.pipe';
 
 @Component({
   selector: 'app-my-courses',
@@ -21,6 +22,9 @@ export class MyCoursesComponent implements OnInit {
   selectedCourse: any
   loading = true
   loadingAction = false
+
+  private filterStatus: FilterStatusPipe
+  status = ''
 
   constructor(private _myCoursesService: MyCoursesService) { }
 

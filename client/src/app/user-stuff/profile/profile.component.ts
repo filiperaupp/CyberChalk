@@ -25,7 +25,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.getUser()
-    this._sharedService.emitChange('Data from child')
   }
 
   getUser(){
@@ -72,7 +71,10 @@ export class ProfileComponent implements OnInit {
   }
 
   urlImage(){
-    return 'url(http://localhost:8000/storage/'+this.user.profile_photo+')'
+    if (this.user.profile_photo != null)
+      return 'url(http://localhost:8000/storage/'+this.user.profile_photo+')'
+    else
+      return 'url(../../../../../assets/images/user.png)'
   }
 
 }

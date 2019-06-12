@@ -32,6 +32,27 @@ class CourseController extends Controller
         return json_encode($courses);
     }
 
+    public function getLastestCourses(){
+        $latestCourses = Course::select('id','title','user_id','theme_id')->where('status','approved')->orderBy('id','desc')->take(4)->get();
+
+        $courses = array();
+        if (isset($latestCourses) && sizeOf($latestCourses)) {
+            foreach ($latestCourses as $course) {
+                $course->theme = Theme::select('id','name','category_id')->find($course->theme_id);
+                $course->category = Category::select('id','name')->find($course->theme->category_id);
+                $course->creator = User::select('name')->find($course->user_id);
+                array_push($courses, $course);
+            }
+        }
+
+        return json_encode($courses);
+    }
+
+    public function countCourses($id){
+        $count = Course::where('user_id',$id)->count();
+        return $count;
+    }
+
     public function allCoursesByUser(){
         $userId = Auth::user()->id;
         $courses = Course::where('user_id', $userId)->get();
@@ -51,6 +72,17 @@ class CourseController extends Controller
 
     public function getById($id){
         $course = Course::find($id);
+        return json_encode($course);
+    }
+
+    public function getCourseFullContents($id){
+        $contentController = new ContentSolicitationController();
+        $course = Course::find($id);
+
+        if (isset($course)){
+            $course->contents = $contentController->fullContentsByCourse($id);
+        }
+
         return json_encode($course);
     }
 
@@ -128,7 +160,7 @@ class CourseController extends Controller
             $course->description = $request->description;
             $course->status = 'saved';
             $course->save();
-            return response('ok',200);
+            return json_encode('ok',200);
         } else {
             return response('not found', 400);
         }

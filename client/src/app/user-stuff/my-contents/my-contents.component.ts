@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { MyContentsService } from './my-contents.service';
+import { FilterStatusPipe } from 'src/app/pipes/filter-status.pipe';
 
 @Component({
   selector: 'app-my-contents',
@@ -15,6 +16,9 @@ export class MyContentsComponent implements OnInit {
   private loadingAction = false
   private contentSolicitations: any[]
   private selectedContent: any
+
+  private filterStatus: FilterStatusPipe
+  status = ''
 
   constructor(private _myContentService: MyContentsService) { }
 
