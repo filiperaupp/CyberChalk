@@ -28,6 +28,28 @@ ul {
     color:#367FA9 !important;
 }
 
+.btn-main-color{
+    color: #fff;
+    background-color: #367FA9;
+    border-color: #367FA9;
+}
+
+.btn-main-color:hover{
+    color: #fff;
+    background-color: #306a89;
+    border-color: #306a89;
+}
+
+.btn-outline-main-color {
+    color: #367FA9;
+    border-color: #367FA9;
+}
+
+.btn-outline-main-color:hover{
+    background-color: #367FA9;
+    color: #fff;
+}
+
 .main-div{
     font-family: 'Roboto', sans-serif;
     color: #ffffff;
@@ -38,7 +60,7 @@ ul {
 }
 
 .pass-through{
-    background-color: #00000080;
+    background-color: #000000a8;
     min-height: 100vh;
 }
 

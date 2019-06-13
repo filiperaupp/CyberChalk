@@ -39,6 +39,7 @@ import { ShowCourseComponent } from './category-content/show-course/show-course.
 import { MyProgressComponent } from './user-stuff/my-progress/my-progress.component';
 import { ProfileComponent } from './user-stuff/profile/profile.component';
 import { MainComponent } from './dashboard/main/main.component';
+import { CommentComponent } from './common/comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { MainComponent } from './dashboard/main/main.component';
     ShowCourseComponent,
     MyProgressComponent,
     ProfileComponent,
-    MainComponent
+    MainComponent,
+    CommentComponent
   ],
   imports: [
     routing,

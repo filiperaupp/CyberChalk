@@ -11,4 +11,8 @@ export class ShowContentService {
   getContent(idContent){
     return this.http.get('http://localhost:8000/api/content-solicitations/'+idContent)
   }
+
+  postComment(newComment){
+    return this.http.post('http://localhost:8000/api/comments', newComment)
+  }
 }

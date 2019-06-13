@@ -1,0 +1,18 @@
+.user-photo{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.cover{
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    position: relative !important;
+}
+
+.card{
+    display: inline-block;
+    white-space: normal;
+    vertical-align: top;
+}

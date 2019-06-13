@@ -14,6 +14,14 @@
     min-height: 100vh;
     max-height: auto;
 }
+
+.pointer{
+    cursor: pointer;
+}
+
+.pointer:hover{
+    text-decoration: underline;
+}
 /*--------------------------*/
 /*-----------Nav top--------*/
 .nav{

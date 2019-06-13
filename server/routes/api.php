@@ -122,4 +122,9 @@ Route::post('unlike', 'LikeController@destroy')->middleware('auth:api');
 //get user logged
 Route::get('user-logged','AuthController@getUser')->middleware('auth:api');
 
+//comments
+Route::post('comments', 'CommentController@store')->middleware('auth:api');
+Route::delete('comments/{id}', 'CommentController@destroy');
+//Route::put('comments/{id}', 'CommentController@update')/
+
 

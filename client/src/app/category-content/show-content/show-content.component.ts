@@ -1,3 +1,4 @@
+import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit, Input, SimpleChanges, SimpleChange } from '@angular/core';
 import { ShowContentService } from './show-content.service';
 import { ActivatedRoute } from '@angular/router';
@@ -15,8 +16,13 @@ export class ShowContentComponent implements OnInit {
   private loading: boolean = true
   private insideCourse = false
 
+  commentForm = this.fb.group({
+    commentText: ['', Validators.required]
+  })
+
   constructor(private active: ActivatedRoute,
-              private _showContentService: ShowContentService) { }
+              private _showContentService: ShowContentService,
+              private fb: FormBuilder) { }
 
   ngOnInit() {
     this.active.params.subscribe(param => {
@@ -38,6 +44,19 @@ export class ShowContentComponent implements OnInit {
       this.loading = true
       this.getContent()
     }
+  }
+
+  onSubmit(){
+    let newComment = new FormData
+    newComment.append('text', this.commentForm.controls['commentText'].value)
+    newComment.append('content_id', this.content.id)
+    this._showContentService.postComment(newComment)
+      .subscribe(
+        (data) => {
+          console.log(data)
+        },
+        (error) => console.log(error)
+      )
   }
 
   getContent(){

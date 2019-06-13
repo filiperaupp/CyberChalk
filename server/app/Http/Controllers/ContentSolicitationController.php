@@ -9,6 +9,7 @@ use App\ContentSolicitation;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\CommentController;
 use App\File;
 use App\Video;
 use App\Theme;
@@ -76,10 +77,12 @@ class ContentSolicitationController extends Controller
     public function getById($id) {
         $fileController = new FileController();
         $videoController = new VideoController();
+        $commentController = new CommentController();
 
         $contentSolicitation = ContentSolicitation::find($id);
         $contentSolicitation->support_files = json_decode($fileController->getByContentSolicitationId($id));
         $contentSolicitation->video = json_decode($videoController->getByContentSolicitationId($id));
+        $contentSolicitation->comments = $commentController->getCommentsByContent($id);
         return json_encode($contentSolicitation);
     }
 

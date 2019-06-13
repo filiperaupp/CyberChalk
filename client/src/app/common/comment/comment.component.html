@@ -1,0 +1,56 @@
+<div *ngFor="let comment of comments" class="card mr-2" style="width: 18rem;">
+  <div class="card-header p-2">
+    <div class="row">
+      <div class="col-auto">
+        <div class="user-photo cover bg-light" [style.background-image]="urlImage(comment)">
+        </div>
+      </div>
+      <div class="col p-0">
+        <p class="m-0">
+          {{ comment.user.name }}
+        </p>
+      </div>
+      <div *ngIf="comment.user.id == user?.id" class="col-auto">
+        <div class="btn-group">
+          <button class="btn btn-sm btn-info">
+            <i class="fas fa-pen"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delModal"
+            (click)="getSelectedComment(comment)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-2" style="min-height: 208px;">
+    {{ comment.text }}
+  </div>
+</div>
+
+<!-- Modal Remove-->
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-light">
+        <h5 class="modal-title" id="exampleModalLabel">Excluir comentário</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span #closeButtonDel class="text-light" aria-hidden="true">X</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Deseja realmente excluir o seu comentário?
+      </div>
+      <div *ngIf="!loadingAction" class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="delete()">Excluir</button>
+      </div>
+      <div *ngIf="loadingAction" class="modal-footer">
+        <div class="w-100">
+          <loader></loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

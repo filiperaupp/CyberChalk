@@ -11,3 +11,14 @@
     display: inline-block;
     cursor: pointer;
 }
+
+.card-body{
+    white-space: normal;
+}
+
+div.scrollmenu {
+    min-width: 100%;
+    width: auto;
+    overflow: auto;
+    white-space: nowrap;
+}

@@ -4,16 +4,24 @@
 
 <div class="container-fluid">
   <div class="row nav">
-    <div class="side-title" id="navTitle" #navTitle>
-      <a routerLink="/dashboard">
-        <b>{{ title1 }}</b>{{ title2 }}
-      </a>
+    <div class="col-auto p-0">
+      <div class="side-title" id="navTitle" #navTitle>
+        <a routerLink="/dashboard">
+          <b>{{ title1 }}</b>{{ title2 }}
+        </a>
+      </div>
     </div>
-    <div>
-      <button class="h-100 menu-botton" (click)="toggleMenu()">
-        <i class="fas fa-bars"></i>
-      </button>
-      <button (click)="logout()">Logout</button>
+    <div class="col p-0">
+      <div class="row h-100 justify-content-between">
+        <div class="col-auto p-0">
+          <button class="h-100 menu-botton" (click)="toggleMenu()">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+        <div class="col-auto pt-2">
+          <p class="text-white m-0 p-1 pointer" (click)="logout()">Logout</p>
+        </div>
+      </div>
     </div>
   </div>
   <div class="flex-container">

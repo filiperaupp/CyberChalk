@@ -46,5 +46,26 @@
         {{ content.support_text }}
       </p>
     </div>
+    <div class="col-12">
+      <div class="scrollmenu">
+        <div class="card mr-3" style="width: 16rem;">
+          <div class="card-header p-2">
+            <h5>Faça um comentário</h5>
+          </div>
+          <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+            <div class="card-body p-2">
+              <textarea class="w-100" rows="8" maxlength="200" formControlName="commentText"></textarea>
+              <small class="text-muted">Max. de 200 caracteres</small>
+            </div>
+            <div class="card-footer">
+              <button type="submit" class="btn btn-sm btn-success" [disabled]="commentForm.invalid">
+                Enviar
+              </button>
+            </div>
+          </form>
+        </div>
+        <comments [comments]="content.comments"></comments>
+      </div>
+    </div>
   </div>
 </div>
