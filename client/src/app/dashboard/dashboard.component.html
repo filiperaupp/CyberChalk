@@ -3,23 +3,23 @@
 </ng-template>
 
 <div class="container-fluid">
-  <div class="row nav">
-    <div class="col-auto p-0">
+  <div class="row h-auto nav">
+    <div class="col-sm-12 col-fix-230 w-100 p-0">
       <div class="side-title" id="navTitle" #navTitle>
         <a routerLink="/dashboard">
           <b>{{ title1 }}</b>{{ title2 }}
         </a>
       </div>
     </div>
-    <div class="col p-0">
+    <div class="col-12 col-md p-0">
       <div class="row h-100 justify-content-between">
         <div class="col-auto p-0">
           <button class="h-100 menu-botton" (click)="toggleMenu()">
             <i class="fas fa-bars"></i>
           </button>
         </div>
-        <div class="col-auto pt-2">
-          <p class="text-white m-0 p-1 pointer" (click)="logout()">Logout</p>
+        <div class="col-auto">
+          <p class="text-white m-0 p-2 pointer" (click)="logout()">Logout</p>
         </div>
       </div>
     </div>

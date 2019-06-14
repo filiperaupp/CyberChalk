@@ -1,5 +1,5 @@
 <ng-template #load>
-  <loader *ngIf="loading"></loader>
+  <loader *ngIf="loading || loadingAction"></loader>
 </ng-template>
 
 <div *ngIf="!loading else load" class="container-fluid bg-white mt-2">
@@ -58,9 +58,20 @@
               <small class="text-muted">Max. de 200 caracteres</small>
             </div>
             <div class="card-footer">
-              <button type="submit" class="btn btn-sm btn-success" [disabled]="commentForm.invalid">
-                Enviar
-              </button>
+              <div class="row p-0 justify-content-end">
+                <div *ngIf="!commentSend && !loadingAction else loadSend" class="col-auto p-0">
+                  <button type="submit" class="btn btn-sm btn-success" [disabled]="commentForm.invalid">
+                    <i class="far fa-paper-plane"></i>
+                    Enviar
+                  </button>
+                </div>
+                <ng-template #loadSend>
+                  <loader *ngIf="loadingAction" class="mr-2"></loader>
+                </ng-template>
+                <div *ngIf="commentSend && !loadingAction" class="col-12 alert alert-success w-100 p-2 mb-0">
+                  <p class="m-0">Comentário criado com sucesso!</p>
+                </div>
+              </div>
             </div>
           </form>
         </div>

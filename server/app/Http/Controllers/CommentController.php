@@ -18,7 +18,8 @@ class CommentController extends Controller
         $newComment->content_solicitation_id = $request->content_id;
         $newComment->text = $request->text;
         $newComment->save();
-        return json_encode('ok',200);
+        $newComment->user = User::select('id','name','profile_photo')->where('id',$newComment->user_id)->first();
+        return json_encode($newComment,200);
     }
 
     public function update(Request $request, $id){
@@ -33,7 +34,7 @@ class CommentController extends Controller
     }
 
     public function getCommentsByContent($idContent){
-        $allComments = Comment::where('content_solicitation_id', $idContent)->get();
+        $allComments = Comment::where('content_solicitation_id', $idContent)->orderby('id','desc')->get();
 
         $comments = array();
         if (isset($allComments) && sizeOf($allComments) > 0) {

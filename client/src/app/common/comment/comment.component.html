@@ -12,9 +12,6 @@
       </div>
       <div *ngIf="comment.user.id == user?.id" class="col-auto">
         <div class="btn-group">
-          <button class="btn btn-sm btn-info">
-            <i class="fas fa-pen"></i>
-          </button>
           <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delModal"
             (click)="getSelectedComment(comment)">
             <i class="fas fa-trash"></i>

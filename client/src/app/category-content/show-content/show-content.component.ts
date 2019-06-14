@@ -14,7 +14,9 @@ export class ShowContentComponent implements OnInit {
   private id
   private content
   private loading: boolean = true
+  private loadingAction:boolean = false
   private insideCourse = false
+  private commentSend = false
 
   commentForm = this.fb.group({
     commentText: ['', Validators.required]
@@ -47,13 +49,16 @@ export class ShowContentComponent implements OnInit {
   }
 
   onSubmit(){
+    this.loadingAction = true
     let newComment = new FormData
     newComment.append('text', this.commentForm.controls['commentText'].value)
     newComment.append('content_id', this.content.id)
     this._showContentService.postComment(newComment)
       .subscribe(
         (data) => {
-          console.log(data)
+          this.content.comments.unshift(data)
+          this.commentSend = true
+          this.loadingAction = false
         },
         (error) => console.log(error)
       )
