@@ -57,6 +57,7 @@ export class ShowContentComponent implements OnInit {
       .subscribe(
         (data) => {
           this.content.comments.unshift(data)
+          this.commentForm.controls['commentText'].setValue('')
           this.commentSend = true
           this.loadingAction = false
         },
