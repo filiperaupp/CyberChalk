@@ -1,3 +1,4 @@
+import { FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { MyCoursesService } from 'src/app/user-stuff/my-courses/my-courses.service';
@@ -26,7 +27,12 @@ export class CoursesComponent implements OnInit {
   filterStatus: FilterStatusPipe
   status = 'pending'
 
-  constructor(private _myCoursesService: MyCoursesService) { }
+  formMensage = this.fb.group({
+    recycleMensage: ['', Validators.required]
+  })
+
+  constructor(private _myCoursesService: MyCoursesService,
+              private fb: FormBuilder) { }
 
   ngOnInit() {
     this.getAllCourses()
@@ -66,6 +72,10 @@ export class CoursesComponent implements OnInit {
     let idCourse = this.selectedCourse.id
     let formAction = new FormData()
     formAction.append('status', action)
+    if (action == 'recycled') {
+      let mensage = this.formMensage.controls['recycleMensage'].value
+      formAction.append('recycleMensage', mensage)
+    }
     this._myCoursesService.changeStatus(idCourse, formAction)
       .subscribe(
         (res) => {

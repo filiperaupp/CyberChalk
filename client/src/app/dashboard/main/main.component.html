@@ -18,7 +18,7 @@
 
         <div *ngFor="let user of topUsers; let i = index" class="card mr-3" style="width: 14rem;">
           <div class="card-header p-1 text-center">
-            {{ ranking[i] }}
+            <b>{{ ranking[i] }}</b>
             <div class="user-photo bg-light m-auto cover" [style.background-image]="urlImage(i)">
 
             </div>

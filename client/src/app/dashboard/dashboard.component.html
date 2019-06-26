@@ -47,19 +47,19 @@
           </a>
           <div class="panel">
             <ul class="list-style-none">
-              <li class="sub-category">
+              <li class="sub-category" (click)="hideMenu()">
                 <a routerLink="profile" routerLinkActive="sub-category-active">
                   <i class="far fa-circle mr-1"></i>
                   Perfil
                 </a>
               </li>
-              <li class="sub-category">
+              <li class="sub-category" (click)="hideMenu()">
                 <a routerLink="my-stuff" routerLinkActive="sub-category-active">
                   <i class="far fa-circle mr-1"></i>
                   Minhas criações
                 </a>
               </li>
-              <li class="sub-category">
+              <li class="sub-category" (click)="hideMenu()">
                 <a routerLink="progress" routerLinkActive="sub-category-active">
                   <i class="far fa-circle mr-1"></i>
                   Material em andamento
@@ -75,19 +75,19 @@
           </a>
           <div class="panel">
             <ul class="list-style-none">
-              <li class="sub-category">
+              <li class="sub-category" (click)="hideMenu()">
                 <a routerLink="admin/user" routerLinkActive="sub-category-active">
                   <i class="far fa-circle"></i>
                   <span class="ml-2">Usuários</span>
                 </a>
               </li>
-              <li class="sub-category">
+              <li class="sub-category" (click)="hideMenu()">
                 <a routerLink="admin/categories" routerLinkActive="sub-category-active">
                   <i class="far fa-circle"></i>
                   <span class="ml-2">Categorias / Temas</span>
                 </a>
               </li>
-              <li class="sub-category">
+              <li class="sub-category" (click)="hideMenu()">
                 <a routerLink="admin/contents-and-courses" routerLinkActive="sub-category-active">
                   <i class="far fa-circle"></i>
                   <span class="ml-2">Conteúdos / Cursos</span>
@@ -104,7 +104,7 @@
           <div class="panel">
             <ul class="list-style-none">
               <ng-container *ngFor="let category of categories">
-                <li *ngIf="category.session == 1" class="sub-category">
+                <li *ngIf="category.session == 1" class="sub-category" (click)="hideMenu()">
                   <a routerLink="category/{{category.id}}" routerLinkActive="sub-category-active">
                     <i class="far fa-circle"></i>
                     <span class="ml-2">{{  category.name  }}</span>
@@ -122,7 +122,7 @@
           <div class="panel">
             <ul class="list-style-none">
               <ng-container *ngFor="let category of categories">
-                <li *ngIf="category.session == 2" class="sub-category">
+                <li *ngIf="category.session == 2" class="sub-category" (click)="hideMenu()">
                   <a routerLink="category/{{category.id}}" routerLinkActive="sub-category-active">
                     <i class="far fa-circle"></i>
                     <span class="ml-2">{{  category.name  }}</span>
@@ -140,7 +140,7 @@
           <div class="panel">
             <ul class="list-style-none">
               <ng-container *ngFor="let category of categories">
-                <li *ngIf="category.session == 3" class="sub-category">
+                <li *ngIf="category.session == 3" class="sub-category" (click)="hideMenu()">
                   <a routerLink="category/{{category.id}}" routerLinkActive="sub-category-active">
                     <i class="far fa-circle"></i>
                     <span class="ml-2">{{  category.name  }}</span>

@@ -11,7 +11,7 @@
     <hr>
     <div class="row pb-2 px-2">
         <div *ngFor="let course of courses" class="col-12 col-md-6 col-lg-3">
-            <div class="card p-0 mb-2">
+            <div class="card p-0 mb-2 card-hover" routerLink="../category/{{course.category.id}}/theme/{{ course.theme.id }}/course/{{ course.id }}">
                 <div class="card-header p-2">
                     <h5 class="m-0">{{ course.title }}</h5>
                 </div>

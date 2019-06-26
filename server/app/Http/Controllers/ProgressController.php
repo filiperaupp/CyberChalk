@@ -43,7 +43,7 @@ class ProgressController extends Controller
                 Log::debug($progress);
                 $course = $courseController->getCourseInfo($progress->course_id);
                 $course->totalContents = $contentController->countContentsByCourse($progress->course_id);
-                $course->contentsDone = Progress::where('course_id',$progress->course_id)->count();
+                $course->contentsDone = Progress::where([['course_id',$progress->course_id],['user_id',$user->id]])->count();
                 $course->creator = $user->name;
                 array_push($courses,$course); 
             }

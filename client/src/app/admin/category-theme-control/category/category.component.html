@@ -37,10 +37,13 @@
         <td>{{ category.name }}</td>
         <td [ngSwitch]="category.session">
           <div *ngSwitchCase="1">
-            <span>Manual STADS</span>
+            <span>Guia de aulas</span>
           </div>
           <div *ngSwitchCase="2">
-            <span>Tech & Dev</span>
+            <span>High Technologies</span>
+          </div>
+          <div *ngSwitchCase="3">
+            <span>Fala Tu!</span>
           </div>
           <div *ngSwitchDefault>Não especificado</div>
         </td>
@@ -78,8 +81,8 @@
             <label for="session">Sessão</label>
             <select class="form-control mb-1" name="session" id="session" formControlName="session">
               <option selected hidden disabled>Escolher sessão</option>
-              <option value="1">Manual STADS</option>
-              <option value="2">Tech & Dev</option>
+              <option value="1">Guia de Aulas</option>
+              <option value="2">High Technologies</option>
               <option value="3">Fala Tu!</option>
             </select>
             <div class="text-danger"
@@ -159,8 +162,9 @@
             <label for="session">Sessão</label>
             <select class="form-control mb-1" name="session" id="session" formControlName="session">
               <option selected hidden disabled>Escolher sessão</option>
-              <option value="1">Manual STADS</option>
-              <option value="2">Tech & Dev</option>
+              <option value="1">Guia de Aulas</option>
+              <option value="2">High Technologies</option>
+              <option value="3">Fala Tu!</option>
             </select>
             <div class="text-danger"
               *ngIf="newCategoryForm.controls['session'].invalid && (newCategoryForm.controls['session'].dirty || newCategoryForm.controls['session'].touched)"

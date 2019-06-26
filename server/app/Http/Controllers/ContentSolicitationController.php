@@ -177,7 +177,6 @@ class ContentSolicitationController extends Controller
                     break;
                 case 'recycled':
                     $content->status = 'recycled';
-                    Log::debug($request->recycleMensage);
                     if (isset($request->recycleMensage)) {
                         $content->recycle_mensage = $request->recycleMensage;
                     }

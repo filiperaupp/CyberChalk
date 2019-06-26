@@ -135,6 +135,10 @@ class CourseController extends Controller
                     break;
                 case 'recycled': 
                     $course->status = 'recycled';
+                    Log::debug('veio');
+                    if (isset($request->recycleMensage)) {
+                        $course->recycle_mensage = $request->recycleMensage;
+                    }
                     break;
                 case 'rejected':
                     $course->status = 'rejected';

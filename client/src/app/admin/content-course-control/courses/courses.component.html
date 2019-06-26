@@ -89,7 +89,7 @@
 <div class="container-fluid" *ngIf="courses | filterStatus: text: status as result;">
   <div class="row">
     <div *ngIf="!loading && status == 'pending' && result.length == 0" class="alert alert-success text-center w-100">
-       <h5>Nenhum curso "Em aprovação" pendente!</h5>
+      <h5>Nenhum curso "Em aprovação" pendente!</h5>
     </div>
   </div>
 </div>
@@ -141,26 +141,32 @@
           <span #closeButtonRecycle class="text-light" aria-hidden="true">X</span>
         </button>
       </div>
-      <div *ngIf="selectedCourse" class="modal-body">
-        Deseja realmente <b>reciclar</b> o curso <b>{{ selectedCourse.title }}</b>?<br>
-        <small class="text-secondary">Obs: O criador poderá fazer os reajustes e, posteriormente, reencaminhar o
-          curso.</small>
-      </div>
-      <div *ngIf="!loadingAction" class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-          <i class="fas fa-arrow-left mr-1"></i>
-          Cancelar
-        </button>
-        <button type="button" class="btn btn-info" (click)="changeStatus('recycled')">
-          <i class="fas fa-recycle"></i>
-          Reciclar
-        </button>
-      </div>
-      <div *ngIf="loadingAction" class="modal-footer">
-        <div class="w-100">
-          <loader></loader>
+      <form [formGroup]="formMensage">
+        <div *ngIf="selectedCourse" class="modal-body">
+          Deseja realmente <b>reciclar</b> o curso <b>{{ selectedCourse.title }}</b>?<br>
+          <small class="text-secondary">Obs: O criador poderá fazer os reajustes e, posteriormente, reencaminhar o
+            curso.</small>
+          <p class="m-0">Motivo da recicalgem: </p>
+          <textarea class="w-100" rows="3" maxlength="200" formControlName="recycleMensage"></textarea>
         </div>
-      </div>
+        <div *ngIf="!loadingAction" class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fas fa-arrow-left mr-1"></i>
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-info" (click)="changeStatus('recycled')"
+            [disabled]="formMensage.pristine || formMensage.invalid">
+            <i class="fas fa-recycle"></i>
+            Reciclar
+          </button>
+        </div>
+        <div *ngIf="loadingAction" class="modal-footer">
+          <div class="w-100">
+            <loader></loader>
+          </div>
+        </div>
+      </form>
+
     </div>
   </div>
 </div>
@@ -235,7 +241,8 @@
             </div>
             <div class="col-12 p-2">
               <h5>Arquivos de apoio</h5>
-              <div class="card border-info p-1 m-1 bg-info text-white" *ngFor="let file of selectedContent.support_files">
+              <div class="card border-info p-1 m-1 bg-info text-white"
+                *ngFor="let file of selectedContent.support_files">
                 <p class="m-0">
                   {{ file.file_name }}
                 </p>
@@ -254,16 +261,16 @@
         </div>
         <div *ngIf="!loadingShow" class="row p-2">
           <h5>Lista de conteúdos</h5>
-          <div *ngFor="let content of selectedShowCourse.contents" class="w-100 bg-light item-content" 
+          <div *ngFor="let content of selectedShowCourse.contents" class="w-100 bg-light item-content"
             [ngClass]="{active: content == selectedContent}">
             <p class="m-0 p-2" (click)="selectedContent = content; showing = true">
               {{ content.title }}
-            </p> 
+            </p>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
       </div>
     </div>
   </div>

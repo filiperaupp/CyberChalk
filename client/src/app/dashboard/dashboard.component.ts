@@ -29,12 +29,24 @@ export class DashboardComponent implements OnInit {
               private route: Router) { }
 
   ngOnInit() {
+    if (window.innerWidth < 500){
+      document.getElementById("sideMenu").style.width = "0px";
+      document.getElementById("board").style.marginLeft = "0px";
+      document.getElementById("board").style.width = "100%"
+      this.toggled = false
+    }
     this.verifyAdmin()
     this.getAllCategories()
     this._sharedService.changeEmitted$
       .subscribe(
         text => this.getAllCategories()
       )
+  }
+
+  hideMenu(){
+    if (window.innerWidth < 998){
+      this.toggleMenu()
+    }
   }
   
   ngAfterViewInit(){
@@ -66,20 +78,20 @@ export class DashboardComponent implements OnInit {
       document.getElementById("sideMenu").style.width = "230px";
       document.getElementById("sideMenu").style.display = "block";
       document.getElementById("board").style.width = "calc(100% - 230px)"
-      if (window.innerWidth > 500) {
-        document.getElementById("navTitle").style.width = "230px";
-        this.title1 = "Cyber"
-        this.title2 = "Chalk"
-      }
+      // if (window.innerWidth > 500) {
+      //   document.getElementById("navTitle").style.width = "230px";
+      //   this.title1 = "Cyber"
+      //   this.title2 = "Chalk"
+      // }
     } else {
       document.getElementById("sideMenu").style.width = "0px";
       document.getElementById("board").style.marginLeft = "0px";
       document.getElementById("board").style.width = "100%"
-      if (window.innerWidth > 500) {
-        document.getElementById("navTitle").style.width = "50px";
-        this.title1 = "C"
-        this.title2 = "c"
-      }
+      // if (window.innerWidth > 500) {
+      //   document.getElementById("navTitle").style.width = "50px";
+      //   this.title1 = "C"
+      //   this.title2 = "c"
+      // }
     }
     this.toggled = !this.toggled;
   }
@@ -111,15 +123,5 @@ export class DashboardComponent implements OnInit {
     this._authService.logout();
     this.route.navigate([''])
   }
-
-  // @HostListener('window:resize', ['$event'])
-  // onResize(event){
-  //   let divTitle = this.navTitle.nativeElement.offsetWidth 
-  //   if (divTitle<=50) 
-  //     this.title = "Cc"
-  //   else 
-  //     this.title = "CyberChalk"
-  //   console.log(this.title)
-  // }
 
 }

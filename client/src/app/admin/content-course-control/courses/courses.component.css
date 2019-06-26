@@ -20,3 +20,11 @@
     border-bottom: 2px solid #666666;
     cursor: pointer;
 }
+
+.ng-valid:not(form):not(#status):not(#search)  {
+    border-left: 5px solid #42A948; /* green */
+  }
+  
+  .ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+  }
