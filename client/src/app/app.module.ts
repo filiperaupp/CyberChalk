@@ -40,6 +40,7 @@ import { MyProgressComponent } from './user-stuff/my-progress/my-progress.compon
 import { ProfileComponent } from './user-stuff/profile/profile.component';
 import { MainComponent } from './dashboard/main/main.component';
 import { CommentComponent } from './common/comment/comment.component';
+import { ComponenteTesteComponent } from './componente-teste/componente-teste.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,8 @@ import { CommentComponent } from './common/comment/comment.component';
     MyProgressComponent,
     ProfileComponent,
     MainComponent,
-    CommentComponent
+    CommentComponent,
+    ComponenteTesteComponent
   ],
   imports: [
     routing,
